@@ -57,7 +57,7 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between">
             <span className="text-xs text-[#624a4a] font-medium">
-              Touch base to strengthen your bond! 💪
+              Ready to spread some friendship joy! 💕
             </span>
             <div className="w-2 h-2 rounded-full bg-[#ffacd6] group-hover:bg-[#28428c] transition-colors duration-200"></div>
           </div>

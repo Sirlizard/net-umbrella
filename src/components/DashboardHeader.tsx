@@ -17,12 +17,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount })
       
       <div className="text-center">
         <h2 className="text-xl font-semibold text-[#892f1a] mb-2">
-          Your Friendship Dashboard
+          Your Amazing Friendship Network! ✨
         </h2>
         <div className="flex items-center justify-center space-x-2 text-[#624a4a]">
           <Users className="w-4 h-4" />
           <p className="text-sm">
-            You're staying connected with <span className="font-semibold text-[#28428c]">{friendCount}</span> amazing people
+            You're nurturing <span className="font-semibold text-[#28428c]">{friendCount}</span> wonderful connections that bring joy to your life! 🌟
           </p>
         </div>
       </div>

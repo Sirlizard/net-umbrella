@@ -58,13 +58,13 @@ function App() {
           <div className="text-center py-16">
             <div className="bg-white rounded-xl p-8 shadow-sm max-w-md mx-auto border border-[#ffacd6]/20">
               <h3 className="text-lg font-semibold text-[#892f1a] mb-2">
-                Ready to build your network?
+                Ready to create your amazing friendship network? 🌈
               </h3>
               <p className="text-[#624a4a] mb-4">
-                Start adding friends to keep track of your meaningful connections.
+                Start building beautiful connections that will bring happiness and joy to your life! ✨
               </p>
               <button className="bg-[#28428c] text-white px-6 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200">
-                Add Your First Friend
+                Start Your Friendship Journey! 🚀
               </button>
             </div>
           </div>
