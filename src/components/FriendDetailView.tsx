@@ -197,19 +197,21 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               </div>
             </div>
           ) : (
-            <p className="text-[#624a4a] leading-relaxed">
-              {friend.bio || 'No bio added yet. Click the edit button to add one!'}
-            </p>
-            <div className="flex items-center space-x-4 mt-2">
-              <div className="flex items-center space-x-1 text-xs text-[#28428c]">
-                <BarChart3 className="w-3 h-3" />
-                <span>{getTotalReceivedMessages(friend)} messages received</span>
+            <>
+              <p className="text-[#624a4a] leading-relaxed">
+                {friend.bio || 'No bio added yet. Click the edit button to add one!'}
+              </p>
+              <div className="flex items-center space-x-4 mt-2">
+                <div className="flex items-center space-x-1 text-xs text-[#28428c]">
+                  <BarChart3 className="w-3 h-3" />
+                  <span>{getTotalReceivedMessages(friend)} messages received</span>
+                </div>
+                <div className="flex items-center space-x-1 text-xs text-[#624a4a]">
+                  <TrendingUp className="w-3 h-3" />
+                  <span>{formatResponseTime(getAverageResponseTime(friend.socials.flatMap(s => s.messageHistory)))} response time</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-1 text-xs text-[#624a4a]">
-                <TrendingUp className="w-3 h-3" />
-                <span>{formatResponseTime(getAverageResponseTime(friend.socials.flatMap(s => s.messageHistory)))} response time</span>
-              </div>
-            </div>
+            </>
           )}
         </div>
 
