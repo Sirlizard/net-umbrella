@@ -75,9 +75,6 @@ function App() {
                     onClick={() => setShowAddFriendForm(true)}
                     className="bg-[#28428c] text-white px-6 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
                   >
-                    onClick={() => setShowAddFriendForm(true)}
-                    className="bg-[#28428c] text-white px-6 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
-                  >
                     Start Your Friendship Journey! 🚀
                   </button>
                 </div>
