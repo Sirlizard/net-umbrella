@@ -3,9 +3,10 @@ import { Umbrella, Users } from 'lucide-react';
 
 interface DashboardHeaderProps {
   friendCount: number;
+  onOpenAnalytics?: () => void;
 }
 
-export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount }) => {
+export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, onOpenAnalytics }) => {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-center mb-4">
@@ -25,6 +26,16 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount })
             You're nurturing <span className="font-semibold text-[#28428c]">{friendCount}</span> wonderful connections that bring joy to your life! 🌟
           </p>
         </div>
+        {onOpenAnalytics && (
+          <div className="mt-4">
+            <button
+              onClick={onOpenAnalytics}
+              className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+            >
+              Open Message Analytics
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,11 +6,13 @@ import { DashboardHeader } from './components/DashboardHeader';
 import { AddFriendButton } from './components/AddFriendButton';
 import { FriendDetailView } from './components/FriendDetailView';
 import { AddFriendForm } from './components/AddFriendForm';
+import { MessageAnalyticsPage } from './components/MessageAnalyticsPage';
 
 function App() {
   const [friends, setFriends] = useState<Friend[]>(mockFriends);
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
   const [showAddFriendForm, setShowAddFriendForm] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   const handleFriendClick = (friend: Friend) => {
     setSelectedFriend(friend);
@@ -41,6 +43,18 @@ function App() {
         onBack={handleBackToDashboard}
         onUpdateFriend={handleUpdateFriend}
       />
+    );
+  }
+
+  // Show analytics page
+  if (showAnalytics) {
+    return (
+      <div className="min-h-screen bg-[#e8e6d8]">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <DashboardHeader friendCount={friends.length} />
+          <MessageAnalyticsPage friends={friends} onBack={() => setShowAnalytics(false)} />
+        </div>
+      </div>
     );
   }
 
@@ -96,7 +110,8 @@ function App() {
   return (
     <div className="min-h-screen bg-[#e8e6d8]">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <DashboardHeader friendCount={friends.length} />
+        <DashboardHeader friendCount={friends.length} onOpenAnalytics={() => setShowAnalytics(true)} />
+        <DashboardHeader friendCount={friends.length} onOpenAnalytics={() => setShowAnalytics(true)} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {friends.map((friend) => (

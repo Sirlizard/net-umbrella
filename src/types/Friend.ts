@@ -4,6 +4,7 @@ export interface Friend {
   bio?: string;
   socials: SocialLink[];
   lastContacted: Date;
+  contactFrequency?: number; // 0 (low) to 10 (high)
 }
 
 export interface SocialLink {

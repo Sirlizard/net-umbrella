@@ -29,6 +29,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
   const [newHandle, setNewHandle] = useState('');
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [editedBio, setEditedBio] = useState(friend.bio || '');
+  const [contactFrequency, setContactFrequency] = useState<number>(friend.contactFrequency ?? 5);
 
   const getPlatformIcon = (platform: string) => {
     const iconClass = "w-5 h-5";
@@ -105,6 +106,11 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
     const updatedFriend = { ...friend, bio: editedBio.trim() };
     onUpdateFriend(updatedFriend);
     setIsEditingBio(false);
+  };
+
+  const handleSaveContactFrequency = () => {
+    const updatedFriend = { ...friend, contactFrequency };
+    onUpdateFriend(updatedFriend);
   };
 
   const getContactStatusColor = (lastContacted?: Date) => {
@@ -192,6 +198,10 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                   <BarChart3 className="w-3 h-3" />
                   <span>{getTotalReceivedMessages(friend)} messages received</span>
                 </div>
+                <div className="flex items-center space-x-1 text-xs text-[#28428c]">
+                  <Send className="w-3 h-3" />
+                  <span>{getTotalSentMessages(friend)} messages sent</span>
+                </div>
                 <div className="flex items-center space-x-1 text-xs text-[#624a4a]">
                   <TrendingUp className="w-3 h-3" />
                   <span>{formatResponseTime(getAverageResponseTime(friend.socials.flatMap(s => s.messageHistory)))} response time</span>
@@ -199,6 +209,41 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               </div>
             </>
           )}
+        </div>
+
+        {/* Contact Frequency Preference */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-[#892f1a]">How often to stay in touch</h2>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#624a4a]">Little contact</span>
+              <span className="text-sm text-[#624a4a]">Frequent contact through the day</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={10}
+              step={1}
+              value={contactFrequency}
+              onChange={(e) => setContactFrequency(parseInt(e.target.value, 10))}
+              className="w-full accent-[#28428c]"
+            />
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#624a4a]">0</span>
+              <span className="text-sm text-[#28428c] font-semibold">Preference: {contactFrequency}/10</span>
+              <span className="text-sm text-[#624a4a]">10</span>
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={handleSaveContactFrequency}
+                className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+              >
+                Save Preference
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Contact Platforms */}
@@ -271,6 +316,9 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                         <span className="text-xs text-[#28428c] font-medium">
                           {getReceivedMessageCount(social.messageHistory)} received
                         </span>
+                        <span className="text-xs text-[#28428c] font-medium">
+                          {getSentMessageCount(social.messageHistory)} sent
+                        </span>
                         <span className="text-xs text-[#624a4a]">
                           {formatResponseTime(getAverageResponseTime(social.messageHistory))}
                         </span>
@@ -294,6 +342,11 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                 {getLastReceivedMessage(social.messageHistory) && (
                   <p className="text-xs mb-3 text-[#28428c]">
                     Last received: {formatLastContacted(getLastReceivedMessage(social.messageHistory)!)}
+                  </p>
+                )}
+                {getLastSentMessage(social.messageHistory) && (
+                  <p className="text-xs mb-3 text-[#624a4a]">
+                    Last sent: {formatLastContacted(getLastSentMessage(social.messageHistory)!)}
                   </p>
                 )}
                 
