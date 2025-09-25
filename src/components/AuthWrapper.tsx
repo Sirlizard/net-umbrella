@@ -10,6 +10,7 @@ import { AddFriendButton } from './AddFriendButton'
 import { FriendDetailView } from './FriendDetailView'
 import { AddFriendForm } from './AddFriendForm'
 import { MessageAnalyticsPage } from './MessageAnalyticsPage'
+import { EmailVerificationBanner } from './EmailVerificationBanner'
 
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth()
@@ -135,6 +136,7 @@ export const AuthWrapper: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#e8e6d8]">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <EmailVerificationBanner />
         <DashboardHeader friendCount={friends.length} onOpenAnalytics={() => setShowAnalytics(true)} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
