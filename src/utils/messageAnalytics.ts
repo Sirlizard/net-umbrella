@@ -11,20 +11,25 @@ export const getTotalReceivedMessages = (friend: Friend): number => {
 };
 
 export const getAverageResponseTime = (messageHistory: MessageRecord[]): number | null => {
-  const intervals: number[] = [];
+  const responseTimes: number[] = [];
   
-  for (let i = 1; i < messageHistory.length; i++) {
-    const current = messageHistory[i];
-    const previous = messageHistory[i - 1];
+  // Sort messages by timestamp
+  const sortedMessages = [...messageHistory].sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  
+  for (let i = 0; i < sortedMessages.length - 1; i++) {
+    const current = sortedMessages[i];
+    const next = sortedMessages[i + 1];
     
-    // Calculate interval between consecutive messages
-    const timeDiff = current.timestamp.getTime() - previous.timestamp.getTime();
-    intervals.push(timeDiff);
+    // Calculate response time: sent message followed by received message
+    if (current.type === 'sent' && next.type === 'received') {
+      const responseTime = next.timestamp.getTime() - current.timestamp.getTime();
+      responseTimes.push(responseTime);
+    }
   }
   
-  if (intervals.length === 0) return null;
+  if (responseTimes.length === 0) return null;
   
-  const averageMs = intervals.reduce((sum, interval) => sum + interval, 0) / intervals.length;
+  const averageMs = responseTimes.reduce((sum, time) => sum + time, 0) / responseTimes.length;
   return averageMs;
 };
 
@@ -33,14 +38,16 @@ export const formatResponseTime = (averageMs: number | null): string => {
   
   const days = Math.floor(averageMs / (1000 * 60 * 60 * 24));
   const hours = Math.floor((averageMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((averageMs % (1000 * 60 * 60)) / (1000 * 60));
   
   if (days > 0) {
     return `${days}d ${hours}h avg`;
   } else if (hours > 0) {
     return `${hours}h avg`;
-  } else {
-    const minutes = Math.floor(averageMs / (1000 * 60));
+  } else if (minutes > 0) {
     return `${minutes}m avg`;
+  } else {
+    return '<1m avg';
   }
 };
 
@@ -50,4 +57,22 @@ export const getLastReceivedMessage = (messageHistory: MessageRecord[]): Date | 
     .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   
   return receivedMessages.length > 0 ? receivedMessages[0].timestamp : null;
+};
+
+export const getLastSentMessage = (messageHistory: MessageRecord[]): Date | null => {
+  const sentMessages = messageHistory
+    .filter(msg => msg.type === 'sent')
+    .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  
+  return sentMessages.length > 0 ? sentMessages[0].timestamp : null;
+};
+
+export const getSentMessageCount = (messageHistory: MessageRecord[]): number => {
+  return messageHistory.filter(msg => msg.type === 'sent').length;
+};
+
+export const getTotalSentMessages = (friend: Friend): number => {
+  return friend.socials.reduce((total, social) => {
+    return total + getSentMessageCount(social.messageHistory);
+  }, 0);
 };
