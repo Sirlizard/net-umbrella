@@ -11,24 +11,7 @@ import {
   getSentMessageCount,
   getTotalSentMessages
 } from '../utils/messageAnalytics';
-import { 
-  ArrowLeft, 
-  MessageCircle, 
-  Send, 
-  MessageSquare, 
-  Plus,
-  Instagram,
-  Twitter,
-  Facebook,
-  Linkedin,
-  Mail,
-  Phone,
-  MessageCircleMore,
-  Trash2,
-  Edit3,
-  BarChart3,
-  TrendingUp
-} from 'lucide-react';
+import { ArrowLeft, MessageCircle, Send, MessageSquare, Plus, Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MessageCircleMore, Trash2, CreditCard as Edit3, BarChart3, TrendingUp } from 'lucide-react';
 
 interface FriendDetailViewProps {
   friend: Friend;
@@ -207,7 +190,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               <div className="flex items-center space-x-4 mt-2">
                 <div className="flex items-center space-x-1 text-xs text-[#28428c]">
                   <BarChart3 className="w-3 h-3" />
-                  <span>{getTotalReceivedMessages(friend)} received • {getTotalSentMessages(friend)} sent</span>
+                  <span>{getTotalReceivedMessages(friend)} messages received</span>
                 </div>
                 <div className="flex items-center space-x-1 text-xs text-[#624a4a]">
                   <TrendingUp className="w-3 h-3" />
@@ -286,7 +269,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                       <p className="text-sm text-[#624a4a]">{social.handle}</p>
                       <div className="flex items-center space-x-3 mt-1">
                         <span className="text-xs text-[#28428c] font-medium">
-                          {getReceivedMessageCount(social.messageHistory)} received • {getSentMessageCount(social.messageHistory)} sent
+                          {getReceivedMessageCount(social.messageHistory)} received
                         </span>
                         <span className="text-xs text-[#624a4a]">
                           {formatResponseTime(getAverageResponseTime(social.messageHistory))}
@@ -311,12 +294,6 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                 {getLastReceivedMessage(social.messageHistory) && (
                   <p className="text-xs mb-3 text-[#28428c]">
                     Last received: {formatLastContacted(getLastReceivedMessage(social.messageHistory)!)}
-                  </p>
-                )}
-                
-                {getLastSentMessage(social.messageHistory) && (
-                  <p className="text-xs mb-3 text-[#892f1a]">
-                    Last sent: {formatLastContacted(getLastSentMessage(social.messageHistory)!)}
                   </p>
                 )}
                 
