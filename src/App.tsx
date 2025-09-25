@@ -111,7 +111,6 @@ function App() {
     <div className="min-h-screen bg-[#e8e6d8]">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <DashboardHeader friendCount={friends.length} onOpenAnalytics={() => setShowAnalytics(true)} />
-        <DashboardHeader friendCount={friends.length} onOpenAnalytics={() => setShowAnalytics(true)} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {friends.map((friend) => (
