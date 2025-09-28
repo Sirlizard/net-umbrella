@@ -14,7 +14,7 @@ import { EmailVerificationBanner } from './EmailVerificationBanner'
 
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth()
-  const [showSignup, setShowSignup] = useState(false)
+  const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
   const [friends, setFriends] = useState<Friend[]>(mockFriends)
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
   const [showAddFriendForm, setShowAddFriendForm] = useState(false)
@@ -55,10 +55,13 @@ export const AuthWrapper: React.FC = () => {
 
   // Show authentication pages if not logged in
   if (!user) {
-    if (showSignup) {
-      return <SignupPage onSwitchToLogin={() => setShowSignup(false)} />
+    if (authView === 'signup') {
+      return <SignupPage onSwitchToLogin={() => setAuthView('login')} />
+    } else if (authView === 'login') {
+      return <LoginPage onSwitchToSignup={() => setAuthView('signup')} />
+    } else {
+      return <LandingPage onGetStarted={() => setAuthView('signup')} onSignIn={() => setAuthView('login')} />
     }
-    return <LoginPage onSwitchToSignup={() => setShowSignup(true)} />
   }
 
   // Show friend detail view if a friend is selected
