@@ -1,13 +1,14 @@
 import React from 'react';
 import { Umbrella, Users, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { UserProfile } from '../hooks/useUserProfile';
 
 interface DashboardHeaderProps {
   friendCount: number;
-  onOpenAnalytics?: () => void;
+  userProfile?: UserProfile | null;
 }
 
-export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, onOpenAnalytics }) => {
+export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, userProfile }) => {
   const { user, signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -24,7 +25,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, o
         
         <div className="flex items-center space-x-4">
           <div className="text-sm text-[#624a4a]">
-            Welcome, <span className="font-medium text-[#892f1a]">{user?.email}</span>
+            Welcome, <span className="font-medium text-[#892f1a]">
+              {userProfile?.full_name || user?.email}
+            </span>
           </div>
           <button
             onClick={handleLogout}
@@ -47,16 +50,6 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, o
             You're nurturing <span className="font-semibold text-[#28428c]">{friendCount}</span> wonderful connections that bring joy to your life! 🌟
           </p>
         </div>
-        {onOpenAnalytics && (
-          <div className="mt-4">
-            <button
-              onClick={onOpenAnalytics}
-              className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
-            >
-              Open Message Analytics
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
