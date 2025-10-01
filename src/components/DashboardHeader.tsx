@@ -6,9 +6,10 @@ import { UserProfile } from '../hooks/useUserProfile';
 interface DashboardHeaderProps {
   friendCount: number;
   userProfile?: UserProfile | null;
+  onOpenJournal?: () => void;
 }
 
-export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, userProfile }) => {
+export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, userProfile, onOpenJournal }) => {
   const { user, signOut } = useAuth();
 
   const handleLogout = async () => {
@@ -29,6 +30,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({ friendCount, u
               {userProfile?.full_name || user?.email}
             </span>
           </div>
+          <button
+            onClick={onOpenJournal}
+            className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+          >
+            Open Journal
+          </button>
           <button
             onClick={handleLogout}
             className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"

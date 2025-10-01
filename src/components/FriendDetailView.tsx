@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Friend, SocialLink } from '../types/Friend';
 import { formatLastContacted } from '../utils/timeFormatter';
 import { 
@@ -12,6 +12,8 @@ import {
   getTotalSentMessages
 } from '../utils/messageAnalytics';
 import { ArrowLeft, MessageCircle, Send, MessageSquare, Plus, Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MessageCircleMore, Trash2, CreditCard as Edit3, BarChart3, TrendingUp } from 'lucide-react';
+import { useSocialLinks } from '../hooks/useSocialLinks'
+import { supabase } from '../lib/supabase'
 
 interface FriendDetailViewProps {
   friend: Friend;
@@ -30,6 +32,16 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [editedBio, setEditedBio] = useState(friend.bio || '');
   const [contactFrequency, setContactFrequency] = useState<number>(friend.contactFrequency ?? 5);
+
+  // Load server-backed social links for this friend
+  const { links, addLink, removeLink, recordInteraction, touchLink } = useSocialLinks(friend.id)
+
+  const aggregatedMessageCounts = useMemo(() => {
+    // Fallback to local structure if no server links yet
+    const totalReceived = getTotalReceivedMessages(friend)
+    const totalSent = getTotalSentMessages(friend)
+    return { totalReceived, totalSent }
+  }, [friend])
 
   const getPlatformIcon = (platform: string) => {
     const iconClass = "w-5 h-5";
@@ -60,46 +72,51 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
     }
   };
 
-  const handleMessageAction = (socialIndex: number, type: 'sent' | 'received') => {
+  const handleMessageAction = async (socialIndex: number, type: 'sent' | 'received') => {
     const now = new Date();
     const updatedFriend = { ...friend };
-    
-    // Add message to history
-    updatedFriend.socials[socialIndex].messageHistory.push({
-      type,
-      timestamp: now
-    });
-    
-    // Update the specific social platform's last contacted time
+
+    // Local optimistic update for in-memory UI
+    updatedFriend.socials[socialIndex].messageHistory.push({ type, timestamp: now });
     updatedFriend.socials[socialIndex].lastContacted = now;
-    
-    // Update the overall last contacted time
     updatedFriend.lastContacted = now;
-    
     onUpdateFriend(updatedFriend);
+
+    // Persist to server via friend_interactions; triggers will update counters/timestamps
+    await recordInteraction(friend.id, type === 'sent' ? 'message_sent' : 'message_received', updatedFriend.socials[socialIndex].platform)
+
+    // Best-effort: update social link last_contacted if such column exists
+    const matching = links.find(l => l.platform?.toLowerCase() === updatedFriend.socials[socialIndex].platform.toLowerCase() && l.handle === updatedFriend.socials[socialIndex].handle)
+    if (matching) {
+      await touchLink(matching.id)
+    }
   };
 
-  const handleAddPlatform = () => {
+  const handleAddPlatform = async () => {
     if (newPlatform.trim() && newHandle.trim()) {
+      const platform = newPlatform.trim()
+      const handle = newHandle.trim()
+
       const updatedFriend = { ...friend };
-      updatedFriend.socials.push({
-        platform: newPlatform.trim(),
-        handle: newHandle.trim(),
-        lastContacted: undefined,
-        messageHistory: []
-      });
-      
+      updatedFriend.socials.push({ platform, handle, lastContacted: undefined, messageHistory: [] });
       onUpdateFriend(updatedFriend);
+
+      await addLink(platform, handle)
+
       setNewPlatform('');
       setNewHandle('');
       setShowAddPlatform(false);
     }
   };
 
-  const handleRemovePlatform = (socialIndex: number) => {
+  const handleRemovePlatform = async (socialIndex: number) => {
+    const removed = friend.socials[socialIndex]
     const updatedFriend = { ...friend };
     updatedFriend.socials.splice(socialIndex, 1);
     onUpdateFriend(updatedFriend);
+
+    const match = links.find(l => l.platform?.toLowerCase() === removed.platform.toLowerCase() && l.handle === removed.handle)
+    if (match) await removeLink(match.id)
   };
 
   const handleSaveBio = () => {

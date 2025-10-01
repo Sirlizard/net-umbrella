@@ -7,6 +7,7 @@ import { SignupPage } from './SignupPage'
 import { LandingPage } from './LandingPage'
 import { FriendCard } from './FriendCard'
 import { DashboardHeader } from './DashboardHeader'
+import { JournalPage } from './JournalPage'
 import { AddFriendButton } from './AddFriendButton'
 import { EmailVerificationBanner } from './EmailVerificationBanner'
 
@@ -15,6 +16,7 @@ export const AuthWrapper: React.FC = () => {
   const { profile, loading: profileLoading } = useUserProfile()
   const { friends, loading: friendsLoading } = useFriends()
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
+  const [showJournal, setShowJournal] = useState(false)
 
   // Show loading state
   if (loading || profileLoading) {
@@ -39,12 +41,17 @@ export const AuthWrapper: React.FC = () => {
     }
   }
 
+  // Show journal view
+  if (showJournal) {
+    return <JournalPage onBack={() => setShowJournal(false)} />
+  }
+
   // Show main dashboard
   return (
     <div className="min-h-screen bg-[#e8e6d8]">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <EmailVerificationBanner />
-        <DashboardHeader friendCount={friends.length} userProfile={profile} />
+        <DashboardHeader friendCount={friends.length} userProfile={profile} onOpenJournal={() => setShowJournal(true)} />
         
         {friendsLoading ? (
           <div className="text-center py-16">
@@ -62,6 +69,9 @@ export const AuthWrapper: React.FC = () => {
                   </p>
                   <p className="text-sm text-[#624a4a]">
                     Last contact: {new Date(friend.last_contacted).toLocaleDateString()}
+                  </p>
+                  <p className="text-sm text-[#624a4a] mt-1">
+                    Last sent: {friend.last_message_sent ? new Date(friend.last_message_sent).toLocaleString() : '—'}
                   </p>
                   {friend.bio && (
                     <p className="text-sm text-[#624a4a] mt-2 line-clamp-2">{friend.bio}</p>

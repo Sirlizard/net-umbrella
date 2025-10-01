@@ -83,13 +83,27 @@ export const useFriends = () => {
     contact_frequency?: number
   }) => {
     try {
+      // Resolve the current user's profile id to satisfy RLS and FK on friends.profile_user_id
+      const { data: currentProfileId, error: currentIdError } = await supabase
+        .rpc('get_current_user_id')
+
+      if (currentIdError) {
+        throw currentIdError
+      }
+
+      if (!currentProfileId) {
+        throw new Error('Could not resolve current profile id')
+      }
+
       const { data, error } = await supabase
         .from('friends')
         .insert({
           name: friendData.name,
           bio: friendData.bio,
           contact_frequency: friendData.contact_frequency || 5,
-          last_contacted: new Date().toISOString()
+          last_contacted: new Date().toISOString(),
+          // Link to the owning user profile for RLS and relationships
+          profile_user_id: currentProfileId as string
         })
         .select()
         .single()
