@@ -112,3 +112,4 @@ CREATE INDEX IF NOT EXISTS idx_jef_friend ON journal_entry_friends(friend_id);
 GRANT ALL ON journals TO authenticated;
 GRANT ALL ON journal_entries TO authenticated;
 GRANT ALL ON journal_entry_friends TO authenticated;
+
