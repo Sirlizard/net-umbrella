@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Friend, SocialLink, MessageRecord } from '../types/Friend';
+import { supabase } from '../lib/supabase'
 import { 
   X, 
   Plus, 
@@ -70,7 +71,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
     setContactMethods(updated);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name.trim()) {
@@ -125,15 +126,53 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
       return social.lastContacted > latest ? social.lastContacted : latest;
     }, undefined as Date | undefined) || new Date();
 
-    const newFriend: Friend = {
-      id: Date.now().toString(), // Simple ID generation
-      name: name.trim(),
-      bio: bio.trim() || undefined,
-      socials,
-      lastContacted
-    };
+    // Resolve current profile id
+    const { data: profileId, error: idErr } = await supabase.rpc('get_current_user_id')
+    if (idErr || !profileId) {
+      alert('Could not resolve your user profile. Please try again.')
+      return
+    }
 
-    onAddFriend(newFriend);
+    // Create friend in DB
+    const { data: createdFriend, error: friendErr } = await supabase
+      .from('friends')
+      .insert({
+        profile_user_id: profileId as string,
+        name: name.trim(),
+        bio: bio.trim() || null,
+        contact_frequency: 5,
+        last_contacted: lastContacted.toISOString()
+      })
+      .select('*')
+      .single()
+
+    if (friendErr || !createdFriend) {
+      alert(friendErr?.message || 'Failed to create friend')
+      return
+    }
+
+    // Insert social links
+    if (socials.length) {
+      const socialRows = socials.map(s => ({ friend_id: createdFriend.id, platform: s.platform, handle: s.handle, last_contacted: s.lastContacted ? s.lastContacted.toISOString() : null }))
+      const { error: socialErr } = await supabase.from('social_links').insert(socialRows)
+      if (socialErr) {
+        alert(socialErr.message)
+      }
+    }
+
+    // Record initial interactions (optional)
+    for (const s of socials) {
+      for (const m of s.messageHistory) {
+        await supabase.from('friend_interactions').insert({
+          friend_id: createdFriend.id,
+          interaction_type: m.type === 'sent' ? 'message_sent' : 'message_received',
+          platform: s.platform,
+          interaction_date: m.timestamp.toISOString()
+        })
+      }
+    }
+
+    onAddFriend({ id: createdFriend.id, name: createdFriend.name, bio: createdFriend.bio ?? undefined, socials, lastContacted })
     onClose();
   };
 

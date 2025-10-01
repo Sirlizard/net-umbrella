@@ -10,6 +10,7 @@ import { DashboardHeader } from './DashboardHeader'
 import { JournalPage } from './JournalPage'
 import { AddFriendButton } from './AddFriendButton'
 import { EmailVerificationBanner } from './EmailVerificationBanner'
+import { AddFriendForm } from './AddFriendForm'
 
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth()
@@ -17,6 +18,7 @@ export const AuthWrapper: React.FC = () => {
   const { friends, loading: friendsLoading } = useFriends()
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
   const [showJournal, setShowJournal] = useState(false)
+  const [showAddFriend, setShowAddFriend] = useState(false)
 
   // Show loading state
   if (loading || profileLoading) {
@@ -91,13 +93,33 @@ export const AuthWrapper: React.FC = () => {
               <p className="text-[#624a4a] mb-4">
                 Start building beautiful connections that will bring happiness and joy to your life! ✨
               </p>
-              <button className="bg-[#28428c] text-white px-6 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200">
+              <button onClick={() => setShowAddFriend(true)} className="bg-[#28428c] text-white px-6 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200">
                 Start Your Friendship Journey! 🚀
               </button>
             </div>
           </div>
         )}
+
+        {friends.length > 0 && (
+          <div className="mt-10">
+            <div className="bg-white rounded-xl p-6 shadow-sm border border-[#ffacd6]/20 flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-[#892f1a]">Keep growing your network</h3>
+                <p className="text-[#624a4a] text-sm">Add more friends and set up their connections.</p>
+              </div>
+              <button onClick={() => setShowAddFriend(true)} className="bg-[#28428c] text-white px-4 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200">
+                Add more friends
+              </button>
+            </div>
+          </div>
+        )}
+
+        <AddFriendButton onClick={() => setShowAddFriend(true)} />
       </div>
+
+      {showAddFriend && (
+        <AddFriendForm onClose={() => setShowAddFriend(false)} onAddFriend={() => setShowAddFriend(false)} />
+      )}
     </div>
   )
 }
