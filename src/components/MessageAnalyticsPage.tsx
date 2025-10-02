@@ -129,7 +129,7 @@ export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ frie
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-[#892f1a]">Message Analytics (Last 30 Days)</h2>
-        <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#624a4a] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back</button>
+        <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#624a41] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back</button>
       </div>
 
       {recommended && (
@@ -137,7 +137,7 @@ export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ frie
           <div className="flex items-start justify-between">
             <div>
               <h3 className="text-md font-semibold text-[#892f1a] mb-1">Who to reach out to next</h3>
-              <p className="text-sm text-[#624a4a]">
+              <p className="text-sm text-[#624a41]">
                 It's been <span className="font-semibold text-[#28428c]">{recommended.days} day{recommended.days === 1 ? '' : 's'}</span> since you last connected with <span className="font-semibold">{recommended.friend.name}</span>.
               </p>
             </div>
@@ -149,8 +149,8 @@ export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ frie
             </button>
           </div>
           <div className="mt-3">
-            <label className="block text-xs text-[#624a4a] mb-1">Suggested message</label>
-            <div className="p-3 bg-white border border-gray-200 rounded-lg text-sm text-[#624a4a]">
+            <label className="block text-xs text-[#624a41] mb-1">Suggested message</label>
+            <div className="p-3 bg-white border border-gray-200 rounded-lg text-sm text-[#624a41]">
               {suggestionText}
             </div>
           </div>
@@ -159,7 +159,7 @@ export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ frie
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
-          <label className="block text-sm text-[#624a4a] mb-1">Select Friend</label>
+          <label className="block text-sm text-[#624a41] mb-1">Select Friend</label>
           <select
             value={selectedFriendId}
             onChange={(e) => setSelectedFriendId(e.target.value)}
@@ -173,11 +173,11 @@ export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ frie
         <div className="md:col-span-2 flex items-end justify-end space-x-4">
           <div className="flex items-center space-x-2">
             <span className="inline-block w-4 h-1 bg-[#28428c] rounded" />
-            <span className="text-xs text-[#624a4a]">Sent</span>
+            <span className="text-xs text-[#624a41]">Sent</span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="inline-block w-4 h-1 bg-[#ffacd6] rounded" />
-            <span className="text-xs text-[#624a4a]">Received</span>
+            <span className="text-xs text-[#624a41]">Received</span>
           </div>
         </div>
       </div>

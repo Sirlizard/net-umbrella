@@ -52,7 +52,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
             <h1 className="text-2xl font-bold text-[#892f1a] mb-4">
               Welcome to the Family!
             </h1>
-            <p className="text-[#624a4a] mb-6">
+            <p className="text-[#624a41] mb-6">
               We've sent you a confirmation link. Please check your email and click the link to verify your account!
             </p>
             <button
@@ -75,7 +75,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
             <h1 className="text-3xl font-bold text-[#892f1a] mb-2">
               Create Account 🌟
             </h1>
-            <p className="text-[#624a4a]">
+            <p className="text-[#624a41]">
               Join your friendship network
             </p>
           </div>
@@ -142,7 +142,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[#624a4a]">
+            <p className="text-[#624a41]">
               Already have an account?{' '}
               <button
                 onClick={onSwitchToLogin}

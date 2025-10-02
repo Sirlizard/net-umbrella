@@ -156,11 +156,11 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-[#892f1a]">Friend Analytics</h2>
-          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#624a4a] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back</button>
+          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#624a41] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back</button>
         </div>
         <div className="text-center py-16">
           <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <p className="text-[#624a4a]">No friends added yet. Add some friends to see analytics!</p>
+          <p className="text-[#624a41]">No friends added yet. Add some friends to see analytics!</p>
         </div>
       </div>
     );
@@ -172,7 +172,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-[#892f1a]">Friend Analytics Dashboard</h2>
-          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#624a4a] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back to Dashboard</button>
+          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#624a41] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back to Dashboard</button>
         </div>
       </div>
 
@@ -185,7 +185,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                 <MessageSquare className="w-5 h-5 text-[#28428c]" />
               </div>
               <div>
-                <p className="text-sm text-[#624a4a]">Total Messages</p>
+                <p className="text-sm text-[#624a41]">Total Messages</p>
                 <p className="text-xl font-semibold text-[#892f1a]">{analytics.totalMessages.toLocaleString()}</p>
               </div>
             </div>
@@ -197,7 +197,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                 <TrendingUp className="w-5 h-5 text-[#892f1a]" />
               </div>
               <div>
-                <p className="text-sm text-[#624a4a]">Avg per Friend</p>
+                <p className="text-sm text-[#624a41]">Avg per Friend</p>
                 <p className="text-xl font-semibold text-[#892f1a]">{analytics.avgMessagesPerFriend}</p>
               </div>
             </div>
@@ -209,7 +209,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                 <Users className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-sm text-[#624a4a]">Most Active</p>
+                <p className="text-sm text-[#624a41]">Most Active</p>
                 <p className="text-sm font-semibold text-[#892f1a] truncate">{analytics.mostActiveFriend.name}</p>
               </div>
             </div>
@@ -221,9 +221,9 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                 <Clock className="w-5 h-5 text-orange-600" />
               </div>
               <div>
-                <p className="text-sm text-[#624a4a]">Reconnect With</p>
+                <p className="text-sm text-[#624a41]">Reconnect With</p>
                 <p className="text-sm font-semibold text-[#892f1a] truncate">{analytics.reconnectFriend.name}</p>
-                <p className="text-xs text-[#624a4a]">{analytics.reconnectDays} days ago</p>
+                <p className="text-xs text-[#624a41]">{analytics.reconnectDays} days ago</p>
               </div>
             </div>
           </div>
@@ -235,7 +235,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4">
             <div>
-              <label className="block text-sm text-[#624a4a] mb-1">Select Friend</label>
+              <label className="block text-sm text-[#624a41] mb-1">Select Friend</label>
               <select
                 value={selectedFriendId}
                 onChange={(e) => setSelectedFriendId(e.target.value)}
@@ -248,14 +248,14 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
             </div>
             
             <div>
-              <label className="block text-sm text-[#624a4a] mb-1">Chart Type</label>
+              <label className="block text-sm text-[#624a41] mb-1">Chart Type</label>
               <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
                 <button
                   onClick={() => setChartType('line')}
                   className={`px-3 py-1 rounded text-sm transition-colors ${
                     chartType === 'line'
                       ? 'bg-white text-[#28428c] shadow-sm'
-                      : 'text-[#624a4a] hover:text-[#28428c]'
+                      : 'text-[#624a41] hover:text-[#28428c]'
                   }`}
                 >
                   Line
@@ -265,7 +265,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                   className={`px-3 py-1 rounded text-sm transition-colors ${
                     chartType === 'bar'
                       ? 'bg-white text-[#28428c] shadow-sm'
-                      : 'text-[#624a4a] hover:text-[#28428c]'
+                      : 'text-[#624a41] hover:text-[#28428c]'
                   }`}
                 >
                   Bar
@@ -277,11 +277,11 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <span className="inline-block w-4 h-1 bg-[#28428c] rounded" />
-              <span className="text-xs text-[#624a4a]">Sent ({selectedFriend?.messages_sent_count || 0})</span>
+              <span className="text-xs text-[#624a41]">Sent ({selectedFriend?.messages_sent_count || 0})</span>
             </div>
             <div className="flex items-center space-x-2">
               <span className="inline-block w-4 h-1 bg-[#ffacd6] rounded" />
-              <span className="text-xs text-[#624a4a]">Received ({selectedFriend?.messages_received_count || 0})</span>
+              <span className="text-xs text-[#624a41]">Received ({selectedFriend?.messages_received_count || 0})</span>
             </div>
           </div>
         </div>
@@ -293,23 +293,23 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <p className="text-[#624a4a]">Total Messages</p>
+                <p className="text-[#624a41]">Total Messages</p>
                 <p className="font-semibold text-[#28428c]">
                   {selectedFriend.messages_sent_count + selectedFriend.messages_received_count}
                 </p>
               </div>
               <div>
-                <p className="text-[#624a4a]">Last Contact</p>
+                <p className="text-[#624a41]">Last Contact</p>
                 <p className="font-semibold text-[#28428c]">
                   {new Date(selectedFriend.last_contacted).toLocaleDateString()}
                 </p>
               </div>
               <div>
-                <p className="text-[#624a4a]">Total Interactions</p>
+                <p className="text-[#624a41]">Total Interactions</p>
                 <p className="font-semibold text-[#28428c]">{selectedFriend.total_interactions}</p>
               </div>
               <div>
-                <p className="text-[#624a4a]">Response Rate</p>
+                <p className="text-[#624a41]">Response Rate</p>
                 <p className="font-semibold text-[#28428c]">
                   {selectedFriend.messages_sent_count > 0 
                     ? Math.round((selectedFriend.messages_received_count / selectedFriend.messages_sent_count) * 100)
@@ -385,7 +385,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
         </div>
 
         <div className="mt-4 text-center">
-          <p className="text-sm text-[#624a4a]">
+          <p className="text-sm text-[#624a41]">
             Message activity over the last 30 days
             {selectedFriend && (
               <span className="ml-2 text-[#28428c] font-medium">
@@ -400,3 +400,5 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
 };
 
 export default FriendAnalyticsPage;
+
+

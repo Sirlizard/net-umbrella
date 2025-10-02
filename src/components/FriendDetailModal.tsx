@@ -54,7 +54,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-[#892f1a]">{friend.name}</h2>
-              <p className="text-sm text-[#624a4a]">
+              <p className="text-sm text-[#624a41]">
                 Last contact: {formatDate(friend.last_contacted)}
               </p>
             </div>
@@ -62,7 +62,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
               onClick={onClose}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
             >
-              <X className="w-5 h-5 text-[#624a4a]" />
+              <X className="w-5 h-5 text-[#624a41]" />
             </button>
           </div>
         </div>
@@ -97,7 +97,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                 </button>
               </div>
             ) : (
-              <p className="text-[#624a4a]">
+              <p className="text-[#624a41]">
                 {friend.bio || 'No bio added yet. Click edit to add one!'}
               </p>
             )}
@@ -107,7 +107,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="text-lg font-semibold text-[#892f1a] mb-3">Contact Preference</h3>
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm text-[#624a4a]">
+              <div className="flex items-center justify-between text-sm text-[#624a41]">
                 <span>Rarely</span>
                 <span>Very Often</span>
               </div>
@@ -121,11 +121,11 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                 className="w-full accent-[#28428c]"
               />
               <div className="flex items-center justify-between">
-                <span className="text-sm text-[#624a4a]">0</span>
+                <span className="text-sm text-[#624a41]">0</span>
                 <span className="text-sm text-[#28428c] font-semibold">
                   Preference: {contactFrequency}/10
                 </span>
-                <span className="text-sm text-[#624a4a]">10</span>
+                <span className="text-sm text-[#624a41]">10</span>
               </div>
               <button
                 onClick={handleSaveContactFrequency}
@@ -182,7 +182,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                       setNewPlatform('')
                       setNewHandle('')
                     }}
-                    className="px-4 py-2 bg-gray-200 text-[#624a4a] rounded-lg hover:bg-gray-300 transition-colors duration-200"
+                    className="px-4 py-2 bg-gray-200 text-[#624a41] rounded-lg hover:bg-gray-300 transition-colors duration-200"
                   >
                     Cancel
                   </button>
@@ -197,9 +197,9 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <h4 className="font-medium text-[#892f1a]">{link.platform}</h4>
-                      <p className="text-sm text-[#624a4a]">{link.handle}</p>
+                      <p className="text-sm text-[#624a41]">{link.handle}</p>
                       {link.last_contacted && (
-                        <p className="text-xs text-[#624a4a] mt-1">
+                        <p className="text-xs text-[#624a41] mt-1">
                           <Clock className="w-3 h-3 inline mr-1" />
                           Last contacted: {formatDate(link.last_contacted)}
                         </p>
@@ -234,7 +234,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
             </div>
 
             {links.length === 0 && (
-              <div className="text-center py-8 text-[#624a4a]">
+              <div className="text-center py-8 text-[#624a41]">
                 <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
                 <p>No contact methods added yet.</p>
                 <button
@@ -253,15 +253,15 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-[#28428c]">{friend.messages_sent_count}</div>
-                <div className="text-sm text-[#624a4a]">Sent</div>
+                <div className="text-sm text-[#624a41]">Sent</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-[#ffacd6]">{friend.messages_received_count}</div>
-                <div className="text-sm text-[#624a4a]">Received</div>
+                <div className="text-sm text-[#624a41]">Received</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-[#892f1a]">{friend.total_interactions}</div>
-                <div className="text-sm text-[#624a4a]">Total</div>
+                <div className="text-sm text-[#624a41]">Total</div>
               </div>
             </div>
           </div>

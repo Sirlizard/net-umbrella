@@ -113,7 +113,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
               onClick={onClose}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
             >
-              <X className="w-5 h-5 text-[#624a4a]" />
+              <X className="w-5 h-5 text-[#624a41]" />
             </button>
           </div>
         </div>
@@ -204,7 +204,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs text-[#624a4a] mb-1">
+                      <label className="block text-xs text-[#624a41] mb-1">
                         Last Sent Message (Optional)
                       </label>
                       <input
@@ -215,7 +215,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#624a4a] mb-1">
+                      <label className="block text-xs text-[#624a41] mb-1">
                         Last Received Message (Optional)
                       </label>
                       <input
@@ -242,7 +242,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 bg-gray-200 text-[#624a4a] rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
+              className="px-6 py-3 bg-gray-200 text-[#624a41] rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
             >
               Cancel
             </button>

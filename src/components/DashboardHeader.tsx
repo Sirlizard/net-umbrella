@@ -33,7 +33,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="text-sm text-[#624a4a]">
+          <div className="text-sm text-[#624a41]">
             Welcome, <span className="font-medium text-[#892f1a]">
               {userProfile?.full_name || user?.email}
             </span>
@@ -58,7 +58,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'dashboard'
                   ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#624a4a] hover:bg-gray-50'
+                  : 'text-[#624a41] hover:bg-gray-50'
               }`}
             >
               <Home className="w-4 h-4" />
@@ -69,7 +69,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'analytics'
                   ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#624a4a] hover:bg-gray-50'
+                  : 'text-[#624a41] hover:bg-gray-50'
               }`}
             >
               <BarChart3 className="w-4 h-4" />
@@ -80,7 +80,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'journal'
                   ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#624a4a] hover:bg-gray-50'
+                  : 'text-[#624a41] hover:bg-gray-50'
               }`}
             >
               <BookOpen className="w-4 h-4" />
@@ -96,7 +96,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
            currentView === 'journal' ? 'Your Personal Journal 📝' :
            'Your Amazing Friendship Network! ✨'}
         </h2>
-        <div className="flex items-center justify-center space-x-2 text-[#624a4a]">
+        <div className="flex items-center justify-center space-x-2 text-[#624a41]">
           <Users className="w-4 h-4" />
           <p className="text-sm">
             {currentView === 'analytics' ? 
