@@ -12,6 +12,7 @@ import { AddFriendButton } from './AddFriendButton'
 import { EmailVerificationBanner } from './EmailVerificationBanner'
 import { AddFriendForm } from './AddFriendForm'
 import { FriendDetailModal } from './FriendDetailModal'
+import { FriendAnalyticsPage } from './FriendAnalyticsPage'
 import { Friend } from '../types/Friend'
 
 export const AuthWrapper: React.FC = () => {
@@ -19,7 +20,7 @@ export const AuthWrapper: React.FC = () => {
   const { profile, loading: profileLoading } = useUserProfile()
   const { friends, loading: friendsLoading, addFriend, updateFriend } = useFriends()
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
-  const [showJournal, setShowJournal] = useState(false)
+  const [currentView, setCurrentView] = useState<'dashboard' | 'journal' | 'analytics'>('dashboard')
   const [showAddFriend, setShowAddFriend] = useState(false)
   const [selectedFriend, setSelectedFriend] = useState<any | null>(null)
 
@@ -63,8 +64,13 @@ export const AuthWrapper: React.FC = () => {
   }
 
   // Show journal view
-  if (showJournal) {
-    return <JournalPage onBack={() => setShowJournal(false)} />
+  if (currentView === 'journal') {
+    return <JournalPage onBack={() => setCurrentView('dashboard')} />
+  }
+
+  // Show analytics view  
+  if (currentView === 'analytics') {
+    return <FriendAnalyticsPage friends={friends} onBack={() => setCurrentView('dashboard')} />
   }
 
   // Show main dashboard
@@ -72,7 +78,13 @@ export const AuthWrapper: React.FC = () => {
     <div className="min-h-screen bg-[#e8e6d8]">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <EmailVerificationBanner />
-        <DashboardHeader friendCount={friends.length} userProfile={profile} onOpenJournal={() => setShowJournal(true)} />
+        <DashboardHeader 
+          friendCount={friends.length} 
+          userProfile={profile} 
+          onOpenJournal={() => setCurrentView('journal')}
+          currentView={currentView}
+          onViewChange={setCurrentView}
+        />
         
         {friendsLoading ? (
           <div className="text-center py-16">
