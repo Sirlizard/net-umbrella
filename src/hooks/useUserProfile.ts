@@ -61,10 +61,11 @@ export const useUserProfile = () => {
 
             setProfile(insertData)
           } else {
-                  } else {
+            throw error
+          }
+        } else {
           setProfile(data)
         }
-              } catch (err) {
         console.error('Error fetching user profile:', err)
         setError(err instanceof Error ? err.message : 'Failed to fetch profile')
       } finally {
