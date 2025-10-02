@@ -29,12 +29,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3 bg-white rounded-full px-6 py-3 shadow-md border border-[#ffacd6]/20">
           <Umbrella className="w-8 h-8 text-[#28428c]" />
-          <h1 className="text-2xl font-bold text-[#892f1a]">Net-umbrella</h1>
+          <h1 className="text-2xl font-bold text-[#28428c]">Net-umbrella</h1>
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="text-sm text-[#624a41]">
-            Welcome, <span className="font-medium text-[#892f1a]">
+          <div className="text-sm text-[#e8e6d8]">
+            Welcome, <span className="font-medium text-[#28428c]">
               {userProfile?.full_name || user?.email}
             </span>
           </div>
@@ -91,12 +91,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       </div>
 
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-[#892f1a] mb-2">
+        <h2 className="text-xl font-semibold text-[#28428c] mb-2">
           {currentView === 'analytics' ? 'Friend Analytics Dashboard 📊' :
            currentView === 'journal' ? 'Your Personal Journal 📝' :
            'Your Amazing Friendship Network! ✨'}
         </h2>
-        <div className="flex items-center justify-center space-x-2 text-[#624a41]">
+        <div className="flex items-center justify-center space-x-2 text-[#e8e6d8]">
           <Users className="w-4 h-4" />
           <p className="text-sm">
             {currentView === 'analytics' ? 

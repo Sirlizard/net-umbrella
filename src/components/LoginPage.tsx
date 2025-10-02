@@ -31,17 +31,17 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
       <div className="max-w-md w-full">
         <div className="bg-white rounded-xl shadow-lg p-8 border border-[#ffacd6]/20">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-[#892f1a] mb-2">
+            <h1 className="text-3xl font-bold text-[#28428c] mb-2">
               Welcome Back! 🌟
             </h1>
-            <p className="text-[#624a41]">
+            <p className="text-[#e8e6d8]">
               Sign in to your friendship network
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#892f1a] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-[#28428c] mb-2">
                 Email Address
               </label>
               <input
@@ -56,7 +56,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#892f1a] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-[#28428c] mb-2">
                 Password
               </label>
               <input
@@ -86,7 +86,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[#624a41]">
+            <p className="text-[#e8e6d8]">
               Don't have an account?{' '}
               <button
                 onClick={onSwitchToSignup}
