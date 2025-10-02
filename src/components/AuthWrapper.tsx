@@ -17,7 +17,7 @@ import { Friend } from '../types/Friend'
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth()
   const { profile, loading: profileLoading } = useUserProfile()
-  const { friends, loading: friendsLoading, addFriend } = useFriends()
+  const { friends, loading: friendsLoading, addFriend, updateFriend } = useFriends()
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
   const [showJournal, setShowJournal] = useState(false)
   const [showAddFriend, setShowAddFriend] = useState(false)
