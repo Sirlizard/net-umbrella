@@ -11,6 +11,7 @@ import { JournalPage } from './JournalPage'
 import { AddFriendButton } from './AddFriendButton'
 import { EmailVerificationBanner } from './EmailVerificationBanner'
 import { AddFriendForm } from './AddFriendForm'
+import { FriendDetailModal } from './FriendDetailModal'
 import { Friend } from '../types/Friend'
 
 export const AuthWrapper: React.FC = () => {
@@ -20,6 +21,7 @@ export const AuthWrapper: React.FC = () => {
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
   const [showJournal, setShowJournal] = useState(false)
   const [showAddFriend, setShowAddFriend] = useState(false)
+  const [selectedFriend, setSelectedFriend] = useState<any | null>(null)
 
   const handleAddFriend = async (friendData: { name: string; bio?: string; contact_frequency?: number }) => {
     const { data, error } = await addFriend(friendData)
@@ -27,6 +29,13 @@ export const AuthWrapper: React.FC = () => {
       setShowAddFriend(false)
     } else if (error) {
       alert(`Error adding friend: ${error}`)
+    }
+  }
+
+  const handleUpdateFriend = async (friendId: string, updates: any) => {
+    const { error } = await updateFriend(friendId, updates)
+    if (error) {
+      alert(`Error updating friend: ${error}`)
     }
   }
 
@@ -74,7 +83,11 @@ export const AuthWrapper: React.FC = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {friends.map((friend) => (
-                <div key={friend.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <div 
+                  key={friend.id} 
+                  className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer hover:shadow-md hover:border-[#ffacd6] transition-all duration-200"
+                  onClick={() => setSelectedFriend(friend)}
+                >
                   <h3 className="text-lg font-semibold text-[#892f1a] mb-2">{friend.name}</h3>
                   <p className="text-sm text-[#624a4a] mb-2">
                     {friend.messages_sent_count + friend.messages_received_count} total messages
@@ -123,12 +136,18 @@ export const AuthWrapper: React.FC = () => {
             </div>
           </div>
         )}
-
-        <AddFriendButton onClick={() => setShowAddFriend(true)} />
       </div>
 
       {showAddFriend && (
         <AddFriendForm onClose={() => setShowAddFriend(false)} onAddFriend={handleAddFriend} />
+      )}
+
+      {selectedFriend && (
+        <FriendDetailModal 
+          friend={selectedFriend} 
+          onClose={() => setSelectedFriend(null)}
+          onUpdate={handleUpdateFriend}
+        />
       )}
     </div>
   )
