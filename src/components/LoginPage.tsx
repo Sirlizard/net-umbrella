@@ -34,7 +34,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
             <h1 className="text-3xl font-bold text-[#28428c] mb-2">
               Welcome Back! 🌟
             </h1>
-            <p className="text-[#624a41]">
+            <p className="text-[#28428c]">
               Sign in to your friendship network
             </p>
           </div>
@@ -86,7 +86,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[#624a41]">
+            <p className="text-[#28428c]">
               Don't have an account?{' '}
               <button
                 onClick={onSwitchToSignup}

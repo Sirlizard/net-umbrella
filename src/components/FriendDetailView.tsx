@@ -155,7 +155,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
             </button>
             <div>
               <h1 className="text-2xl font-bold text-[#892f1a]">{friend.name}</h1>
-              <p className="text-sm text-[#624a41]">
+              <p className="text-sm text-[#28428c]">
                 Last contact: <span className={getContactStatusColor(friend.lastContacted)}>
                   {formatLastContacted(friend.lastContacted)}
                 </span>
@@ -174,7 +174,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               onClick={() => setIsEditingBio(!isEditingBio)}
               className="p-2 rounded-full hover:bg-[#ffacd6]/10 transition-colors duration-200"
             >
-              <Edit3 className="w-4 h-4 text-[#624a41]" />
+              <Edit3 className="w-4 h-4 text-[#28428c]" />
             </button>
           </div>
           
@@ -199,7 +199,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                     setIsEditingBio(false);
                     setEditedBio(friend.bio || '');
                   }}
-                  className="px-4 py-2 bg-gray-200 text-[#624a41] rounded-lg hover:bg-gray-300 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-200 text-[#28428c] rounded-lg hover:bg-gray-300 transition-colors duration-200"
                 >
                   Cancel
                 </button>
@@ -207,7 +207,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
             </div>
           ) : (
             <>
-              <p className="text-[#624a41] leading-relaxed">
+              <p className="text-[#28428c] leading-relaxed">
                 {friend.bio || 'No bio added yet. Click the edit button to add one!'}
               </p>
               <div className="flex items-center space-x-4 mt-2">
@@ -219,7 +219,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                   <Send className="w-3 h-3" />
                   <span>{getTotalSentMessages(friend)} messages sent</span>
                 </div>
-                <div className="flex items-center space-x-1 text-xs text-[#624a41]">
+                <div className="flex items-center space-x-1 text-xs text-[#28428c]">
                   <TrendingUp className="w-3 h-3" />
                   <span>{formatResponseTime(getAverageResponseTime(friend.socials.flatMap(s => s.messageHistory)))} response time</span>
                 </div>
@@ -235,8 +235,8 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-[#624a41]">Little contact</span>
-              <span className="text-sm text-[#624a41]">Frequent contact through the day</span>
+              <span className="text-sm text-[#28428c]">Little contact</span>
+              <span className="text-sm text-[#28428c]">Frequent contact through the day</span>
             </div>
             <input
               type="range"
@@ -248,9 +248,9 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               className="w-full accent-[#28428c]"
             />
             <div className="flex items-center justify-between">
-              <span className="text-sm text-[#624a41]">0</span>
+              <span className="text-sm text-[#28428c]">0</span>
               <span className="text-sm text-[#28428c] font-semibold">Preference: {contactFrequency}/10</span>
-              <span className="text-sm text-[#624a41]">10</span>
+              <span className="text-sm text-[#28428c]">10</span>
             </div>
             <div className="flex justify-end">
               <button
@@ -309,7 +309,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                     setNewPlatform('');
                     setNewHandle('');
                   }}
-                  className="px-4 py-2 bg-gray-200 text-[#624a41] rounded-lg hover:bg-gray-300 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-200 text-[#28428c] rounded-lg hover:bg-gray-300 transition-colors duration-200"
                 >
                   Cancel
                 </button>
@@ -328,7 +328,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                     </div>
                     <div>
                       <h3 className="font-medium text-[#892f1a]">{social.platform}</h3>
-                      <p className="text-sm text-[#624a41]">{social.handle}</p>
+                      <p className="text-sm text-[#28428c]">{social.handle}</p>
                       <div className="flex items-center space-x-3 mt-1">
                         <span className="text-xs text-[#28428c] font-medium">
                           {getReceivedMessageCount(social.messageHistory)} received
@@ -336,7 +336,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                         <span className="text-xs text-[#28428c] font-medium">
                           {getSentMessageCount(social.messageHistory)} sent
                         </span>
-                        <span className="text-xs text-[#624a41]">
+                        <span className="text-xs text-[#28428c]">
                           {formatResponseTime(getAverageResponseTime(social.messageHistory))}
                         </span>
                       </div>
@@ -362,7 +362,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                   </p>
                 )}
                 {getLastSentMessage(social.messageHistory) && (
-                  <p className="text-xs mb-3 text-[#624a41]">
+                  <p className="text-xs mb-3 text-[#28428c]">
                     Last sent: {formatLastContacted(getLastSentMessage(social.messageHistory)!)}
                   </p>
                 )}
@@ -389,8 +389,8 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
 
           {friend.socials.length === 0 && (
             <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 text-[#624a41] mx-auto mb-3 opacity-50" />
-              <p className="text-[#624a41] mb-4">Ready to start connecting? Let's add some ways to reach your amazing friend! 🌟</p>
+              <MessageSquare className="w-12 h-12 text-[#28428c] mx-auto mb-3 opacity-50" />
+              <p className="text-[#28428c] mb-4">Ready to start connecting? Let's add some ways to reach your amazing friend! 🌟</p>
               <button
                 onClick={() => setShowAddPlatform(true)}
                 className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"

@@ -40,11 +40,11 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
             <h3 className="text-lg font-semibold text-[#28428c] group-hover:text-[#892f1a] transition-colors duration-200 mb-1">
               {friend.name}
             </h3>
-            <p className="text-sm text-[#624a41] mb-2">
+            <p className="text-sm text-[#28428c] mb-2">
               {friend.socials.length} contact method{friend.socials.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <MessageCircle className="w-5 h-5 text-[#624a41] group-hover:text-[#ffacd6] transition-colors duration-200" />
+          <MessageCircle className="w-5 h-5 text-[#ffacd6] group-hover:text-[#28428c] transition-colors duration-200" />
         </div>
         
         <div className="flex items-center space-x-2">
@@ -56,7 +56,7 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
         
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-[#624a41] font-medium">
+            <span className="text-xs text-[#ffacd6] font-medium">
               Ready to spread some friendship joy! 💕
             </span>
             <div className="w-2 h-2 rounded-full bg-[#ffacd6] group-hover:bg-[#28428c] transition-colors duration-200"></div>

@@ -33,14 +33,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="text-sm text-[#624a41]">
+          <div className="text-sm text-[#28428c]">
             Welcome, <span className="font-medium text-[#28428c]">
               {userProfile?.full_name || user?.email}
             </span>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200"
+            className="flex items-center space-x-2 px-4 py-2 bg-[#892f1a] text-white rounded-lg hover:bg-[#6b1f0f] transition-colors duration-200"
             title="Sign Out"
           >
             <LogOut className="w-4 h-4" />
@@ -58,7 +58,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'dashboard'
                   ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#624a41] hover:bg-gray-50'
+                  : 'text-[#28428c] hover:bg-gray-50'
               }`}
             >
               <Home className="w-4 h-4" />
@@ -69,7 +69,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'analytics'
                   ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#624a41] hover:bg-gray-50'
+                  : 'text-[#28428c] hover:bg-gray-50'
               }`}
             >
               <BarChart3 className="w-4 h-4" />
@@ -80,7 +80,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'journal'
                   ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#624a41] hover:bg-gray-50'
+                  : 'text-[#28428c] hover:bg-gray-50'
               }`}
             >
               <BookOpen className="w-4 h-4" />
@@ -96,7 +96,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
            currentView === 'journal' ? 'Your Personal Journal 📝' :
            'Your Amazing Friendship Network! ✨'}
         </h2>
-        <div className="flex items-center justify-center space-x-2 text-[#624a41]">
+        <div className="flex items-center justify-center space-x-2 text-[#28428c]">
           <Users className="w-4 h-4" />
           <p className="text-sm">
             {currentView === 'analytics' ? 

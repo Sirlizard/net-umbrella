@@ -68,7 +68,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                 {journals.map(j => (
                   <button key={j.id} onClick={() => setSelectedJournalId(j.id)} className={`w-full text-left px-3 py-2 rounded-lg border ${selectedJournalId === j.id ? 'border-[#28428c] bg-[#ffacd6]/10' : 'border-gray-200 hover:border-[#ffacd6]/50'}`}>
                     <div className="text-sm text-[#892f1a] font-medium">{j.title}</div>
-                    <div className="text-xs text-[#624a41]">Updated {new Date(j.updated_at).toLocaleString()}</div>
+                    <div className="text-xs text-[#28428c]">Updated {new Date(j.updated_at).toLocaleString()}</div>
                   </button>
                 ))}
               </div>
@@ -82,7 +82,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
               <h2 className="text-lg font-semibold text-[#892f1a] mb-3">Tag Friends</h2>
               <div className="space-y-2 max-h-80 overflow-auto pr-1">
                 {friends.map(f => (
-                  <label key={f.id} className="flex items-center space-x-2 text-sm text-[#624a41]">
+                  <label key={f.id} className="flex items-center space-x-2 text-sm text-[#28428c]">
                     <input type="checkbox" checked={selectedFriendIds.includes(f.id)} onChange={() => toggleFriend(f.id)} />
                     <span>{f.name}</span>
                   </label>
@@ -103,12 +103,12 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
               <h2 className="text-lg font-semibold text-[#892f1a] mb-3">Recent Entries</h2>
               {entries.length === 0 ? (
-                <p className="text-sm text-[#624a41]">No entries yet. Your reflections will appear here.</p>
+                <p className="text-sm text-[#28428c]">No entries yet. Your reflections will appear here.</p>
               ) : (
                 <div className="space-y-4">
                   {entries.map(e => (
                     <div key={e.id} className="border border-gray-100 rounded-lg p-4">
-                      <div className="text-xs text-[#624a41] mb-2">{new Date(e.created_at).toLocaleString()}</div>
+                      <div className="text-xs text-[#28428c] mb-2">{new Date(e.created_at).toLocaleString()}</div>
                       <div className="whitespace-pre-wrap text-[#892f1a]">{e.content}</div>
                     </div>
                   ))}
