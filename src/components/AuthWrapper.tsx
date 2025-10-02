@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useUserProfile } from '../hooks/useUserProfile'
 import { useFriends } from '../hooks/useFriends'
+import { useFriendHighlights } from '../hooks/useFriendHighlights'
 import { LoginPage } from './LoginPage'
 import { SignupPage } from './SignupPage'
 import { LandingPage } from './LandingPage'
@@ -13,12 +14,14 @@ import { EmailVerificationBanner } from './EmailVerificationBanner'
 import { AddFriendForm } from './AddFriendForm'
 import { FriendDetailModal } from './FriendDetailModal'
 import { FriendAnalyticsPage } from './FriendAnalyticsPage'
+import { ResponseReminder } from './ResponseReminder';
 import { Friend } from '../types/Friend'
 
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth()
   const { profile, loading: profileLoading } = useUserProfile()
   const { friends, loading: friendsLoading, addFriend, updateFriend } = useFriends()
+  const { friendToRespond } = useFriendHighlights(friends);
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
   const [currentView, setCurrentView] = useState<'dashboard' | 'journal' | 'analytics'>('dashboard')
   const [showAddFriend, setShowAddFriend] = useState(false)
@@ -86,6 +89,8 @@ export const AuthWrapper: React.FC = () => {
           onViewChange={setCurrentView}
         />
         
+        <ResponseReminder friend={friendToRespond} />
+
         {friendsLoading ? (
           <div className="text-center py-16">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28428c] mx-auto mb-4"></div>
@@ -95,25 +100,12 @@ export const AuthWrapper: React.FC = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {friends.map((friend) => (
-                <div 
+                <FriendCard 
                   key={friend.id} 
-                  className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer hover:shadow-md hover:border-[#ffacd6] transition-all duration-200"
+                  friend={friend}
                   onClick={() => setSelectedFriend(friend)}
-                >
-                  <h3 className="text-lg font-semibold text-[#892f1a] mb-2">{friend.name}</h3>
-                  <p className="text-sm text-[#28428c] mb-2">
-                    {friend.messages_sent_count + friend.messages_received_count} total messages
-                  </p>
-                  <p className="text-sm text-[#28428c]">
-                    Last contact: {new Date(friend.last_contacted).toLocaleDateString()}
-                  </p>
-                  <p className="text-sm text-[#28428c] mt-1">
-                    Last sent: {friend.last_message_sent ? new Date(friend.last_message_sent).toLocaleString() : '—'}
-                  </p>
-                  {friend.bio && (
-                    <p className="text-sm text-[#28428c] mt-2 line-clamp-2">{friend.bio}</p>
-                  )}
-                </div>
+                  isHighlighted={friend.id === friendToRespond?.id}
+                />
               ))}
             </div>
           </>
