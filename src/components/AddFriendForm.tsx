@@ -20,7 +20,7 @@ import {
 
 interface AddFriendFormProps {
   onClose: () => void;
-  onAddFriend: (friend: Friend) => void;
+  onAddFriend: (friendData: { name: string; bio?: string; contact_frequency?: number }) => void;
 }
 
 interface ContactMethod {
@@ -90,85 +90,12 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
       return;
     }
 
-    // Convert contact methods to SocialLink format
-    const socials: SocialLink[] = validContactMethods.map(method => {
-      const messageHistory: MessageRecord[] = [];
-      
-      // Add sent message if provided
-      if (method.lastSentMessage) {
-        messageHistory.push({
-          type: 'sent',
-          timestamp: method.lastSentMessage
-        });
-      }
-      
-      // Add received message if provided
-      if (method.lastReceivedMessage) {
-        messageHistory.push({
-          type: 'received',
-          timestamp: method.lastReceivedMessage
-        });
-      }
-
-      // Sort messages by timestamp
-      messageHistory.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-
-      return {
-        platform: method.platform.trim(),
-        handle: method.handle.trim(),
-        lastContacted: method.lastSentMessage || method.lastReceivedMessage,
-        messageHistory
-      };
+    // Call the parent handler with friend data
+    onAddFriend({
+      name: name.trim(),
+      bio: bio.trim() || undefined,
+      contact_frequency: 5
     });
-
-    // Find the most recent contact date
-    const lastContacted = socials.reduce((latest, social) => {
-      if (!social.lastContacted) return latest;
-      if (!latest) return social.lastContacted;
-      return social.lastContacted > latest ? social.lastContacted : latest;
-    }, undefined as Date | undefined) || new Date();
-
-    // Create friend in DB
-    const { data: createdFriend, error: friendErr } = await supabase
-      .from('friends')
-      .insert({
-        user_id: user?.id,
-        name: name.trim(),
-        bio: bio.trim() || null,
-        contact_frequency: 5,
-        last_contacted: lastContacted.toISOString()
-      })
-      .select('*')
-      .single()
-
-    if (friendErr || !createdFriend) {
-      alert(friendErr?.message || 'Failed to create friend')
-      return
-    }
-
-    // Insert social links
-    if (socials.length) {
-      const socialRows = socials.map(s => ({ friend_id: createdFriend.id, platform: s.platform, handle: s.handle, last_contacted: s.lastContacted ? s.lastContacted.toISOString() : null }))
-      const { error: socialErr } = await supabase.from('social_links').insert(socialRows)
-      if (socialErr) {
-        alert(socialErr.message)
-      }
-    }
-
-    // Record initial interactions (optional)
-    for (const s of socials) {
-      for (const m of s.messageHistory) {
-        await supabase.from('friend_interactions').insert({
-          friend_id: createdFriend.id,
-          interaction_type: m.type === 'sent' ? 'message_sent' : 'message_received',
-          platform: s.platform,
-          interaction_date: m.timestamp.toISOString()
-        })
-      }
-    }
-
-    onAddFriend({ id: createdFriend.id, name: createdFriend.name, bio: createdFriend.bio ?? undefined, socials, lastContacted })
-    onClose();
   };
 
   return (

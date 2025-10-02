@@ -11,14 +11,24 @@ import { JournalPage } from './JournalPage'
 import { AddFriendButton } from './AddFriendButton'
 import { EmailVerificationBanner } from './EmailVerificationBanner'
 import { AddFriendForm } from './AddFriendForm'
+import { Friend } from '../types/Friend'
 
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth()
   const { profile, loading: profileLoading } = useUserProfile()
-  const { friends, loading: friendsLoading } = useFriends()
+  const { friends, loading: friendsLoading, addFriend } = useFriends()
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing')
   const [showJournal, setShowJournal] = useState(false)
   const [showAddFriend, setShowAddFriend] = useState(false)
+
+  const handleAddFriend = async (friendData: { name: string; bio?: string; contact_frequency?: number }) => {
+    const { data, error } = await addFriend(friendData)
+    if (!error && data) {
+      setShowAddFriend(false)
+    } else if (error) {
+      alert(`Error adding friend: ${error}`)
+    }
+  }
 
   // Show loading state
   if (loading || profileLoading) {
@@ -118,7 +128,7 @@ export const AuthWrapper: React.FC = () => {
       </div>
 
       {showAddFriend && (
-        <AddFriendForm onClose={() => setShowAddFriend(false)} onAddFriend={() => setShowAddFriend(false)} />
+        <AddFriendForm onClose={() => setShowAddFriend(false)} onAddFriend={handleAddFriend} />
       )}
     </div>
   )
