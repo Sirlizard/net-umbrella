@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Friend, SocialLink, MessageRecord } from '../types/Friend';
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../contexts/AuthContext';
 import { 
   X, 
   Plus, 
@@ -30,6 +31,7 @@ interface ContactMethod {
 }
 
 export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFriend }) => {
+  const { user } = useAuth();
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [contactMethods, setContactMethods] = useState<ContactMethod[]>([
