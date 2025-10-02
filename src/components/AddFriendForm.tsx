@@ -126,18 +126,11 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
       return social.lastContacted > latest ? social.lastContacted : latest;
     }, undefined as Date | undefined) || new Date();
 
-    // Resolve current profile id
-    const { data: profileId, error: idErr } = await supabase.rpc('get_current_user_id')
-    if (idErr || !profileId) {
-      alert('Could not resolve your user profile. Please try again.')
-      return
-    }
-
     // Create friend in DB
     const { data: createdFriend, error: friendErr } = await supabase
       .from('friends')
       .insert({
-        profile_user_id: profileId as string,
+        user_id: user?.id,
         name: name.trim(),
         bio: bio.trim() || null,
         contact_frequency: 5,
