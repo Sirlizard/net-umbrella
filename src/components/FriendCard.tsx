@@ -6,10 +6,9 @@ import { MessageCircle, Clock } from 'lucide-react';
 interface FriendCardProps {
   friend: Friend;
   onClick: (friend: Friend) => void;
-  isHighlighted?: boolean;
 }
 
-export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick, isHighlighted }) => {
+export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
   const getContactStatusColor = (lastContacted: Date) => {
     const now = new Date();
     const diffDays = Math.floor(Math.abs(now.getTime() - lastContacted.getTime()) / (1000 * 60 * 60 * 24));
@@ -28,16 +27,12 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick, isHighl
     return 'border-l-red-400';
   };
 
-  const highlightClass = isHighlighted 
-    ? 'border-yellow-400 shadow-lg scale-[1.03]' 
-    : 'border-gray-100 hover:border-[#ffacd6]';
-
   return (
     <div
       onClick={() => onClick(friend)}
       className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer 
                   border-l-4 ${getContactStatusBorder(friend.lastContacted)} hover:scale-[1.02] 
-                  border ${highlightClass} group`}
+                  border border-gray-100 hover:border-[#ffacd6] group`}
     >
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
