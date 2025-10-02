@@ -5,7 +5,7 @@ export const mockFriends: Friend[] = [
     id: '1',
     name: 'Sarah Chen',
     contactFrequency: 7,
-    bio: 'Amazing UX Designer at TechCorp! 🌟 Passionate about creating beautiful experiences, loves hiking in nature, capturing life through photography, and discovering the most incredible coffee shops! Always excited for weekend adventures and making memories! ✨',
+    bio: 'Amazing UX Designer at TechCorp! Passionate about creating beautiful experiences, loves hiking in nature, capturing life through photography, and discovering the most incredible coffee shops! Always excited for weekend adventures and making memories! ',
     socials: [
       { 
         platform: 'Instagram', 
@@ -45,7 +45,7 @@ export const mockFriends: Friend[] = [
     id: '2',
     name: 'Marcus Johnson',
     contactFrequency: 5,
-    bio: 'Incredible full-stack developer and gaming enthusiast! 🎮 Currently creating an amazing indie game that will blow your mind! Always excited for epic coding sessions and unforgettable gaming nights with friends! 🚀',
+    bio: 'Incredible full-stack developer and gaming enthusiast! Currently creating an amazing indie game that will blow your mind! Always excited for epic coding sessions and unforgettable gaming nights with friends! ',
     socials: [
       { 
         platform: 'Twitter', 
@@ -82,7 +82,7 @@ export const mockFriends: Friend[] = [
     id: '3',
     name: 'Elena Rodriguez',
     contactFrequency: 3,
-    bio: 'Inspiring travel blogger and incredible photographer! 📸 Currently having the adventure of a lifetime exploring the beautiful Southeast Asia! Loves sharing amazing travel tips and breathtaking photography that captures the magic of our wonderful world! ✈️✨',
+    bio: 'Inspiring travel blogger and incredible photographer! Currently having the adventure of a lifetime exploring the beautiful Southeast Asia! Loves sharing amazing travel tips and breathtaking photography that captures the magic of our wonderful world! ',
     socials: [
       { 
         platform: 'Instagram', 
@@ -119,7 +119,7 @@ export const mockFriends: Friend[] = [
     id: '4',
     name: 'Alex Thompson',
     contactFrequency: 8,
-    bio: 'Brilliant freelance writer and passionate book lover! 📚 Specializes in amazing tech journalism and creative writing that inspires! Always has the most incredible book recommendations that will change your life! Loves sharing stories and knowledge! 💫',
+    bio: 'Brilliant freelance writer and passionate book lover! Specializes in amazing tech journalism and creative writing that inspires! Always has the most incredible book recommendations that will change your life! Loves sharing stories and knowledge! ',
     socials: [
       { 
         platform: 'LinkedIn', 

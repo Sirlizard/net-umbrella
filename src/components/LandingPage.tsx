@@ -80,7 +80,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                 <div className="text-sm text-gray-600">Friendships Managed</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900">4.9★</div>
+                <div className="text-3xl font-bold text-gray-900">4.9</div>
                 <div className="text-sm text-gray-600">User Rating</div>
               </div>
             </div>
@@ -108,7 +108,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
             <div className="bg-white rounded-3xl shadow-2xl p-8 border border-indigo-100">
               <div className="space-y-6">
                 <div className="text-center">
-                  <div className="text-6xl mb-4">🌟</div>
+                  <div className="text-6xl mb-4"></div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     Your Friendship Network
                   </h3>

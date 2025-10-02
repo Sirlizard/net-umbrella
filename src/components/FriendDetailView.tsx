@@ -279,7 +279,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
           {/* Add Platform Form */}
           {showAddPlatform && (
             <div className="bg-[#e8e6d8] rounded-lg p-4 mb-6">
-              <h3 className="font-medium text-[#892f1a] mb-3">Add a New Connection! 🌈</h3>
+              <h3 className="font-medium text-[#892f1a] mb-3">Add a New Connection! </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                 <input
                   type="text"
@@ -390,12 +390,12 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
           {friend.socials.length === 0 && (
             <div className="text-center py-8">
               <MessageSquare className="w-12 h-12 text-[#28428c] mx-auto mb-3 opacity-50" />
-              <p className="text-[#28428c] mb-4">Ready to start connecting? Let's add some ways to reach your amazing friend! 🌟</p>
+              <p className="text-[#28428c] mb-4">Ready to start connecting? Let's add some ways to reach your amazing friend! </p>
               <button
                 onClick={() => setShowAddPlatform(true)}
                 className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
               >
-                Add Your First Connection! 🚀
+                Add Your First Connection! 
               </button>
             </div>
           )}

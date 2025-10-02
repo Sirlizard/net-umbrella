@@ -32,7 +32,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
         <div className="bg-white rounded-xl shadow-lg p-8 border border-[#ffacd6]/20">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#28428c] mb-2">
-              Welcome Back! 🌟
+              Welcome Back!
             </h1>
             <p className="text-[#28428c]">
               Sign in to your friendship network

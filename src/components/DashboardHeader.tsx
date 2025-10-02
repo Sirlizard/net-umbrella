@@ -92,9 +92,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
       <div className="text-center">
         <h2 className="text-xl font-semibold text-[#28428c] mb-2">
-          {currentView === 'analytics' ? 'Friend Analytics Dashboard 📊' :
-           currentView === 'journal' ? 'Your Personal Journal 📝' :
-           'Your Amazing Friendship Network! ✨'}
+          {currentView === 'analytics' ? 'Friend Analytics Dashboard ' :
+           currentView === 'journal' ? 'Your Personal Journal ' :
+           'Your Amazing Friendship Network! '}
         </h2>
         <div className="flex items-center justify-center space-x-2 text-[#28428c]">
           <Users className="w-4 h-4" />
@@ -103,7 +103,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               `Analyze communication patterns across your ${friendCount} connections` :
               currentView === 'journal' ?
               'Reflect on your friendship journey and growth' :
-              `You're nurturing ${friendCount} wonderful connections that bring joy to your life! 🌟`
+              `You're nurturing ${friendCount} wonderful connections that bring joy to your life! `
             }
           </p>
         </div>

@@ -48,7 +48,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
       <div className="min-h-screen bg-[#e8e6d8] flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <div className="bg-white rounded-xl shadow-lg p-8 border border-[#ffacd6]/20 text-center">
-            <div className="text-6xl mb-6">🎉</div>
+            <div className="text-6xl mb-6"></div>
             <h1 className="text-2xl font-bold text-[#892f1a] mb-4">
               Welcome to the Family!
             </h1>
@@ -73,7 +73,7 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
         <div className="bg-white rounded-xl shadow-lg p-8 border border-[#ffacd6]/20">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#892f1a] mb-2">
-              Create Account 🌟
+              Create Account
             </h1>
             <p className="text-[#28428c]">
               Join your friendship network
