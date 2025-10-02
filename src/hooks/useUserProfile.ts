@@ -30,33 +30,39 @@ export const useUserProfile = () => {
         setError(null)
 
         const { data, error } = await supabase
-          .rpc('get_user_profile')
+          .from('users')
+          .select('*')
+          .eq('auth_id', user.id)
+          .single()
+          .select('*')
+          .eq('auth_id', user.id)
+          .single()
+          .select('*')
+          .eq('auth_id', user.id)
+          .single()
 
         if (error) {
-          throw error
-        }
+          if (error.code === 'PGRST116') {
+            // Profile doesn't exist yet, create it
+            const { data: insertData, error: insertError } = await supabase
+              .from('users')
+              .insert({
+                auth_id: user.id,
+                email: user.email,
+                full_name: user.user_metadata?.full_name || user.email,
+                avatar_url: user.user_metadata?.avatar_url
+              })
+              .select()
+              .single()
 
-        if (data && data.length > 0) {
-          setProfile(data[0])
+            if (insertError) {
+              throw insertError
+            }
+
+            setProfile(insertData)
+          } else {
         } else {
-          // Profile doesn't exist yet, this might happen if the trigger didn't fire
-          // Try to create it manually
-          const { data: insertData, error: insertError } = await supabase
-            .from('users')
-            .insert({
-              auth_id: user.id,
-              email: user.email,
-              full_name: user.user_metadata?.full_name || user.email,
-              avatar_url: user.user_metadata?.avatar_url
-            })
-            .select()
-            .single()
-
-          if (insertError) {
-            throw insertError
-          }
-
-          setProfile(insertData)
+          setProfile(data)
         }
       } catch (err) {
         console.error('Error fetching user profile:', err)
