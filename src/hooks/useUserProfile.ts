@@ -34,32 +34,22 @@ export const useUserProfile = () => {
           .select('*')
           .eq('auth_id', user.id)
           .single()
-          .select('*')
-          .eq('auth_id', user.id)
-          .single()
-          .select('*')
-          .eq('auth_id', user.id)
-          .single()
 
         if (error) {
+          // If profile doesn't exist, it should be created by the database trigger
+          // Wait a moment and try again
           if (error.code === 'PGRST116') {
-            // Profile doesn't exist yet, create it
-            const { data: insertData, error: insertError } = await supabase
+            await new Promise(resolve => setTimeout(resolve, 1000))
+            const { data: retryData, error: retryError } = await supabase
               .from('users')
-              .insert({
-                auth_id: user.id,
-                email: user.email,
-                full_name: user.user_metadata?.full_name || user.email,
-                avatar_url: user.user_metadata?.avatar_url
-              })
-              .select()
+              .select('*')
+              .eq('auth_id', user.id)
               .single()
-
-            if (insertError) {
-              throw insertError
+            
+            if (retryError) {
+              throw retryError
             }
-
-            setProfile(insertData)
+            setProfile(retryData)
           } else {
             throw error
           }
