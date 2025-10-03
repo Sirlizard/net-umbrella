@@ -77,19 +77,76 @@ export const useJournals = () => {
 
     // Touch journal updated_at
     await supabase.from('journals').update({ updated_at: new Date().toISOString() }).eq('id', journal_id)
+    
+    // Refresh journals list to update the timestamp
+    fetchJournals()
+    
     return { data: entry as JournalEntryRow, error: null }
   }
 
-  const listEntries = async (journal_id: string) => {
-    const { data, error } = await supabase
+  const listEntries = async (journal_id: string, friendFilter?: string[]) => {
+    let query = supabase
       .from('journal_entries')
-      .select('*')
+      .select(`
+        *,
+        journal_entry_friends (
+          friend_id,
+          friends (
+            id,
+            name
+          )
+        )
+      `)
       .eq('journal_id', journal_id)
       .order('created_at', { ascending: false })
-    return { data: (data || []) as JournalEntryRow[], error }
+
+    const { data, error } = await query
+    
+    if (error) return { data: [], error }
+    
+    let filteredData = data || []
+    
+    // Filter by friend tags if specified
+    if (friendFilter && friendFilter.length > 0) {
+      filteredData = filteredData.filter(entry => {
+        const entryFriendIds = entry.journal_entry_friends?.map((jef: any) => jef.friend_id) || []
+        return friendFilter.some(friendId => entryFriendIds.includes(friendId))
+      })
+    }
+    
+    return { data: filteredData as any[], error: null }
   }
 
-  return { journals, loading, error, fetchJournals, createJournal, addEntry, listEntries }
+  const deleteEntry = async (entryId: string) => {
+    const { data, error } = await supabase
+      .from('journal_entries')
+      .delete()
+      .eq('id', entryId)
+    return { error }
+  }
+
+  const deleteJournal = async (journalId: string) => {
+    const { error } = await supabase
+      .from('journals')
+      .delete()
+      .eq('id', journalId)
+    if (!error) {
+      setJournals(prev => prev.filter(j => j.id !== journalId))
+    }
+    return { error }
+  }
+
+  return { 
+    journals, 
+    loading, 
+    error, 
+    fetchJournals, 
+    createJournal, 
+    addEntry, 
+    listEntries, 
+    deleteEntry, 
+    deleteJournal 
+  }
 }
 
 
