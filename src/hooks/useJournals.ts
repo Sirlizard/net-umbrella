@@ -62,26 +62,64 @@ export const useJournals = () => {
   }
 
   const addEntry = async (journal_id: string, content: string, friendIds: string[]) => {
-    const { data: entry, error } = await supabase
-      .from('journal_entries')
-      .insert({ journal_id, content })
-      .select('*')
-      .single()
-    if (error || !entry) return { data: null, error }
+    try {
+      // First, insert the journal entry
+      const { data: entry, error: entryError } = await supabase
+        .from('journal_entries')
+        .insert({ journal_id, content })
+        .select('*')
+        .single()
+      
+      if (entryError) {
+        console.error('Error creating journal entry:', entryError)
+        return { data: null, error: entryError.message }
+      }
 
-    if (friendIds.length) {
-      const rows = friendIds.map(friend_id => ({ journal_entry_id: entry.id, friend_id }))
-      const { error: mapErr } = await supabase.from('journal_entry_friends').insert(rows)
-      if (mapErr) return { data: entry, error: mapErr }
+      if (!entry) {
+        return { data: null, error: 'Failed to create journal entry' }
+      }
+
+      // Then, add friend tags if any were selected
+      if (friendIds.length > 0) {
+        const friendTags = friendIds.map(friend_id => ({ 
+          journal_entry_id: entry.id, 
+          friend_id 
+        }))
+        
+        const { error: tagsError } = await supabase
+          .from('journal_entry_friends')
+          .insert(friendTags)
+        
+        if (tagsError) {
+          console.error('Error adding friend tags:', tagsError)
+          // Entry was created but tags failed - still return success
+          // but log the error for debugging
+        }
+      }
+
+      // Update the journal's updated_at timestamp
+      const { error: updateError } = await supabase
+        .from('journals')
+        .update({ updated_at: new Date().toISOString() })
+        .eq('id', journal_id)
+      
+      if (updateError) {
+        console.error('Error updating journal timestamp:', updateError)
+        // Don't fail the whole operation for this
+      }
+
+      // Refresh journals list to update the timestamp in UI
+      fetchJournals()
+      
+      return { data: entry as JournalEntryRow, error: null }
+      
+    } catch (err) {
+      console.error('Unexpected error in addEntry:', err)
+      return { 
+        data: null, 
+        error: err instanceof Error ? err.message : 'Failed to save journal entry' 
+      }
     }
-
-    // Touch journal updated_at
-    await supabase.from('journals').update({ updated_at: new Date().toISOString() }).eq('id', journal_id)
-    
-    // Refresh journals list to update the timestamp
-    fetchJournals()
-    
-    return { data: entry as JournalEntryRow, error: null }
   }
 
   const listEntries = async (journal_id: string, friendFilter?: string[]) => {

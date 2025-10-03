@@ -47,12 +47,16 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
   const handleAddEntry = async () => {
     if (!selectedJournalId || !entryText.trim()) return
     const { data, error } = await addEntry(selectedJournalId, entryText.trim(), selectedFriendIds)
-    if (!error && data) {
+    if (!error) {
       // Reload entries to get the full data with friend information
       const { data: updatedEntries } = await listEntries(selectedJournalId, filterFriendIds.length > 0 ? filterFriendIds : undefined)
       setEntries(updatedEntries || [])
       setEntryText('')
       setSelectedFriendIds([])
+    }
+    if (error) {
+      console.error('Error saving entry:', error)
+      alert('Failed to save entry. Please try again.')
     }
   }
 
