@@ -12,6 +12,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
 
   const [selectedJournalId, setSelectedJournalId] = useState<string | null>(null)
   const [newJournalTitle, setNewJournalTitle] = useState('My Friendship Journal')
+  const [entryTitle, setEntryTitle] = useState('')
   const [entryText, setEntryText] = useState('')
   const [selectedFriendIds, setSelectedFriendIds] = useState<string[]>([])
   const [entries, setEntries] = useState<any[]>([])
@@ -45,12 +46,13 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
   }
 
   const handleAddEntry = async () => {
-    if (!selectedJournalId || !entryText.trim()) return
-    const { data, error } = await addEntry(selectedJournalId, entryText.trim(), selectedFriendIds)
+    if (!selectedJournalId || !entryText.trim() || !entryTitle.trim()) return
+    const { data, error } = await addEntry(selectedJournalId, entryTitle.trim(), entryText.trim(), selectedFriendIds)
     if (!error) {
       // Reload entries to get the full data with friend information
       const { data: updatedEntries } = await listEntries(selectedJournalId, filterFriendIds.length > 0 ? filterFriendIds : undefined)
       setEntries(updatedEntries || [])
+      setEntryTitle('')
       setEntryText('')
       setSelectedFriendIds([])
     }
@@ -159,6 +161,12 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
           <div className="md:col-span-2">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
               <h2 className="text-lg font-semibold text-[#892f1a] mb-3">Write Entry</h2>
+              <input
+                value={entryTitle}
+                onChange={e => setEntryTitle(e.target.value)}
+                placeholder="Entry title..."
+                className="w-full px-3 py-2 mb-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent"
+              />
               <textarea value={entryText} onChange={e => setEntryText(e.target.value)} placeholder="Capture your thoughts about your friendships..." rows={6} className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent" />
               <div className="flex justify-end mt-3">
                 <button onClick={handleAddEntry} className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200">Save Entry</button>
@@ -183,7 +191,10 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                   {entries.map(e => (
                     <div key={e.id} className="border border-gray-100 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <div className="text-xs text-[#28428c]">{new Date(e.created_at).toLocaleString()}</div>
+                        <div>
+                          <div className="text-sm font-semibold text-[#892f1a] mb-1">{e.title}</div>
+                          <div className="text-xs text-[#28428c]">{new Date(e.created_at).toLocaleString()}</div>
+                        </div>
                         <button
                           onClick={() => setShowDeleteConfirm(e.id)}
                           className="text-xs text-red-500 hover:text-red-700"

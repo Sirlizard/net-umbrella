@@ -12,6 +12,7 @@ export interface JournalRow {
 export interface JournalEntryRow {
   id: string
   journal_id: string
+  title: string
   content: string
   created_at: string
   updated_at: string
@@ -61,12 +62,12 @@ export const useJournals = () => {
     return { data, error }
   }
 
-  const addEntry = async (journal_id: string, content: string, friendIds: string[]) => {
+  const addEntry = async (journal_id: string, title: string, content: string, friendIds: string[]) => {
     try {
       // First, insert the journal entry
       const { data: entry, error: entryError } = await supabase
         .from('journal_entries')
-        .insert({ journal_id, content })
+        .insert({ journal_id, title, content })
         .select('*')
         .single()
       
