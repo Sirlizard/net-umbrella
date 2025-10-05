@@ -139,7 +139,7 @@ export const AuthWrapper: React.FC = () => {
           <div className="mt-10">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-[#ffacd6]/20 flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-[#892f1a]">Keep growing your network</h3>
+                <h3 className="text-lg font-semibold text-[#28428c]">Keep growing your network</h3>
                 <p className="text-[#28428c] text-sm">Add more friends and set up their connections.</p>
               </div>
               <button onClick={() => setShowAddFriend(true)} className="bg-[#28428c] text-white px-4 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200">
