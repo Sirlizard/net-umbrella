@@ -100,7 +100,7 @@ export const AuthWrapper: React.FC = () => {
                   className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 cursor-pointer hover:shadow-md hover:border-[#ffacd6] transition-all duration-200"
                   onClick={() => setSelectedFriend(friend)}
                 >
-                  <h3 className="text-lg font-semibold text-[#892f1a] mb-2">{friend.name}</h3>
+                  <h3 className="text-lg font-semibold text-[#28428c] mb-2">{friend.name}</h3>
                   <p className="text-sm text-[#28428c] mb-2">
                     {friend.messages_sent_count + friend.messages_received_count} total messages
                   </p>
