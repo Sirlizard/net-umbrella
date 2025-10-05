@@ -89,19 +89,19 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
     <div className="min-h-screen bg-[#e8e6d8]">
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-[#892f1a]">Friendship Journal</h1>
+          <h1 className="text-2xl font-bold text-[#28428c]">Friendship Journal</h1>
           <button onClick={onBack} className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200">Back to Dashboard</button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-              <h2 className="text-lg font-semibold text-[#892f1a] mb-3">Your Journals</h2>
+              <h2 className="text-lg font-semibold text-[#28428c] mb-3">Your Journals</h2>
               <div className="space-y-2">
                 {journals.map(j => (
                   <div key={j.id} className={`border rounded-lg ${selectedJournalId === j.id ? 'border-[#28428c] bg-[#ffacd6]/10' : 'border-gray-200'}`}>
                     <button onClick={() => setSelectedJournalId(j.id)} className="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg">
-                      <div className="text-sm text-[#892f1a] font-medium">{j.title}</div>
+                      <div className="text-sm text-[#28428c] font-medium">{j.title}</div>
                       <div className="text-xs text-[#28428c]">Updated {new Date(j.updated_at).toLocaleString()}</div>
                     </button>
                     {selectedJournalId === j.id && (
@@ -124,7 +124,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-              <h2 className="text-lg font-semibold text-[#892f1a] mb-3">Tag Friends</h2>
+              <h2 className="text-lg font-semibold text-[#28428c] mb-3">Tag Friends</h2>
               <div className="text-xs text-[#28428c] mb-2">Select friends to tag in your entry:</div>
               <div className="space-y-2 max-h-80 overflow-auto pr-1">
                 {friends.map(f => (
@@ -136,7 +136,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
               </div>
               
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <h3 className="text-md font-semibold text-[#892f1a] mb-2">Filter Entries</h3>
+                <h3 className="text-md font-semibold text-[#28428c] mb-2">Filter Entries</h3>
                 <div className="text-xs text-[#28428c] mb-2">Show only entries tagged with:</div>
                 <div className="space-y-2 max-h-40 overflow-auto pr-1">
                   {friends.map(f => (
@@ -160,7 +160,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
 
           <div className="md:col-span-2">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
-              <h2 className="text-lg font-semibold text-[#892f1a] mb-3">Write Entry</h2>
+              <h2 className="text-lg font-semibold text-[#28428c] mb-3">Write Entry</h2>
               <input
                 value={entryTitle}
                 onChange={e => setEntryTitle(e.target.value)}
@@ -174,7 +174,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-              <h2 className="text-lg font-semibold text-[#892f1a] mb-3">Recent Entries</h2>
+              <h2 className="text-lg font-semibold text-[#28428c] mb-3">Recent Entries</h2>
               {filterFriendIds.length > 0 && (
                 <div className="mb-3 p-2 bg-[#e8e6d8] rounded-lg">
                   <div className="text-xs text-[#28428c]">
@@ -192,7 +192,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                     <div key={e.id} className="border border-gray-100 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <div className="text-sm font-semibold text-[#892f1a] mb-1">{e.title}</div>
+                          <div className="text-sm font-semibold text-[#28428c] mb-1">{e.title}</div>
                           <div className="text-xs text-[#28428c]">{new Date(e.created_at).toLocaleString()}</div>
                         </div>
                         <button
@@ -202,13 +202,13 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                           Delete
                         </button>
                       </div>
-                      <div className="whitespace-pre-wrap text-[#892f1a]">{e.content}</div>
+                      <div className="whitespace-pre-wrap text-[#28428c]">{e.content}</div>
                       {e.journal_entry_friends && e.journal_entry_friends.length > 0 && (
                         <div className="mt-2 pt-2 border-t border-gray-100">
                           <div className="text-xs text-[#28428c] mb-1">Tagged friends:</div>
                           <div className="flex flex-wrap gap-1">
                             {e.journal_entry_friends.map((jef: any) => (
-                              <span key={jef.friend_id} className="inline-block px-2 py-1 bg-[#ffacd6]/20 text-xs text-[#892f1a] rounded-full">
+                              <span key={jef.friend_id} className="inline-block px-2 py-1 bg-[#ffacd6]/20 text-xs text-[#28428c] rounded-full">
                                 {jef.friends?.name || 'Unknown'}
                               </span>
                             ))}
@@ -228,7 +228,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-sm mx-4">
-            <h3 className="text-lg font-semibold text-[#892f1a] mb-2">Delete Entry</h3>
+            <h3 className="text-lg font-semibold text-[#28428c] mb-2">Delete Entry</h3>
             <p className="text-sm text-[#28428c] mb-4">Are you sure you want to delete this journal entry? This action cannot be undone.</p>
             <div className="flex space-x-3">
               <button onClick={() => handleDeleteEntry(showDeleteConfirm)} className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">Delete</button>
