@@ -186,7 +186,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
               </div>
               <div>
                 <p className="text-sm text-[#28428c]">Total Messages</p>
-                <p className="text-xl font-semibold text-[#892f1a]">{analytics.totalMessages.toLocaleString()}</p>
+                <p className="text-xl font-semibold text-[#28428c]">{analytics.totalMessages.toLocaleString()}</p>
               </div>
             </div>
           </div>
@@ -198,7 +198,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
               </div>
               <div>
                 <p className="text-sm text-[#28428c]">Avg per Friend</p>
-                <p className="text-xl font-semibold text-[#892f1a]">{analytics.avgMessagesPerFriend}</p>
+                <p className="text-xl font-semibold text-[#28428c]">{analytics.avgMessagesPerFriend}</p>
               </div>
             </div>
           </div>
@@ -210,7 +210,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
               </div>
               <div>
                 <p className="text-sm text-[#28428c]">Most Active</p>
-                <p className="text-sm font-semibold text-[#892f1a] truncate">{analytics.mostActiveFriend.name}</p>
+                <p className="text-sm font-semibold text-[#28428c] truncate">{analytics.mostActiveFriend.name}</p>
               </div>
             </div>
           </div>
@@ -222,7 +222,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
               </div>
               <div>
                 <p className="text-sm text-[#28428c]">Reconnect With</p>
-                <p className="text-sm font-semibold text-[#892f1a] truncate">{analytics.reconnectFriend.name}</p>
+                <p className="text-sm font-semibold text-[#28428c] truncate">{analytics.reconnectFriend.name}</p>
                 <p className="text-xs text-[#28428c]">{analytics.reconnectDays} days ago</p>
               </div>
             </div>
@@ -288,7 +288,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
 
         {selectedFriend && (
           <div className="mb-4 p-4 bg-[#e8e6d8] rounded-lg">
-            <h3 className="text-md font-semibold text-[#892f1a] mb-2">
+            <h3 className="text-md font-semibold text-[#28428c] mb-2">
               {selectedFriend.name} - Communication Overview
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
