@@ -40,7 +40,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center space-x-2 px-4 py-2 bg-[#892f1a] text-white rounded-lg hover:bg-[#6b1f0f] transition-colors duration-200"
+            className="flex items-center space-x-2 px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1f326b] transition-colors duration-200"
             title="Sign Out"
           >
             <LogOut className="w-4 h-4" />
