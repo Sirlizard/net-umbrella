@@ -101,7 +101,7 @@ function buildBars(points: DayPoint[], key: 'sent' | 'received', width: number, 
 
 export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friends, onBack }) => {
   const [selectedFriendId, setSelectedFriendId] = useState<string>(friends[0]?.id ?? '');
-  const [chartType, setChartType] = useState<'lintasske' | 'bar' | 'pie' | 'scatter'>('line');
+  const [chartType, setChartType] = useState<'line' | 'bar' | 'pie' | 'scatter'>('line');
 
   const selectedFriend = useMemo(() => friends.find(f => f.id === selectedFriendId) ?? friends[0], [friends, selectedFriendId]);
   const series = useMemo(() => selectedFriend ? generateSyntheticSeries(selectedFriend) : [], [selectedFriend]);

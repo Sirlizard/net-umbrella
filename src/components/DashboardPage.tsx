@@ -50,6 +50,7 @@ export const DashboardPage: React.FC = () => {
   const friends: Friend[] = useMemo(() => {
     return dbFriends.map(f => ({
       ...f,
+      bio: f.bio ?? undefined,
       socials: [], // Placeholder for socials
       lastContacted: new Date(f.last_contacted),
     }));
