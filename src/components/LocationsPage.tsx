@@ -9,10 +9,12 @@ const containerStyle = {
 
 const libraries: ('places' | 'drawing' | 'geometry' | 'localContext' | 'visualization')[] = ['places'];
 
+const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
 export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyASy-3DPv_iQV_DVAqf_mzzps1c3JltsD4',
+    googleMapsApiKey: apiKey,
     libraries,
   });
 
