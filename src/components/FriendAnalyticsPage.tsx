@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { DatabaseFriend } from '../hooks/useFriends';
-import { BarChart3, TrendingUp, MessageSquare, Clock, Users } from 'lucide-react';
+import { TrendingUp, MessageSquare, Clock, Users } from 'lucide-react';
+import { PieChart } from './PieChart';
+import { ScatterChart } from './ScatterChart';
 
 interface FriendAnalyticsPageProps {
   friends: DatabaseFriend[];
@@ -77,8 +79,6 @@ function buildBars(points: DayPoint[], key: 'sent' | 'received', width: number, 
   const maxY = Math.max(1, ...points.map(p => Math.max(p.sent, p.received)));
   const barWidth = Math.max(2, (width - padding * 2) / points.length - 2);
 
-  const toY = (v: number) => height - padding - (v / maxY) * (height - padding * 2);
-
   return points.map((p, i) => {
     const x = padding + (i * (width - padding * 2)) / Math.max(1, points.length - 1) - barWidth / 2;
     const barHeight = (p[key] / maxY) * (height - padding * 2);
@@ -101,7 +101,7 @@ function buildBars(points: DayPoint[], key: 'sent' | 'received', width: number, 
 
 export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friends, onBack }) => {
   const [selectedFriendId, setSelectedFriendId] = useState<string>(friends[0]?.id ?? '');
-  const [chartType, setChartType] = useState<'line' | 'bar'>('line');
+  const [chartType, setChartType] = useState<'lintasske' | 'bar' | 'pie' | 'scatter'>('line');
 
   const selectedFriend = useMemo(() => friends.find(f => f.id === selectedFriendId) ?? friends[0], [friends, selectedFriendId]);
   const series = useMemo(() => selectedFriend ? generateSyntheticSeries(selectedFriend) : [], [selectedFriend]);
@@ -137,6 +137,21 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
       reconnectFriend,
       reconnectDays: Math.floor((now - new Date(reconnectFriend.last_contacted).getTime()) / (1000 * 60 * 60 * 24))
     };
+  }, [friends]);
+
+  const pieChartData = useMemo(() => {
+    if (!analytics) return [];
+    return [
+      { label: 'Sent', value: analytics.totalSent, color: '#28428c' },
+      { label: 'Received', value: analytics.totalReceived, color: '#ffacd6' },
+    ];
+  }, [analytics]);
+
+  const scatterChartData = useMemo(() => {
+    return friends.map(friend => ({
+      x: friend.total_interactions,
+      y: friend.contact_frequency ?? 0,
+    }));
   }, [friends]);
 
   const width = 800;
@@ -270,6 +285,26 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                 >
                   Bar
                 </button>
+                <button
+                  onClick={() => setChartType('pie')}
+                  className={`px-3 py-1 rounded text-sm transition-colors ${
+                    chartType === 'pie'
+                      ? 'bg-white text-[#28428c] shadow-sm'
+                      : 'text-[#28428c] hover:text-[#28428c]'
+                  }`}
+                >
+                  Pie
+                </button>
+                <button
+                  onClick={() => setChartType('scatter')}
+                  className={`px-3 py-1 rounded text-sm transition-colors ${
+                    chartType === 'scatter'
+                      ? 'bg-white text-[#28428c] shadow-sm'
+                      : 'text-[#28428c] hover:text-[#28428c]'
+                  }`}
+                >
+                  Scatter
+                </button>
               </div>
             </div>
           </div>
@@ -321,67 +356,77 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
         )}
 
         <div className="overflow-x-auto">
-          <svg width={width} height={height} className="w-full">
-            {/* Grid lines */}
-            {yTicks.map((t, i) => {
-              const y = height - padding - (t / maxY) * (height - padding * 2);
-              return (
-                <line key={`grid-${i}`} x1={padding} y1={y} x2={width - padding} y2={y} stroke="#f3f4f6" strokeWidth={1} />
-              );
-            })}
+          {chartType === 'pie' ? (
+            <div className="flex justify-center items-center" style={{ height }}>
+              <PieChart data={pieChartData} size={Math.min(width, height)} />
+            </div>
+          ) : chartType === 'scatter' ? (
+            <div className="flex justify-center items-center" style={{ height }}>
+              <ScatterChart data={scatterChartData} width={width} height={height} />
+            </div>
+          ) : (
+            <svg width={width} height={height} className="w-full">
+              {/* Grid lines */}
+              {yTicks.map((t, i) => {
+                const y = height - padding - (t / maxY) * (height - padding * 2);
+                return (
+                  <line key={`grid-${i}`} x1={padding} y1={y} x2={width - padding} y2={y} stroke="#f3f4f6" strokeWidth={1} />
+                );
+              })}
 
-            {/* Axes */}
-            <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#e5e7eb" strokeWidth={2} />
-            <line x1={padding} y1={padding} x2={padding} y2={height - padding} stroke="#e5e7eb" strokeWidth={2} />
+              {/* Axes */}
+              <line x1={padding} y1={height - padding} x2={width - padding} y2={height - padding} stroke="#e5e7eb" strokeWidth={2} />
+              <line x1={padding} y1={padding} x2={padding} y2={height - padding} stroke="#e5e7eb" strokeWidth={2} />
 
-            {/* Y ticks and labels */}
-            {yTicks.map((t, i) => {
-              const y = height - padding - (t / maxY) * (height - padding * 2);
-              return (
-                <g key={`y-tick-${i}`}>
-                  <line x1={padding - 4} y1={y} x2={padding} y2={y} stroke="#6b7280" strokeWidth={1} />
-                  <text x={padding - 8} y={y + 4} fontSize="12" textAnchor="end" fill="#6b7280">{t}</text>
-                </g>
-              );
-            })}
+              {/* Y ticks and labels */}
+              {yTicks.map((t, i) => {
+                const y = height - padding - (t / maxY) * (height - padding * 2);
+                return (
+                  <g key={`y-tick-${i}`}>
+                    <line x1={padding - 4} y1={y} x2={padding} y2={y} stroke="#6b7280" strokeWidth={1} />
+                    <text x={padding - 8} y={y + 4} fontSize="12" textAnchor="end" fill="#6b7280">{t}</text>
+                  </g>
+                );
+              })}
 
-            {/* X labels - show 6 evenly spaced */}
-            {series.map((p, i) => {
-              const show = i % Math.ceil(series.length / 6) === 0 || i === series.length - 1;
-              if (!show) return null;
-              const x = padding + (i * (width - padding * 2)) / Math.max(1, series.length - 1);
-              const label = formatDateLabel(p.date);
-              return (
-                <text key={`x-label-${i}`} x={x} y={height - padding + 20} fontSize="12" textAnchor="middle" fill="#6b7280">{label}</text>
-              );
-            })}
+              {/* X labels - show 6 evenly spaced */}
+              {series.map((p, i) => {
+                const show = i % Math.ceil(series.length / 6) === 0 || i === series.length - 1;
+                if (!show) return null;
+                const x = padding + (i * (width - padding * 2)) / Math.max(1, series.length - 1);
+                const label = formatDateLabel(p.date);
+                return (
+                  <text key={`x-label-${i}`} x={x} y={height - padding + 20} fontSize="12" textAnchor="middle" fill="#6b7280">{label}</text>
+                );
+              })}
 
-            {/* Chart content */}
-            {chartType === 'bar' ? (
-              <>
-                {receivedBars}
-                {sentBars}
-              </>
-            ) : (
-              <>
-                <polyline fill="none" stroke="#ffacd6" strokeWidth="3" points={receivedPoints} />
-                <polyline fill="none" stroke="#28428c" strokeWidth="3" points={sentPoints} />
-                
-                {/* Data points */}
-                {series.map((p, i) => {
-                  const x = padding + (i * (width - padding * 2)) / Math.max(1, series.length - 1);
-                  const sentY = height - padding - (p.sent / maxY) * (height - padding * 2);
-                  const receivedY = height - padding - (p.received / maxY) * (height - padding * 2);
-                  return (
-                    <g key={`points-${i}`}>
-                      <circle cx={x} cy={sentY} r="4" fill="#28428c" />
-                      <circle cx={x} cy={receivedY} r="4" fill="#ffacd6" />
-                    </g>
-                  );
-                })}
-              </>
-            )}
-          </svg>
+              {/* Chart content */}
+              {chartType === 'bar' ? (
+                <>
+                  {receivedBars}
+                  {sentBars}
+                </>
+              ) : (
+                <>
+                  <polyline fill="none" stroke="#ffacd6" strokeWidth="3" points={receivedPoints} />
+                  <polyline fill="none" stroke="#28428c" strokeWidth="3" points={sentPoints} />
+                  
+                  {/* Data points */}
+                  {series.map((p, i) => {
+                    const x = padding + (i * (width - padding * 2)) / Math.max(1, series.length - 1);
+                    const sentY = height - padding - (p.sent / maxY) * (height - padding * 2);
+                    const receivedY = height - padding - (p.received / maxY) * (height - padding * 2);
+                    return (
+                      <g key={`points-${i}`}>
+                        <circle cx={x} cy={sentY} r="4" fill="#28428c" />
+                        <circle cx={x} cy={receivedY} r="4" fill="#ffacd6" />
+                      </g>
+                    );
+                  })}
+                </>
+              )}
+            </svg>
+          )}
         </div>
 
         <div className="mt-4 text-center">
