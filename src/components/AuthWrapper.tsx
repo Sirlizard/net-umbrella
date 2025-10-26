@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginPage } from './LoginPage';
 import { SignupPage } from './SignupPage';
 import { LandingPage } from './LandingPage';
 import { DashboardPage } from './DashboardPage';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { ProfilePage } from './ProfilePage';
+import { LocationsPage } from './LocationsPage';
+import { JournalPage } from './JournalPage';
+import { useUserProfile } from '../hooks/useUserProfile';
+import { useFriends, DatabaseFriend } from '../hooks/useFriends';
+import { Friend } from '../types/Friend';
 
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth();
   const [authView, setAuthView] = useState<'landing' | 'signup' | 'login'>('landing');
+  const { profile } = useUserProfile();
+  const { friends: dbFriends } = useFriends();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -31,5 +41,13 @@ export const AuthWrapper: React.FC = () => {
   }
 
   // User is authenticated, show the main dashboard
-  return <DashboardPage />;
+  return (
+    <Routes>
+      <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/profile" element={<ProfilePage profile={profile} friends={dbFriends} onBack={() => navigate('/dashboard')} />} />
+      <Route path="/dashboard/locations" element={<LocationsPage onBack={() => navigate('/dashboard')} />} />
+      <Route path="/dashboard/journal" element={<JournalPage onBack={() => navigate('/dashboard')} />} />
+      <Route path="*" element={<Navigate to="/dashboard" />} />
+    </Routes>
+  );
 };

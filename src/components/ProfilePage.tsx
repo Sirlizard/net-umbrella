@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUserProfile, UserProfile } from '../hooks/useUserProfile';
-import { DatabaseFriend } from '../hooks/useFriends';
+import { useFriends, DatabaseFriend } from '../hooks/useFriends';
 import { User, BarChart2, MessageSquare } from 'lucide-react';
 
 interface ProfilePageProps {
@@ -10,6 +10,23 @@ interface ProfilePageProps {
 }
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBack }) => {
+  if (!friends || friends.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-[#28428c]">My Profile</h2>
+            <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">
+              Back to Dashboard
+            </button>
+          </div>
+          <div className="text-center py-10">
+            <p className="text-gray-500">You don't have any friends yet to show analytics.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
   const mostMessagedFriend = friends.reduce((prev, current) => {
     const prevTotal = prev.messages_sent_count + prev.messages_received_count;
     const currentTotal = current.messages_sent_count + current.messages_received_count;
