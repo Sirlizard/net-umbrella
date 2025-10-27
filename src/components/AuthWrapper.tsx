@@ -1,16 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { LoginPage } from './LoginPage';
 import { SignupPage } from './SignupPage';
 import { LandingPage } from './LandingPage';
 import { DashboardPage } from './DashboardPage';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ProfilePage } from './ProfilePage';
 import { LocationsPage } from './LocationsPage';
 import { JournalPage } from './JournalPage';
 import { useUserProfile } from '../hooks/useUserProfile';
-import { useFriends, DatabaseFriend } from '../hooks/useFriends';
-import { Friend } from '../types/Friend';
+import { useFriends } from '../hooks/useFriends';
 
 export const AuthWrapper: React.FC = () => {
   const { user, loading } = useAuth();
@@ -18,6 +17,7 @@ export const AuthWrapper: React.FC = () => {
   const { profile } = useUserProfile();
   const { friends: dbFriends } = useFriends();
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -31,6 +31,10 @@ export const AuthWrapper: React.FC = () => {
   }
 
   if (!user) {
+    // Allow public access to the Locations page so anyone can use the feature
+    if (location.pathname === '/locations') {
+      return <LocationsPage onBack={() => navigate('/')} />;
+    }
     if (authView === 'signup') {
       return <SignupPage onSwitchToLogin={() => setAuthView('login')} />;
     }
