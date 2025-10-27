@@ -3,6 +3,7 @@ import { DatabaseFriend } from '../hooks/useFriends';
 import { TrendingUp, MessageSquare, Clock, Users } from 'lucide-react';
 import { PieChart } from './PieChart';
 import { ScatterChart } from './ScatterChart';
+import { useFriendDailySeries } from '../hooks/useFriendInteractions';
 
 interface FriendAnalyticsPageProps {
   friends: DatabaseFriend[];
@@ -13,49 +14,6 @@ interface DayPoint {
   date: Date;
   sent: number;
   received: number;
-}
-
-// Generate synthetic per-day counts from existing message history counts, spread over 30 days
-function generateSyntheticSeries(friend: DatabaseFriend): DayPoint[] {
-  const totalSent = friend.messages_sent_count;
-  const totalReceived = friend.messages_received_count;
-
-  const days = 30;
-  const today = new Date();
-  const points: DayPoint[] = [];
-
-  let sentRemaining = totalSent;
-  let receivedRemaining = totalReceived;
-
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - i);
-
-    // Distribute counts with some variation (synthetic data)
-    const sent = Math.max(0, Math.round((totalSent / days) + ((Math.sin(i / 3) * totalSent) / (days * 6)) + (Math.random() * 2 - 1)));
-    const received = Math.max(0, Math.round((totalReceived / days) + ((Math.cos(i / 4) * totalReceived) / (days * 6)) + (Math.random() * 2 - 1)));
-
-    // Ensure totals roughly sum up to original counts by decreasing remainder towards end
-    const daysLeft = i + 1;
-    const sentCap = Math.min(sent, sentRemaining - Math.max(0, sentRemaining - Math.ceil((daysLeft - 1) * (totalSent / days))));
-    const receivedCap = Math.min(received, receivedRemaining - Math.max(0, receivedRemaining - Math.ceil((daysLeft - 1) * (totalReceived / days))));
-
-    const sentFinal = isFinite(sentCap) && sentCap >= 0 ? sentCap : 0;
-    const receivedFinal = isFinite(receivedCap) && receivedCap >= 0 ? receivedCap : 0;
-
-    sentRemaining -= sentFinal;
-    receivedRemaining -= receivedFinal;
-
-    points.push({ date: d, sent: sentFinal, received: receivedFinal });
-  }
-
-  // If any remainder left, add to the last day
-  if (points.length > 0) {
-    points[points.length - 1].sent += Math.max(0, sentRemaining);
-    points[points.length - 1].received += Math.max(0, receivedRemaining);
-  }
-
-  return points;
 }
 
 function formatDateLabel(date: Date) {
@@ -104,7 +62,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
   const [chartType, setChartType] = useState<'line' | 'bar' | 'pie' | 'scatter'>('line');
 
   const selectedFriend = useMemo(() => friends.find(f => f.id === selectedFriendId) ?? friends[0], [friends, selectedFriendId]);
-  const series = useMemo(() => selectedFriend ? generateSyntheticSeries(selectedFriend) : [], [selectedFriend]);
+  const { data: series } = useFriendDailySeries(selectedFriend?.id, 30);
 
   // Analytics summary
   const analytics = useMemo(() => {

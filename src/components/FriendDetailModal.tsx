@@ -36,7 +36,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
     }
   }
 
-  const handleMessageAction = async (linkId: string, type: 'message_sent' | 'message_received') => {
+  const handleMessageAction = async (type: 'message_sent' | 'message_received') => {
     await recordInteraction(friend.id, type)
     // Update last contacted time
     onUpdate(friend.id, { last_contacted: new Date().toISOString() })
@@ -215,14 +215,14 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                   
                   <div className="flex space-x-2">
                     <button
-                      onClick={() => handleMessageAction(link.id, 'message_sent')}
+                      onClick={() => handleMessageAction('message_sent')}
                       className="flex items-center space-x-2 px-3 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200 text-sm"
                     >
                       <Send className="w-4 h-4" />
                       <span>Sent Message</span>
                     </button>
                     <button
-                      onClick={() => handleMessageAction(link.id, 'message_received')}
+                      onClick={() => handleMessageAction('message_received')}
                       className="flex items-center space-x-2 px-3 py-2 bg-[#ffacd6] text-[#892f1a] rounded-lg hover:bg-[#ff9bc9] transition-colors duration-200 text-sm"
                     >
                       <MessageCircle className="w-4 h-4" />

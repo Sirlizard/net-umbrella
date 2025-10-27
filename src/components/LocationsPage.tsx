@@ -11,12 +11,12 @@ const containerStyle = {
 
 const libraries: Libraries = ['places'];
 
-const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const apiKey: string | undefined = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: apiKey,
+    googleMapsApiKey: apiKey || '',
     libraries,
   });
 
@@ -67,10 +67,28 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
   }, []);
 
+  if (!apiKey) {
+    return (
+      <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+        <div className="mb-3 p-4 rounded-lg border border-red-200 bg-red-50">
+          <p className="text-sm text-red-700 font-medium">Google Maps API key missing</p>
+          <p className="text-sm text-red-700">Add VITE_GOOGLE_MAPS_API_KEY to a .env.local file and restart the dev server.</p>
+        </div>
+        <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">
+          Back to Dashboard
+        </button>
+      </div>
+    );
+  }
+
   if (loadError) {
     return (
       <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-        <p>Error loading maps</p>
+        <p className="text-red-700 font-medium mb-2">Error loading Google Maps</p>
+        <pre className="text-xs bg-red-50 p-3 rounded border border-red-200 overflow-auto">{String(loadError)}</pre>
+        <div className="mt-3 text-sm text-[#28428c]">
+          Ensure your API key has the Maps JavaScript API and Places API enabled and allowed for http://localhost:5173.
+        </div>
       </div>
     );
   }

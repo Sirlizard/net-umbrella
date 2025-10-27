@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useUserProfile, UserProfile } from '../hooks/useUserProfile';
-import { useFriends, DatabaseFriend } from '../hooks/useFriends';
+import { DatabaseFriend } from '../hooks/useFriends';
 import { User, BarChart2, MessageSquare } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface ProfilePageProps {
   profile: UserProfile | null;
@@ -10,6 +11,48 @@ interface ProfilePageProps {
 }
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBack }) => {
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const { updateProfile } = useUserProfile()
+
+  const handlePickFile = () => fileInputRef.current?.click()
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !profile) return
+    setError(null)
+    setUploading(true)
+    try {
+      // Ensure path starts with auth UID to satisfy storage RLS
+      const { data: userRes, error: userErr } = await supabase.auth.getUser()
+      if (userErr || !userRes?.user) throw userErr || new Error('Not authenticated')
+      const uid = userRes.user.id
+
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      const fileName = `avatar_${Date.now()}.${ext}`
+      const path = `${uid}/${fileName}`
+      const { error: upErr } = await supabase.storage
+        .from('avatars')
+        .upload(path, file, { upsert: true, cacheControl: '3600', contentType: file.type })
+      if (upErr) throw upErr
+
+      const { data: pub } = supabase.storage.from('avatars').getPublicUrl(path)
+      const publicUrl = pub?.publicUrl
+      if (!publicUrl) throw new Error('Failed to resolve public URL')
+
+      await updateProfile({ avatar_url: publicUrl })
+    } catch (err) {
+      console.error('Avatar upload failed', err)
+      setError(err instanceof Error ? err.message : 'Upload failed')
+    } finally {
+      setUploading(false)
+      // reset input so same file change can trigger again
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
   if (!friends || friends.length === 0) {
     return (
       <div className="space-y-6">
@@ -44,14 +87,36 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
             Back to Dashboard
           </button>
         </div>
-        
+        {error && (
+          <div className="mb-3 text-sm text-red-600">{error}</div>
+        )}
         <div className="flex items-center space-x-4">
-          <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-            <User className="w-10 h-10 text-gray-500" />
-          </div>
+          {profile?.avatar_url ? (
+            <img src={profile.avatar_url} alt="Avatar" className="w-20 h-20 rounded-full object-cover border" />
+          ) : (
+            <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
+              <User className="w-10 h-10 text-gray-500" />
+            </div>
+          )}
           <div>
             <h3 className="text-xl font-bold text-[#28428c]">{profile?.full_name}</h3>
             <p className="text-sm text-gray-500">{profile?.email}</p>
+            <div className="mt-2">
+              <button
+                onClick={handlePickFile}
+                disabled={uploading}
+                className="px-3 py-1.5 text-sm bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] disabled:opacity-60"
+              >
+                {uploading ? 'Uploading…' : (profile?.avatar_url ? 'Change Photo' : 'Add Photo')}
+              </button>
+              <input
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                type="file"
+                accept="image/*"
+                className="hidden"
+              />
+            </div>
           </div>
         </div>
       </div>

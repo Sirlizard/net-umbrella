@@ -44,7 +44,7 @@ export const DashboardPage: React.FC = () => {
   const { profile } = useUserProfile();
   const { friends: dbFriends, loading: friendsLoading, addFriend, updateFriend } = useFriends();
   const [showAddFriend, setShowAddFriend] = useState(false);
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
+  const [selectedFriendDb, setSelectedFriendDb] = useState<DatabaseFriend | null>(null);
   const [currentView, setCurrentView] = useState<'dashboard' | 'journal' | 'analytics'>('dashboard');
 
   const friends: Friend[] = useMemo(() => {
@@ -107,10 +107,13 @@ export const DashboardPage: React.FC = () => {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {friends.map((friend) => (
-                    <FriendCard 
-                      key={friend.id} 
+                    <FriendCard
+                      key={friend.id}
                       friend={friend}
-                      onSelect={() => setSelectedFriend(friend)}
+                      onClick={(f) => {
+                        const match = dbFriends.find(df => df.id === f.id) || null;
+                        setSelectedFriendDb(match);
+                      }}
                     />
                   ))}
                 </div>
@@ -125,10 +128,10 @@ export const DashboardPage: React.FC = () => {
         <AddFriendForm onClose={() => setShowAddFriend(false)} onAddFriend={handleAddFriend} />
       )}
 
-      {selectedFriend && (
-        <FriendDetailModal 
-          friend={selectedFriend} 
-          onClose={() => setSelectedFriend(null)}
+      {selectedFriendDb && (
+        <FriendDetailModal
+          friend={selectedFriendDb}
+          onClose={() => setSelectedFriendDb(null)}
           onUpdate={(id, updates) => handleUpdateFriend(id, updates as Partial<DatabaseFriend>)}
         />
       )}
