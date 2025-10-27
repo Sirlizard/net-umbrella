@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, StandaloneSearchBox, Libraries } from '@react-google-maps/api';
 import { Search, X, LocateFixed } from 'lucide-react';
 import { getEventOfTheDay } from '../data/eventsOfDay.ts';
+import { getMapsApiKey, MAPS_KEY_STORAGE } from '../utils/config';
 
 const containerStyle = {
   width: '100%',
@@ -11,7 +12,7 @@ const containerStyle = {
 
 const libraries: Libraries = ['places'];
 
-const apiKey: string | undefined = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const apiKey: string | undefined = getMapsApiKey();
 
 export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const { isLoaded, loadError } = useJsApiLoader({
@@ -68,11 +69,34 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   }, []);
 
   if (!apiKey) {
+    // Allow runtime paste of key for environments without env vars (e.g., Bolt link)
+    const [tempKey, setTempKey] = useState('');
     return (
       <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
         <div className="mb-3 p-4 rounded-lg border border-red-200 bg-red-50">
           <p className="text-sm text-red-700 font-medium">Google Maps API key missing</p>
-          <p className="text-sm text-red-700">Add VITE_GOOGLE_MAPS_API_KEY to a .env.local file and restart the dev server.</p>
+          <p className="text-sm text-red-700">Paste a browser API key below or add VITE_GOOGLE_MAPS_API_KEY in your environment. You can also use the URL parameter <code>?mapsKey=YOUR_KEY</code>.</p>
+        </div>
+        <div className="flex items-center gap-2 mb-3">
+          <input
+            value={tempKey}
+            onChange={(e) => setTempKey(e.target.value)}
+            placeholder="Paste your Google Maps browser key"
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#28428c]"
+          />
+          <button
+            onClick={() => {
+              try {
+                if (tempKey.trim()) {
+                  localStorage.setItem(MAPS_KEY_STORAGE, tempKey.trim());
+                  window.location.reload();
+                }
+              } catch {}
+            }}
+            className="px-3 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1f326b]"
+          >
+            Save & Reload
+          </button>
         </div>
         <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">
           Back to Dashboard
