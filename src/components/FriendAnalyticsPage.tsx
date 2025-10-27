@@ -320,7 +320,15 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
             </div>
           ) : chartType === 'scatter' ? (
             <div className="flex justify-center items-center" style={{ height }}>
-              <ScatterChart data={scatterChartData} width={width} height={height} />
+              <ScatterChart
+                data={scatterChartData}
+                width={width}
+                height={height}
+                color="#28428c"
+                title="Engagement vs Contact Preference"
+                xLabel="Total Interactions"
+                yLabel="Contact Frequency"
+              />
             </div>
           ) : (
             <svg width={width} height={height} className="w-full">

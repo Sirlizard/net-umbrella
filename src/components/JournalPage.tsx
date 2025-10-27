@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useJournals } from '../hooks/useJournals'
 import { useFriends } from '../hooks/useFriends'
 
@@ -18,6 +18,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
   const [entries, setEntries] = useState<any[]>([])
   const [filterFriendIds, setFilterFriendIds] = useState<string[]>([])
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null)
+  const [showDeleteJournalConfirm, setShowDeleteJournalConfirm] = useState<string | null>(null)
 
   useEffect(() => {
     if (journals.length && !selectedJournalId) {
@@ -47,7 +48,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
 
   const handleAddEntry = async () => {
     if (!selectedJournalId || !entryText.trim() || !entryTitle.trim()) return
-    const { data, error } = await addEntry(selectedJournalId, entryTitle.trim(), entryText.trim(), selectedFriendIds)
+    const { error } = await addEntry(selectedJournalId, entryTitle.trim(), entryText.trim(), selectedFriendIds)
     if (!error) {
       // Reload entries to get the full data with friend information
       const { data: updatedEntries } = await listEntries(selectedJournalId, filterFriendIds.length > 0 ? filterFriendIds : undefined)
@@ -107,7 +108,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                     {selectedJournalId === j.id && (
                       <div className="px-3 pb-2">
                         <button
-                          onClick={() => handleDeleteJournal(j.id)}
+                          onClick={() => setShowDeleteJournalConfirm(j.id)}
                           className="text-xs text-red-500 hover:text-red-700"
                         >
                           Delete Journal
@@ -174,7 +175,18 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-              <h2 className="text-lg font-semibold text-[#28428c] mb-3">Recent Entries</h2>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold text-[#28428c]">Recent Entries</h2>
+                {selectedJournalId && (
+                  <button
+                    onClick={() => setShowDeleteJournalConfirm(selectedJournalId)}
+                    className="text-xs px-3 py-1.5 rounded-md border border-red-200 text-red-700 hover:bg-red-50"
+                    title="Delete this journal and all its entries"
+                  >
+                    Delete Journal
+                  </button>
+                )}
+              </div>
               {filterFriendIds.length > 0 && (
                 <div className="mb-3 p-2 bg-[#e8e6d8] rounded-lg">
                   <div className="text-xs text-[#28428c]">
@@ -227,12 +239,26 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 max-w-sm mx-4">
-            <h3 className="text-lg font-semibold text-[#28428c] mb-2">Delete Entry</h3>
-            <p className="text-sm text-[#28428c] mb-4">Are you sure you want to delete this journal entry? This action cannot be undone.</p>
+          <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-sm mx-4 shadow-lg">
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Delete Entry</h3>
+            <p className="text-sm text-red-700 mb-4">Are you sure you want to delete this journal entry? This action cannot be undone.</p>
             <div className="flex space-x-3">
-              <button onClick={() => handleDeleteEntry(showDeleteConfirm)} className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">Delete</button>
-              <button onClick={() => setShowDeleteConfirm(null)} className="flex-1 bg-gray-200 text-[#28428c] py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">Cancel</button>
+              <button onClick={() => handleDeleteEntry(showDeleteConfirm)} className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">Delete Entry</button>
+              <button onClick={() => setShowDeleteConfirm(null)} className="flex-1 bg-white text-red-700 border border-red-300 py-2 rounded-lg hover:bg-red-100 transition-colors duration-200">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Journal Confirmation Modal */}
+      {showDeleteJournalConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-sm mx-4">
+            <h3 className="text-lg font-semibold text-[#28428c] mb-2">Delete Journal</h3>
+            <p className="text-sm text-[#28428c] mb-4">Delete this entire journal and all its entries? This cannot be undone.</p>
+            <div className="flex space-x-3">
+              <button onClick={async () => { await handleDeleteJournal(showDeleteJournalConfirm); setShowDeleteJournalConfirm(null); }} className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">Delete Journal</button>
+              <button onClick={() => setShowDeleteJournalConfirm(null)} className="flex-1 bg-gray-200 text-[#28428c] py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">Cancel</button>
             </div>
           </div>
         </div>
