@@ -16,6 +16,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const { updateProfile } = useUserProfile()
+  const [nameInput, setNameInput] = useState(profile?.full_name ?? '')
+  const [savingName, setSavingName] = useState(false)
 
   const handlePickFile = () => fileInputRef.current?.click()
 
@@ -50,6 +52,24 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
       setUploading(false)
       // reset input so same file change can trigger again
       if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
+  const handleSaveName = async () => {
+    if (!nameInput || !nameInput.trim()) {
+      setError('Please enter a valid name')
+      return
+    }
+    setError(null)
+    setSavingName(true)
+    try {
+      const { error } = await updateProfile({ full_name: nameInput.trim() }) as any
+      if (error) throw new Error(error)
+    } catch (err) {
+      console.error('Failed to save name', err)
+      setError(err instanceof Error ? err.message : 'Failed to save name')
+    } finally {
+      setSavingName(false)
     }
   }
 
@@ -98,10 +118,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
               <User className="w-10 h-10 text-gray-500" />
             </div>
           )}
-          <div>
-            <h3 className="text-xl font-bold text-[#28428c]">{profile?.full_name}</h3>
-            <p className="text-sm text-gray-500">{profile?.email}</p>
-            <div className="mt-2">
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                placeholder="Your name"
+                className="w-full max-w-sm px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-[#28428c]"
+              />
+              <button
+                onClick={handleSaveName}
+                disabled={savingName}
+                className="px-3 py-2 text-sm bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] disabled:opacity-60"
+              >
+                {savingName ? 'Saving…' : (profile?.full_name ? 'Update Name' : 'Save Name')}
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mt-1">{profile?.email}</p>
+            <div className="mt-3">
               <button
                 onClick={handlePickFile}
                 disabled={uploading}
