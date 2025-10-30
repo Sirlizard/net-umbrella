@@ -109,7 +109,9 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                       <div className="px-3 pb-2">
                         <button
                           onClick={() => setShowDeleteJournalConfirm(j.id)}
-                          className="text-xs text-red-500 hover:text-red-700"
+                          className="text-xs px-3 py-1.5 rounded-md border border-[#28428c]/30 text-[#28428c] hover:bg-[#28428c]/10 hover:border-[#28428c]/40 transition-colors duration-200"
+                          title="Delete this journal and all its entries"
+                          aria-label="Delete this journal"
                         >
                           Delete Journal
                         </button>
@@ -180,7 +182,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                 {selectedJournalId && (
                   <button
                     onClick={() => setShowDeleteJournalConfirm(selectedJournalId)}
-                    className="text-xs px-3 py-1.5 rounded-md border border-red-200 text-red-700 hover:bg-red-50"
+                    className="text-xs px-3 py-1.5 rounded-md border border-[#28428c]/30 text-[#28428c] hover:bg-[#28428c]/10 hover:border-[#28428c]/40"
                     title="Delete this journal and all its entries"
                   >
                     Delete Journal
@@ -202,14 +204,16 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
                 <div className="space-y-4">
                   {entries.map(e => (
                     <div key={e.id} className="border border-gray-100 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <div>
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="flex-1 min-w-0">
                           <div className="text-sm font-semibold text-[#28428c] mb-1">{e.title}</div>
                           <div className="text-xs text-[#28428c]">{new Date(e.created_at).toLocaleString()}</div>
                         </div>
                         <button
                           onClick={() => setShowDeleteConfirm(e.id)}
-                          className="text-xs text-red-500 hover:text-red-700"
+                          className="shrink-0 text-xs px-3 py-1.5 rounded-md border border-[#28428c]/30 text-[#28428c] hover:bg-[#28428c]/10 hover:border-[#28428c]/40 transition-colors duration-200"
+                          title="Delete this entry"
+                          aria-label="Delete entry"
                         >
                           Delete
                         </button>
@@ -239,12 +243,24 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 max-w-sm mx-4 shadow-lg">
-            <h3 className="text-lg font-semibold text-red-800 mb-2">Delete Entry</h3>
-            <p className="text-sm text-red-700 mb-4">Are you sure you want to delete this journal entry? This action cannot be undone.</p>
+          <div className="bg-white rounded-xl p-6 max-w-sm mx-4 shadow-xl border border-gray-200">
+            <h3 className="text-lg font-semibold text-[#28428c] mb-2">Delete Entry</h3>
+            <p className="text-sm text-[#28428c] mb-4">Are you sure you want to delete this journal entry? This action cannot be undone.</p>
             <div className="flex space-x-3">
-              <button onClick={() => handleDeleteEntry(showDeleteConfirm)} className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">Delete Entry</button>
-              <button onClick={() => setShowDeleteConfirm(null)} className="flex-1 bg-white text-red-700 border border-red-300 py-2 rounded-lg hover:bg-red-100 transition-colors duration-200">Cancel</button>
+              <button
+                onClick={() => handleDeleteEntry(showDeleteConfirm!)}
+                className="flex-1 inline-flex items-center justify-center bg-[#28428c] text-white font-semibold py-2 rounded-lg border border-[#1e3366] shadow-sm hover:bg-[#1e3366] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28428c]/40 transition-colors duration-200"
+                aria-label="Confirm delete entry"
+                title="Delete this entry"
+              >
+                Delete Entry
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                className="flex-1 inline-flex items-center justify-center bg-gray-100 text-[#28428c] py-2 rounded-lg border border-gray-300 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 transition-colors duration-200"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -257,8 +273,20 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
             <h3 className="text-lg font-semibold text-[#28428c] mb-2">Delete Journal</h3>
             <p className="text-sm text-[#28428c] mb-4">Delete this entire journal and all its entries? This cannot be undone.</p>
             <div className="flex space-x-3">
-              <button onClick={async () => { await handleDeleteJournal(showDeleteJournalConfirm); setShowDeleteJournalConfirm(null); }} className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors duration-200">Delete Journal</button>
-              <button onClick={() => setShowDeleteJournalConfirm(null)} className="flex-1 bg-gray-200 text-[#28428c] py-2 rounded-lg hover:bg-gray-300 transition-colors duration-200">Cancel</button>
+              <button 
+                onClick={async () => { await handleDeleteJournal(showDeleteJournalConfirm!); setShowDeleteJournalConfirm(null); }} 
+                className="flex-1 bg-[#28428c] text-white font-semibold py-2 rounded-lg border border-[#1e3366] shadow-sm hover:bg-[#1e3366] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28428c]/40 transition-colors duration-200"
+                aria-label="Confirm delete journal"
+                title="Delete this journal"
+              >
+                Delete Journal
+              </button>
+              <button 
+                onClick={() => setShowDeleteJournalConfirm(null)} 
+                className="flex-1 bg-gray-100 text-[#28428c] py-2 rounded-lg border border-gray-300 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 transition-colors duration-200"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

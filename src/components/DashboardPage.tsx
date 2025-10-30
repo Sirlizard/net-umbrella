@@ -53,6 +53,7 @@ export const DashboardPage: React.FC = () => {
       bio: f.bio ?? undefined,
       socials: [], // Placeholder for socials
       lastContacted: new Date(f.last_contacted),
+      contactFrequency: typeof f.contact_frequency === 'number' ? f.contact_frequency : undefined,
     }));
   }, [dbFriends]);
 

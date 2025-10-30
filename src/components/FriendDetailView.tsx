@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { Friend, SocialLink } from '../types/Friend';
+import React, { useState } from 'react';
+import { Friend } from '../types/Friend';
 import { formatLastContacted } from '../utils/timeFormatter';
 import { 
   getReceivedMessageCount, 
@@ -13,7 +13,7 @@ import {
 } from '../utils/messageAnalytics';
 import { ArrowLeft, MessageCircle, Send, MessageSquare, Plus, Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MessageCircleMore, Trash2, CreditCard as Edit3, BarChart3, TrendingUp } from 'lucide-react';
 import { useSocialLinks } from '../hooks/useSocialLinks'
-import { supabase } from '../lib/supabase'
+import { frequencyToTargetDays } from '../utils/contactPreference'
 
 interface FriendDetailViewProps {
   friend: Friend;
@@ -36,12 +36,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
   // Load server-backed social links for this friend
   const { links, addLink, removeLink, recordInteraction, touchLink } = useSocialLinks(friend.id)
 
-  const aggregatedMessageCounts = useMemo(() => {
-    // Fallback to local structure if no server links yet
-    const totalReceived = getTotalReceivedMessages(friend)
-    const totalSent = getTotalSentMessages(friend)
-    return { totalReceived, totalSent }
-  }, [friend])
+  // totals are displayed inline via utilities where needed
 
   const getPlatformIcon = (platform: string) => {
     const iconClass = "w-5 h-5";
@@ -132,12 +127,18 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
 
   const getContactStatusColor = (lastContacted?: Date) => {
     if (!lastContacted) return 'text-gray-400';
-    
+
     const now = new Date();
+    const isToday =
+      lastContacted.getFullYear() === now.getFullYear() &&
+      lastContacted.getMonth() === now.getMonth() &&
+      lastContacted.getDate() === now.getDate();
+
+    if (isToday) return 'text-green-600';
+
     const diffDays = Math.floor(Math.abs(now.getTime() - lastContacted.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 3) return 'text-green-600';
-    if (diffDays <= 14) return 'text-yellow-600';
+    const targetDays = frequencyToTargetDays(contactFrequency);
+    if (diffDays <= targetDays) return 'text-yellow-600';
     return 'text-red-500';
   };
 

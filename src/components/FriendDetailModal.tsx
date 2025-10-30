@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { X, MessageCircle, Send, Plus, Trash2, Clock } from 'lucide-react'
 import { useSocialLinks } from '../hooks/useSocialLinks'
 
@@ -15,8 +15,21 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
   const [newHandle, setNewHandle] = useState('')
   const [isEditingBio, setIsEditingBio] = useState(false)
   const [editedBio, setEditedBio] = useState(friend.bio || '')
+  // Local optimistic stats/state so UI updates immediately without needing refresh
+  const [lastContacted, setLastContacted] = useState<string>(friend.last_contacted)
+  const [sentCount, setSentCount] = useState<number>(friend.messages_sent_count)
+  const [receivedCount, setReceivedCount] = useState<number>(friend.messages_received_count)
+  const [totalInteractions, setTotalInteractions] = useState<number>(friend.total_interactions)
 
   const { links, addLink, removeLink, recordInteraction } = useSocialLinks(friend.id)
+
+  // Keep local state in sync if the parent provides updated friend data
+  useEffect(() => {
+    setLastContacted(friend.last_contacted)
+    setSentCount(friend.messages_sent_count)
+    setReceivedCount(friend.messages_received_count)
+    setTotalInteractions(friend.total_interactions)
+  }, [friend])
 
   const handleSaveContactFrequency = () => {
     onUpdate(friend.id, { contact_frequency: contactFrequency })
@@ -37,9 +50,28 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
   }
 
   const handleMessageAction = async (type: 'message_sent' | 'message_received') => {
-    await recordInteraction(friend.id, type)
-    // Update last contacted time
-    onUpdate(friend.id, { last_contacted: new Date().toISOString() })
+    const nowIso = new Date().toISOString()
+
+    // Optimistically update local UI state immediately
+    setLastContacted(nowIso)
+    if (type === 'message_sent') {
+      setSentCount((c) => c + 1)
+    } else {
+      setReceivedCount((c) => c + 1)
+    }
+    setTotalInteractions((t) => t + 1)
+
+    // Fire-and-forget server update; DB triggers should reconcile counts
+    try {
+      await recordInteraction(friend.id, type)
+    } finally {
+      // Best-effort: update friend row so other parts of UI reflect quickly
+      const patch: any = { last_contacted: nowIso }
+      if (type === 'message_sent') patch.last_message_sent = nowIso
+      if (type === 'message_received') patch.last_message_received = nowIso
+      // Note: server triggers likely maintain counts; we avoid manual count patch to prevent drift
+      onUpdate(friend.id, patch)
+    }
   }
 
   const formatDate = (dateString: string) => {
@@ -55,7 +87,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
             <div>
               <h2 className="text-2xl font-bold text-[#892f1a]">{friend.name}</h2>
               <p className="text-sm text-[#28428c]">
-                Last contact: {formatDate(friend.last_contacted)}
+                Last contact: {formatDate(lastContacted)}
               </p>
             </div>
             <button
@@ -252,15 +284,15 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
             <h3 className="text-lg font-semibold text-[#892f1a] mb-3">Message Stats</h3>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-[#28428c]">{friend.messages_sent_count}</div>
+                <div className="text-2xl font-bold text-[#28428c]">{sentCount}</div>
                 <div className="text-sm text-[#28428c]">Sent</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#ffacd6]">{friend.messages_received_count}</div>
+                <div className="text-2xl font-bold text-[#ffacd6]">{receivedCount}</div>
                 <div className="text-sm text-[#28428c]">Received</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-[#892f1a]">{friend.total_interactions}</div>
+                <div className="text-2xl font-bold text-[#892f1a]">{totalInteractions}</div>
                 <div className="text-sm text-[#28428c]">Total</div>
               </div>
             </div>

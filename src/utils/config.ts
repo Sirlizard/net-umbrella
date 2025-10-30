@@ -5,7 +5,13 @@ export function getMapsApiKey(): string | undefined {
   const envKey = (import.meta as any).env?.VITE_GOOGLE_MAPS_API_KEY as string | undefined
   if (envKey && envKey.trim()) return envKey.trim()
 
-  // 2) URL param (?mapsKey=...)
+  // 2) Window global injected at deploy time (public browser key)
+  try {
+    const winKey = (window as any)?.NET_UMBRELLA_MAPS_KEY as string | undefined
+    if (winKey && typeof winKey === 'string' && winKey.trim()) return winKey.trim()
+  } catch {}
+
+  // 3) URL param (?mapsKey=...)
   try {
     const url = new URL(window.location.href)
     const urlKey = url.searchParams.get('mapsKey')
@@ -15,7 +21,7 @@ export function getMapsApiKey(): string | undefined {
     }
   } catch {}
 
-  // 3) Local storage fallback
+  // 4) Local storage fallback
   try {
     const stored = localStorage.getItem(MAPS_KEY_STORAGE)
     if (stored && stored.trim()) return stored.trim()

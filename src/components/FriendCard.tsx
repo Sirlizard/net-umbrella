@@ -2,6 +2,7 @@ import React from 'react';
 import { Friend } from '../types/Friend';
 import { formatLastContacted } from '../utils/timeFormatter';
 import { MessageCircle, Clock } from 'lucide-react';
+import { frequencyToTargetDays } from '../utils/contactPreference';
 
 interface FriendCardProps {
   friend: Friend;
@@ -11,19 +12,31 @@ interface FriendCardProps {
 export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
   const getContactStatusColor = (lastContacted: Date) => {
     const now = new Date();
+    const isToday =
+      lastContacted.getFullYear() === now.getFullYear() &&
+      lastContacted.getMonth() === now.getMonth() &&
+      lastContacted.getDate() === now.getDate();
+
+    if (isToday) return 'text-green-600';
+
     const diffDays = Math.floor(Math.abs(now.getTime() - lastContacted.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 3) return 'text-green-600';
-    if (diffDays <= 14) return 'text-yellow-600';
+    const targetDays = frequencyToTargetDays(friend.contactFrequency);
+    if (diffDays <= targetDays) return 'text-yellow-600';
     return 'text-red-500';
   };
 
   const getContactStatusBorder = (lastContacted: Date) => {
     const now = new Date();
+    const isToday =
+      lastContacted.getFullYear() === now.getFullYear() &&
+      lastContacted.getMonth() === now.getMonth() &&
+      lastContacted.getDate() === now.getDate();
+
+    if (isToday) return 'border-l-green-500';
+
     const diffDays = Math.floor(Math.abs(now.getTime() - lastContacted.getTime()) / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 3) return 'border-l-green-500';
-    if (diffDays <= 14) return 'border-l-yellow-500';
+    const targetDays = frequencyToTargetDays(friend.contactFrequency);
+    if (diffDays <= targetDays) return 'border-l-yellow-500';
     return 'border-l-red-400';
   };
 

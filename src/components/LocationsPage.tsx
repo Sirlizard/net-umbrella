@@ -3,11 +3,30 @@ import { GoogleMap, useJsApiLoader, Marker, StandaloneSearchBox, Libraries } fro
 import { Search, X, LocateFixed } from 'lucide-react';
 import { getEventOfTheDay } from '../data/eventsOfDay.ts';
 import { getMapsApiKey, MAPS_KEY_STORAGE } from '../utils/config';
+import { useFriends } from '../hooks/useFriends';
 
 const containerStyle = {
   width: '100%',
   height: '400px',
   borderRadius: '0.75rem',
+};
+
+// Enable full native gestures and controls
+const mapOptions: google.maps.MapOptions = {
+  gestureHandling: 'greedy', // allow scroll/pinch zoom aggressively
+  draggable: true,
+  scrollwheel: true,
+  keyboardShortcuts: true,
+  clickableIcons: true,
+  zoomControl: true,
+  mapTypeControl: true,
+  streetViewControl: true,
+  fullscreenControl: true,
+  rotateControl: true,
+  scaleControl: true,
+  disableDoubleClickZoom: false,
+  // keep default UI visible
+  disableDefaultUI: false,
 };
 
 const libraries: Libraries = ['places'];
@@ -26,8 +45,69 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [searchValue, setSearchValue] = useState('');
   const [locating, setLocating] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState<{ name?: string; address?: string } | null>(null);
+  const { friends } = useFriends();
 
-  const eventOfTheDay = useMemo(() => getEventOfTheDay(new Date()), []);
+  // Derive a friendship status summary to color the banner similarly to friend cards
+  const friendshipStatus = useMemo(() => {
+    if (!friends || friends.length === 0) return null;
+    const MS_DAY = 24 * 60 * 60 * 1000;
+    let minDays = Number.POSITIVE_INFINITY; // most recent contact (fewest days)
+    let maxDays = -1; // most overdue friend (most days)
+    let mostRecent: any = null;
+    let mostOverdue: any = null;
+    const now = Date.now();
+
+    for (const f of friends) {
+      const d = new Date(f.last_contacted).getTime();
+      const days = Math.floor(Math.abs(now - d) / MS_DAY);
+      if (days < minDays) {
+        minDays = days;
+        mostRecent = f;
+      }
+      if (days > maxDays) {
+        maxDays = days;
+        mostOverdue = f;
+      }
+    }
+
+    const isToday = minDays === 0;
+    const color: 'green' | 'yellow' | 'red' = isToday ? 'green' : (minDays <= 14 ? 'yellow' : 'red');
+    const styles = color === 'green'
+      ? { border: 'border-green-200', bg: 'bg-green-50', text: 'text-green-700' }
+      : color === 'yellow'
+      ? { border: 'border-yellow-200', bg: 'bg-yellow-50', text: 'text-yellow-700' }
+      : { border: 'border-red-200', bg: 'bg-red-50', text: 'text-red-700' };
+
+    return { color, isToday, minDays, maxDays, mostRecent, mostOverdue, ...styles };
+  }, [friends]);
+
+  // Rotate the suggested event on each page reopen within the same tab/session.
+  // Uses a session-scoped counter with a 1s guard to avoid React StrictMode double-mount increments.
+  const eventOfTheDay = useMemo(() => {
+    try {
+      const COUNT_KEY = 'net-umbrella:maps:eodCount';
+      const TS_KEY = 'net-umbrella:maps:eodTs';
+
+      const now = Date.now();
+      const lastTs = Number(sessionStorage.getItem(TS_KEY) || '0');
+      let count = Number(sessionStorage.getItem(COUNT_KEY) || '0');
+      if (!Number.isFinite(count)) count = 0;
+
+      // Only bump the counter if it's been >1s since the last increment.
+      // This avoids counting the dev-time React StrictMode remount as two separate "opens".
+      if (now - lastTs > 1000) {
+        count += 1;
+        sessionStorage.setItem(COUNT_KEY, String(count));
+        sessionStorage.setItem(TS_KEY, String(now));
+      }
+
+      // Shift today's date by the counter so we get a different entry each time.
+      const adjusted = new Date(now + count * 24 * 60 * 60 * 1000);
+      return getEventOfTheDay(adjusted);
+    } catch {
+      return getEventOfTheDay(new Date());
+    }
+  }, []);
 
   useEffect(() => {
     // Try saved place first
@@ -127,9 +207,19 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       </div>
 
       {/* Suggested Event of the Day */}
-      <div className="mb-4 p-4 rounded-lg border border-[#ffacd6]/30 bg-[#fff8fb]">
-        <p className="text-sm text-[#892f1a] font-semibold mb-1">Suggested event of the day</p>
-        <p className="text-[#28428c]">{eventOfTheDay}</p>
+      <div className={`mb-4 p-4 rounded-lg border ${friendshipStatus?.border ?? 'border-[#ffacd6]/30'} ${friendshipStatus?.bg ?? 'bg-[#fff8fb]'}`}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <p className="text-sm text-[#892f1a] font-semibold mb-1">Suggested event of the day</p>
+            <p className="text-[#28428c]">{eventOfTheDay}</p>
+            {friendshipStatus && (
+              <p className={`mt-1 text-xs ${friendshipStatus.text}`}>
+                Friendship status: {friendshipStatus.isToday ? 'You connected with someone today' : `Most recent contact was ${friendshipStatus.minDays} day${friendshipStatus.minDays === 1 ? '' : 's'} ago`}.
+                {friendshipStatus.mostOverdue ? ` Consider inviting ${friendshipStatus.mostOverdue.name} to this!` : ''}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Places Search */}
@@ -226,6 +316,7 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           mapContainerStyle={containerStyle}
           center={currentPosition}
           zoom={14}
+          options={mapOptions}
         >
           <Marker
             key={`${currentPosition.lat},${currentPosition.lng}`}
