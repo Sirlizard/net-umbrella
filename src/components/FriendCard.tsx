@@ -1,7 +1,8 @@
 import React from 'react';
 import { Friend } from '../types/Friend';
 import { formatLastContacted } from '../utils/timeFormatter';
-import { MessageCircle, Clock } from 'lucide-react';
+import { MessageCircle, Clock, Flame } from 'lucide-react';
+import { useFriendStreak } from '../hooks/useFriendStreak';
 import { frequencyToTargetDays } from '../utils/contactPreference';
 
 interface FriendCardProps {
@@ -10,6 +11,7 @@ interface FriendCardProps {
 }
 
 export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
+  const { streak } = useFriendStreak(friend.id, 60)
   const getContactStatusColor = (lastContacted: Date) => {
     const now = new Date();
     const isToday =
@@ -69,9 +71,16 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
         
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-[#ffacd6] font-medium">
-              Ready to spread some friendship joy! 
-            </span>
+            {streak > 0 ? (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-[#28428c]">
+                <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
+                {streak} day{streak === 1 ? '' : 's'} streak
+              </span>
+            ) : (
+              <span className="text-xs text-[#ffacd6] font-medium">
+                Ready to spread some friendship joy! 
+              </span>
+            )}
             <div className="w-2 h-2 rounded-full bg-[#ffacd6] group-hover:bg-[#28428c] transition-colors duration-200"></div>
           </div>
         </div>

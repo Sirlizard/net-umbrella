@@ -11,9 +11,10 @@ import {
   getSentMessageCount,
   getTotalSentMessages
 } from '../utils/messageAnalytics';
-import { ArrowLeft, MessageCircle, Send, MessageSquare, Plus, Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MessageCircleMore, Trash2, CreditCard as Edit3, BarChart3, TrendingUp } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Send, MessageSquare, Plus, Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MessageCircleMore, Trash2, CreditCard as Edit3, BarChart3, TrendingUp, Flame } from 'lucide-react';
 import { useSocialLinks } from '../hooks/useSocialLinks'
 import { frequencyToTargetDays } from '../utils/contactPreference'
+import { useFriendStreak } from '../hooks/useFriendStreak'
 
 interface FriendDetailViewProps {
   friend: Friend;
@@ -32,6 +33,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [editedBio, setEditedBio] = useState(friend.bio || '');
   const [contactFrequency, setContactFrequency] = useState<number>(friend.contactFrequency ?? 5);
+  const { streak } = useFriendStreak(friend.id, 60)
 
   // Load server-backed social links for this friend
   const { links, addLink, removeLink, recordInteraction, touchLink } = useSocialLinks(friend.id)
@@ -161,6 +163,12 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                   {formatLastContacted(friend.lastContacted)}
                 </span>
               </p>
+              {streak > 0 && (
+                <div className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[#28428c]">
+                  <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
+                  {streak} day{streak === 1 ? '' : 's'} streak
+                </div>
+              )}
             </div>
           </div>
         </div>
