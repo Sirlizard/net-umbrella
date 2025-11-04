@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useUserProfile, UserProfile } from '../hooks/useUserProfile';
 import { DatabaseFriend } from '../hooks/useFriends';
 import { User, BarChart2, MessageSquare } from 'lucide-react';
@@ -18,6 +18,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
   const { updateProfile } = useUserProfile()
   const [nameInput, setNameInput] = useState(profile?.full_name ?? '')
   const [savingName, setSavingName] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [nameSaved, setNameSaved] = useState(false)
+
+  // Keep local input synced when upstream profile changes
+  useEffect(() => {
+    setNameInput(profile?.full_name ?? '')
+  }, [profile?.full_name])
 
   const handlePickFile = () => fileInputRef.current?.click()
 
@@ -65,6 +72,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
     try {
       const { error } = await updateProfile({ full_name: nameInput.trim() }) as any
       if (error) throw new Error(error)
+      // Optimistic UX: collapse editor on success
+      setEditingName(false)
+      setNameSaved(true)
+      setTimeout(() => setNameSaved(false), 2500)
     } catch (err) {
       console.error('Failed to save name', err)
       setError(err instanceof Error ? err.message : 'Failed to save name')
@@ -73,30 +84,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
     }
   }
 
-  if (!friends || friends.length === 0) {
-    return (
-      <div className="space-y-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#28428c]">My Profile</h2>
-            <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">
-              Back to Dashboard
-            </button>
-          </div>
-          <div className="text-center py-10">
-            <p className="text-gray-500">You don't have any friends yet to show analytics.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-  const mostMessagedFriend = friends.reduce((prev, current) => {
-    const prevTotal = prev.messages_sent_count + prev.messages_received_count;
-    const currentTotal = current.messages_sent_count + current.messages_received_count;
-    return prevTotal > currentTotal ? prev : current;
-  }, friends[0]);
+  // Always render profile controls even if there are no friends yet
+  const hasFriends = !!friends && friends.length > 0;
+  const mostMessagedFriend = hasFriends
+    ? friends.reduce((prev, current) => {
+        const prevTotal = prev.messages_sent_count + prev.messages_received_count;
+        const currentTotal = current.messages_sent_count + current.messages_received_count;
+        return prevTotal > currentTotal ? prev : current;
+      }, friends[0])
+    : null;
 
-  const totalMessages = friends.reduce((sum, f) => sum + f.messages_sent_count + f.messages_received_count, 0);
+  const totalMessages = hasFriends
+    ? friends.reduce((sum, f) => sum + f.messages_sent_count + f.messages_received_count, 0)
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -119,24 +119,44 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
             </div>
           )}
           <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                value={nameInput}
-                onChange={(e) => setNameInput(e.target.value)}
-                placeholder="Your name"
-                className="w-full max-w-sm px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-[#28428c]"
-              />
-              <button
-                onClick={handleSaveName}
-                disabled={savingName}
-                className="px-3 py-2 text-sm bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] disabled:opacity-60"
-              >
-                {savingName ? 'Saving…' : (profile?.full_name ? 'Update Name' : 'Save Name')}
-              </button>
-            </div>
+            {/* Name display + inline editor */}
+            {!editingName ? (
+              <div className="flex items-center gap-2">
+                <h3 className="text-xl font-bold text-[#28428c]">
+                  {profile?.full_name && profile.full_name.trim() ? profile.full_name : 'Your Name'}
+                </h3>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={nameInput}
+                  onChange={(e) => setNameInput(e.target.value)}
+                  placeholder="Your name"
+                  className="w-full max-w-sm px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-[#28428c]"
+                />
+                <button
+                  onClick={handleSaveName}
+                  disabled={savingName}
+                  className="px-3 py-2 text-sm bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] disabled:opacity-60"
+                >
+                  {savingName ? 'Saving…' : 'Save'}
+                </button>
+                <button
+                  onClick={() => {
+                    setNameInput(profile?.full_name ?? '')
+                    setEditingName(false)
+                  }}
+                  disabled={savingName}
+                  className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 disabled:opacity-60"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+
             <p className="text-sm text-gray-500 mt-1">{profile?.email}</p>
-            <div className="mt-3">
+            <div className="mt-3 flex items-center gap-2">
               <button
                 onClick={handlePickFile}
                 disabled={uploading}
@@ -144,6 +164,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
               >
                 {uploading ? 'Uploading…' : (profile?.avatar_url ? 'Change Photo' : 'Add Photo')}
               </button>
+              <button
+                onClick={() => {
+                  if (editingName) {
+                    setNameInput(profile?.full_name ?? '')
+                    setEditingName(false)
+                  } else {
+                    setEditingName(true)
+                  }
+                }}
+                disabled={savingName}
+                className="px-3 py-1.5 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 disabled:opacity-60"
+              >
+                {editingName ? 'Cancel' : 'Change Name'}
+              </button>
+              {nameSaved && (
+                <span className="text-xs font-medium text-green-700 bg-green-100 border border-green-200 rounded-md px-2 py-1">
+                  Name saved
+                </span>
+              )}
               <input
                 ref={fileInputRef}
                 onChange={handleFileChange}
@@ -158,29 +197,37 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h3 className="text-lg font-semibold text-[#28428c] mb-4">Your Analytics</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <BarChart2 className="w-6 h-6 text-[#28428c]" />
-              <div>
-                <p className="text-sm text-[#28428c]">Most Messaged Friend</p>
-                <p className="text-lg font-semibold text-[#28428c]">{mostMessagedFriend?.name}</p>
+        {hasFriends ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <BarChart2 className="w-6 h-6 text-[#28428c]" />
+                  <div>
+                    <p className="text-sm text-[#28428c]">Most Messaged Friend</p>
+                    <p className="text-lg font-semibold text-[#28428c]">{mostMessagedFriend?.name}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <MessageSquare className="w-6 h-6 text-[#28428c]" />
+                  <div>
+                    <p className="text-sm text-[#28428c]">Total Messages</p>
+                    <p className="text-lg font-semibold text-[#28428c]">{totalMessages.toLocaleString()}</p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <MessageSquare className="w-6 h-6 text-[#28428c]" />
-              <div>
-                <p className="text-sm text-[#28428c]">Total Messages</p>
-                <p className="text-lg font-semibold text-[#28428c]">{totalMessages.toLocaleString()}</p>
-              </div>
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-600">More detailed analytics and profile editing coming soon!</p>
             </div>
+          </>
+        ) : (
+          <div className="text-center py-10">
+            <p className="text-gray-500">You don't have any friends yet to show analytics.</p>
           </div>
-        </div>
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">More detailed analytics and profile editing coming soon!</p>
-        </div>
+        )}
       </div>
     </div>
   );
