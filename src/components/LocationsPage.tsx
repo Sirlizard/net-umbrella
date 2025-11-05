@@ -198,23 +198,23 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   }
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+      <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-[#28428c]">Find Nearby Locations</h2>
-        <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">
+        <h2 className="text-lg font-semibold text-blue">Find Nearby Locations</h2>
+        <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-blue rounded-lg hover:bg-gray-200 transition-colors duration-200">
           Back to Dashboard
         </button>
       </div>
 
       {/* Suggested Event of the Day */}
-      <div className={`mb-4 p-4 rounded-lg border ${friendshipStatus?.border ?? 'border-[#ffacd6]/30'} ${friendshipStatus?.bg ?? 'bg-[#fff8fb]'}`}>
+      <div className={`mb-4 p-4 rounded-lg border ${friendshipStatus?.border ?? 'border-pink/30'} ${friendshipStatus?.bg ?? 'bg-[#fff8fb]'}`}>
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
-            <p className="text-sm text-[#892f1a] font-semibold mb-1">Suggested event of the day</p>
-            <p className="text-[#28428c]">{eventOfTheDay}</p>
+            <p className="text-sm text-red font-semibold mb-1">Suggested event of the day</p>
+            <p className="text-blue">{eventOfTheDay}</p>
             {friendshipStatus && (
               <p className={`mt-1 text-xs ${friendshipStatus.text}`}>
-                Friendship status: {friendshipStatus.isToday ? 'You connected with someone today' : `Most recent contact was ${friendshipStatus.minDays} day${friendshipStatus.minDays === 1 ? '' : 's'} ago`}.
+                Connection status: {friendshipStatus.isToday ? 'You connected with someone today' : `Most recent contact was ${friendshipStatus.minDays} day${friendshipStatus.minDays === 1 ? '' : 's'} ago`}.
                 {friendshipStatus.mostOverdue ? ` Consider inviting ${friendshipStatus.mostOverdue.name} to this!` : ''}
               </p>
             )}

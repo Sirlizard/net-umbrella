@@ -12,15 +12,15 @@ import { FriendCard } from './FriendCard';
 
 const EmptyDashboard = ({ onStart }: { onStart: () => void }) => (
   <div className="text-center py-16">
-    <div className="bg-white rounded-xl p-8 shadow-sm max-w-md mx-auto border border-[#ffacd6]/20">
+  <div className="bg-white rounded-xl p-8 shadow-sm max-w-md mx-auto border border-pink/20">
       <h3 className="text-lg font-semibold text-[#892f1a] mb-2">
-        Ready to create your amazing friendship network? 🌈
+        Ready to create your amazing network? 🌈
       </h3>
       <p className="text-[#28428c] mb-4">
         Start building beautiful connections that will bring happiness and joy to your life! ✨
       </p>
-      <button onClick={onStart} className="bg-[#28428c] text-white px-6 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200">
-        Start Your Friendship Journey! 🚀
+      <button onClick={onStart} className="bg-blue text-white px-6 py-2 rounded-lg hover:bg-blue-dark transition-colors duration-200">
+        Start Your Connections Journey! 🚀
       </button>
     </div>
   </div>
@@ -28,13 +28,13 @@ const EmptyDashboard = ({ onStart }: { onStart: () => void }) => (
 
 const AddMoreFriends = ({ onAdd }: { onAdd: () => void }) => (
     <div className="mt-10">
-        <div className="bg-white rounded-xl p-6 shadow-sm border border-[#ffacd6]/20 flex items-center justify-between">
+  <div className="bg-white rounded-xl p-6 shadow-sm border border-pink/20 flex items-center justify-between">
             <div>
-                <h3 className="text-lg font-semibold text-[#28428c]">Keep growing your network</h3>
-                <p className="text-[#28428c] text-sm">Add more friends and set up their connections.</p>
+        <h3 className="text-lg font-semibold text-[#28428c]">Keep growing your network</h3>
+        <p className="text-[#28428c] text-sm">Add more connections and set up their details.</p>
             </div>
-            <button onClick={onAdd} className="bg-[#28428c] text-white px-4 py-2 rounded-lg hover:bg-[#1e3366] transition-colors duration-200">
-                Add more friends
+      <button onClick={onAdd} className="bg-blue text-white px-4 py-2 rounded-lg hover:bg-blue-dark transition-colors duration-200">
+        Add more connections
             </button>
         </div>
     </div>
@@ -84,7 +84,7 @@ export const DashboardPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#e8e6d8]">
+  <div className="min-h-screen bg-cream">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <EmailVerificationBanner />
         <DashboardHeader 
@@ -97,8 +97,8 @@ export const DashboardPage: React.FC = () => {
         
         {friendsLoading ? (
           <div className="text-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#28428c] mx-auto mb-4"></div>
-            <p className="text-[#28428c]">Loading your friends...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue mx-auto mb-4"></div>
+            <p className="text-blue">Loading your connections...</p>
           </div>
         ) : (
           <>

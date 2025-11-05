@@ -1,10 +1,10 @@
 # Net Umbrella
 
-A React TypeScript application for managing friends and social connections.
+A React TypeScript application for managing personal and professional connections.
 
 ## Features
 
-- Friend management dashboard
+- Connection management dashboard
 - Social connection tracking
 - Modern UI with Tailwind CSS
 

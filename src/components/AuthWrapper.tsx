@@ -21,10 +21,10 @@ export const AuthWrapper: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#e8e6d8] flex items-center justify-center">
+      <div className="min-h-screen bg-cream flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#28428c] mx-auto mb-4"></div>
-          <p className="text-[#28428c]">Loading your friendship network...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue mx-auto mb-4"></div>
+          <p className="text-blue">Loading your network...</p>
         </div>
       </div>
     );

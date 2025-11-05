@@ -27,21 +27,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#e8e6d8] flex items-center justify-center px-4">
+  <div className="min-h-screen bg-cream flex items-center justify-center px-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-xl shadow-lg p-8 border border-[#ffacd6]/20">
+  <div className="bg-white rounded-xl shadow-lg p-8 border border-pink/20">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-[#28428c] mb-2">
+            <h1 className="text-3xl font-bold text-blue mb-2">
               Welcome Back!
             </h1>
-            <p className="text-[#28428c]">
-              Sign in to your friendship network
+            <p className="text-blue">
+              Sign in to your network
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#28428c] mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-blue mb-2">
                 Email Address
               </label>
               <input
@@ -50,13 +50,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#28428c] focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue focus:border-transparent transition-colors"
                 placeholder="Enter your email"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-[#28428c] mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-blue mb-2">
                 Password
               </label>
               <input
@@ -65,7 +65,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#28428c] focus:border-transparent transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue focus:border-transparent transition-colors"
                 placeholder="Enter your password"
               />
             </div>
@@ -79,18 +79,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#28428c] text-white py-3 px-4 rounded-lg hover:bg-[#1e3366] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="w-full bg-blue text-white py-3 px-4 rounded-lg hover:bg-blue-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
               {loading ? 'Signing In...' : 'Sign In'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-[#28428c]">
+            <p className="text-blue">
               Don't have an account?{' '}
               <button
                 onClick={onSwitchToSignup}
-                className="text-[#28428c] hover:text-[#1e3366] font-medium transition-colors"
+                className="text-blue hover:text-blue-dark font-medium transition-colors"
               >
                 Sign up here
               </button>

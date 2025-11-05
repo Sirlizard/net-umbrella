@@ -47,19 +47,19 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
       onClick={() => onClick(friend)}
       className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer 
                   border-l-4 ${getContactStatusBorder(friend.lastContacted)} hover:scale-[1.02] 
-                  border border-gray-100 hover:border-[#ffacd6] group`}
+                  border border-gray-100 hover:border-pink group`}
     >
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-[#28428c] group-hover:text-[#892f1a] transition-colors duration-200 mb-1">
+            <h3 className="text-lg font-semibold text-blue group-hover:text-red transition-colors duration-200 mb-1">
               {friend.name}
             </h3>
-            <p className="text-sm text-[#28428c] mb-2">
+            <p className="text-sm text-blue mb-2">
               {friend.socials.length} contact method{friend.socials.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <MessageCircle className="w-5 h-5 text-[#ffacd6] group-hover:text-[#28428c] transition-colors duration-200" />
+          <MessageCircle className="w-5 h-5 text-pink group-hover:text-blue transition-colors duration-200" />
         </div>
         
         <div className="flex items-center space-x-2">
@@ -72,16 +72,16 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between">
             {streak > 0 ? (
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-[#28428c]">
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-blue">
                 <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
                 {streak} day{streak === 1 ? '' : 's'} streak
               </span>
             ) : (
-              <span className="text-xs text-[#ffacd6] font-medium">
-                Ready to spread some friendship joy! 
+              <span className="text-xs text-pink font-medium">
+                Ready to spark a connection! 
               </span>
             )}
-            <div className="w-2 h-2 rounded-full bg-[#ffacd6] group-hover:bg-[#28428c] transition-colors duration-200"></div>
+            <div className="w-2 h-2 rounded-full bg-pink group-hover:bg-blue transition-colors duration-200"></div>
           </div>
         </div>
       </div>

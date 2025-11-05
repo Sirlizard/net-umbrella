@@ -192,7 +192,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               <textarea
                 value={editedBio}
                 onChange={(e) => setEditedBio(e.target.value)}
-                placeholder="Share what makes your friend special and amazing..."
+                placeholder="Share what makes this connection special..."
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent resize-none"
                 rows={3}
               />
@@ -399,7 +399,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
           {friend.socials.length === 0 && (
             <div className="text-center py-8">
               <MessageSquare className="w-12 h-12 text-[#28428c] mx-auto mb-3 opacity-50" />
-              <p className="text-[#28428c] mb-4">Ready to start connecting? Let's add some ways to reach your amazing friend! </p>
+              <p className="text-[#28428c] mb-4">Ready to start connecting? Let's add some ways to reach this connection! </p>
               <button
                 onClick={() => setShowAddPlatform(true)}
                 className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"

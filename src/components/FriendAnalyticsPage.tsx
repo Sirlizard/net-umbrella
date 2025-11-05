@@ -128,12 +128,12 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[#28428c]">Friend Analytics</h2>
+          <h2 className="text-lg font-semibold text-[#28428c]">Connection Analytics</h2>
           <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back</button>
         </div>
         <div className="text-center py-16">
           <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <p className="text-[#28428c]">No friends added yet. Add some friends to see analytics!</p>
+          <p className="text-[#28428c]">No connections added yet. Add some connections to see analytics!</p>
         </div>
       </div>
     );
@@ -144,7 +144,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
       {/* Header */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[#28428c]">Friend Analytics Dashboard</h2>
+          <h2 className="text-lg font-semibold text-[#28428c]">Connection Analytics Dashboard</h2>
           <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back to Dashboard</button>
         </div>
       </div>
@@ -170,7 +170,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                 <TrendingUp className="w-5 h-5 text-[#892f1a]" />
               </div>
               <div>
-                <p className="text-sm text-[#28428c]">Avg per Friend</p>
+                <p className="text-sm text-[#28428c]">Avg per Connection</p>
                 <p className="text-xl font-semibold text-[#28428c]">{analytics.avgMessagesPerFriend}</p>
               </div>
             </div>
@@ -208,7 +208,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4">
             <div>
-              <label className="block text-sm text-[#28428c] mb-1">Select Friend</label>
+              <label className="block text-sm text-[#28428c] mb-1">Select Connection</label>
               <select
                 value={selectedFriendId}
                 onChange={(e) => setSelectedFriendId(e.target.value)}

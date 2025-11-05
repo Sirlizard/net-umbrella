@@ -84,7 +84,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
     }
   }
 
-  // Always render profile controls even if there are no friends yet
+  // Always render profile controls even if there are no connections yet
   const hasFriends = !!friends && friends.length > 0;
   const mostMessagedFriend = hasFriends
     ? friends.reduce((prev, current) => {
@@ -102,7 +102,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-[#28428c]">My Profile</h2>
+          <h2 className="text-lg font-semibold text-blue">My Profile</h2>
           <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">
             Back to Dashboard
           </button>
@@ -122,7 +122,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
             {/* Name display + inline editor */}
             {!editingName ? (
               <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-[#28428c]">
+                <h3 className="text-xl font-bold text-blue">
                   {profile?.full_name && profile.full_name.trim() ? profile.full_name : 'Your Name'}
                 </h3>
               </div>
@@ -133,12 +133,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                   placeholder="Your name"
-                  className="w-full max-w-sm px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-[#28428c]"
+                  className="w-full max-w-sm px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent text-blue"
                 />
                 <button
                   onClick={handleSaveName}
                   disabled={savingName}
-                  className="px-3 py-2 text-sm bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] disabled:opacity-60"
+                  className="px-3 py-2 text-sm bg-blue text-white rounded-lg hover:bg-blue-dark disabled:opacity-60"
                 >
                   {savingName ? 'Saving…' : 'Save'}
                 </button>
@@ -148,7 +148,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
                     setEditingName(false)
                   }}
                   disabled={savingName}
-                  className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 disabled:opacity-60"
+                  className="px-3 py-2 text-sm bg-gray-100 text-blue rounded-lg hover:bg-gray-200 disabled:opacity-60"
                 >
                   Cancel
                 </button>
@@ -160,7 +160,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
               <button
                 onClick={handlePickFile}
                 disabled={uploading}
-                className="px-3 py-1.5 text-sm bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] disabled:opacity-60"
+                className="px-3 py-1.5 text-sm bg-blue text-white rounded-lg hover:bg-blue-dark disabled:opacity-60"
               >
                 {uploading ? 'Uploading…' : (profile?.avatar_url ? 'Change Photo' : 'Add Photo')}
               </button>
@@ -174,7 +174,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
                   }
                 }}
                 disabled={savingName}
-                className="px-3 py-1.5 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 disabled:opacity-60"
+                className="px-3 py-1.5 text-sm bg-gray-100 text-blue rounded-lg hover:bg-gray-200 disabled:opacity-60"
               >
                 {editingName ? 'Cancel' : 'Change Name'}
               </button>
@@ -196,25 +196,25 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 className="text-lg font-semibold text-[#28428c] mb-4">Your Analytics</h3>
+        <h3 className="text-lg font-semibold text-blue mb-4">Your Analytics</h3>
         {hasFriends ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <BarChart2 className="w-6 h-6 text-[#28428c]" />
+                  <BarChart2 className="w-6 h-6 text-blue" />
                   <div>
-                    <p className="text-sm text-[#28428c]">Most Messaged Friend</p>
-                    <p className="text-lg font-semibold text-[#28428c]">{mostMessagedFriend?.name}</p>
+                    <p className="text-sm text-blue">Most Messaged Connection</p>
+                    <p className="text-lg font-semibold text-blue">{mostMessagedFriend?.name}</p>
                   </div>
                 </div>
               </div>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <MessageSquare className="w-6 h-6 text-[#28428c]" />
+                  <MessageSquare className="w-6 h-6 text-blue" />
                   <div>
-                    <p className="text-sm text-[#28428c]">Total Messages</p>
-                    <p className="text-lg font-semibold text-[#28428c]">{totalMessages.toLocaleString()}</p>
+                    <p className="text-sm text-blue">Total Messages</p>
+                    <p className="text-lg font-semibold text-blue">{totalMessages.toLocaleString()}</p>
                   </div>
                 </div>
               </div>
@@ -225,7 +225,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
           </>
         ) : (
           <div className="text-center py-10">
-            <p className="text-gray-500">You don't have any friends yet to show analytics.</p>
+            <p className="text-gray-500">You don't have any connections yet to show analytics.</p>
           </div>
         )}
       </div>

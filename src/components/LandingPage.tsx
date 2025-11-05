@@ -34,16 +34,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
             <div className="space-y-6">
               <div className="inline-flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
                 <Star className="w-4 h-4 mr-2" />
-                Join thousands building better friendships
+                Join thousands building better connections
               </div>
               
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 Never Lose Touch with
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600"> Amazing Friends</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600"> Your Network</span>
               </h1>
               
               <p className="text-xl text-gray-600 leading-relaxed">
-                Transform your relationships with intelligent friendship management. Track conversations, get reminders, and build deeper connections that last a lifetime.
+                Transform your relationships with intelligent connection management. Track conversations, get reminders, and build deeper connections that last a lifetime.
               </p>
             </div>
 
@@ -77,7 +77,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900">50K+</div>
-                <div className="text-sm text-gray-600">Friendships Managed</div>
+                <div className="text-sm text-gray-600">Connections Managed</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900">4.9</div>
@@ -110,7 +110,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                 <div className="text-center">
                   <div className="text-6xl mb-4"></div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    Your Friendship Network
+                    Your Network
                   </h3>
                   <p className="text-gray-600">
                     See how Net-umbrella helps you stay connected
@@ -158,7 +158,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
                     onClick={onGetStarted}
                     className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 font-semibold transform hover:scale-105"
                   >
-                    Start Managing Your Friendships
+                    Start Managing Your Connections
                   </button>
                 </div>
               </div>
@@ -184,7 +184,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Beautiful Analytics</h3>
             <p className="text-gray-600 leading-relaxed">
-              Get insights into your friendship patterns, response times, and discover who you should reach out to next.
+              Get insights into your connection patterns, response times, and discover who you should reach out to next.
             </p>
           </div>
 
@@ -194,7 +194,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Deeper Connections</h3>
             <p className="text-gray-600 leading-relaxed">
-              Build stronger relationships with personalized reminders and conversation starters tailored to each friend.
+              Build stronger relationships with personalized reminders and conversation starters tailored to each connection.
             </p>
           </div>
         </div>
@@ -203,7 +203,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
         <div className="mt-24 text-center">
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-12 text-white">
             <h2 className="text-4xl font-bold mb-4">
-              Ready to Transform Your Friendships?
+              Ready to Transform Your Connections?
             </h2>
             <p className="text-xl mb-8 opacity-90">
               Join thousands of people who never lose touch with the people they care about.
@@ -235,7 +235,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onSignIn
             </div>
             <div className="flex items-center">
               <Users className="w-4 h-4 mr-1 text-blue-400" />
-              <span>Unlimited friends</span>
+              <span>Unlimited connections</span>
             </div>
             <div className="flex items-center">
               <Star className="w-4 h-4 mr-1 text-yellow-400" />

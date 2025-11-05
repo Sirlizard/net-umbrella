@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import { Friend, SocialLink, MessageRecord } from '../types/Friend';
-import { supabase } from '../lib/supabase'
-import { useAuth } from '../contexts/AuthContext';
 import { 
   X, 
   Plus, 
@@ -31,7 +28,6 @@ interface ContactMethod {
 }
 
 export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFriend }) => {
-  const { user } = useAuth();
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [contactMethods, setContactMethods] = useState<ContactMethod[]>([
@@ -77,7 +73,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
     e.preventDefault();
     
     if (!name.trim()) {
-      alert('Please enter a name for your friend!');
+      alert('Please enter a name for your connection!');
       return;
     }
 
@@ -104,16 +100,16 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
         <div className="sticky top-0 bg-white border-b border-gray-100 p-6 rounded-t-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-[#28428c] rounded-full">
+              <div className="p-2 bg-blue rounded-full">
                 <User className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-[#892f1a]">Add New Friend! 🌟</h2>
+              <h2 className="text-xl font-bold text-[#892f1a]">Add New Connection! 🌟</h2>
             </div>
             <button
               onClick={onClose}
               className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
             >
-              <X className="w-5 h-5 text-[#28428c]" />
+              <X className="w-5 h-5 text-blue" />
             </button>
           </div>
         </div>
@@ -121,29 +117,29 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Name Field */}
           <div>
-            <label className="block text-sm font-medium text-[#892f1a] mb-2">
-              Friend's Name *
+            <label className="block text-sm font-medium text-red mb-2">
+              Connection's Name *
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your amazing friend's name"
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent"
+              placeholder="Enter the connection's name"
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent"
               required
             />
           </div>
 
           {/* Bio Field */}
           <div>
-            <label className="block text-sm font-medium text-[#892f1a] mb-2">
+            <label className="block text-sm font-medium text-red mb-2">
               Bio (Optional)
             </label>
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              placeholder="Share what makes this friend special and amazing..."
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent resize-none"
+              placeholder="Share what makes this connection special..."
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent resize-none"
               rows={3}
             />
           </div>
@@ -151,13 +147,13 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
           {/* Contact Methods */}
           <div>
             <div className="flex items-center justify-between mb-4">
-              <label className="block text-sm font-medium text-[#892f1a]">
+              <label className="block text-sm font-medium text-red">
                 Contact Methods *
               </label>
               <button
                 type="button"
                 onClick={addContactMethod}
-                className="flex items-center space-x-2 px-3 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200 text-sm"
+                className="flex items-center space-x-2 px-3 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200 text-sm"
               >
                 <Plus className="w-4 h-4" />
                 <span>Add Method</span>
@@ -166,11 +162,11 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
 
             <div className="space-y-4">
               {contactMethods.map((method, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4 bg-[#e8e6d8]/30">
+                <div key={index} className="border border-gray-200 rounded-lg p-4 bg-cream/30">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-2">
                       {method.platform && getPlatformIcon(method.platform)}
-                      <span className="text-sm font-medium text-[#892f1a]">
+                      <span className="text-sm font-medium text-red">
                         Contact Method {index + 1}
                       </span>
                     </div>
@@ -191,38 +187,38 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
                       placeholder="Platform (e.g., Instagram, SMS)"
                       value={method.platform}
                       onChange={(e) => updateContactMethod(index, 'platform', e.target.value)}
-                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-sm"
+                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent text-sm"
                     />
                     <input
                       type="text"
                       placeholder="Handle (e.g., @username, phone)"
                       value={method.handle}
                       onChange={(e) => updateContactMethod(index, 'handle', e.target.value)}
-                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-sm"
+                      className="px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent text-sm"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs text-[#28428c] mb-1">
+                      <label className="block text-xs text-blue mb-1">
                         Last Sent Message (Optional)
                       </label>
                       <input
                         type="datetime-local"
                         value={method.lastSentMessage ? method.lastSentMessage.toISOString().slice(0, 16) : ''}
                         onChange={(e) => updateContactMethod(index, 'lastSentMessage', e.target.value ? new Date(e.target.value) : '')}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-sm"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-[#28428c] mb-1">
+                      <label className="block text-xs text-blue mb-1">
                         Last Received Message (Optional)
                       </label>
                       <input
                         type="datetime-local"
                         value={method.lastReceivedMessage ? method.lastReceivedMessage.toISOString().slice(0, 16) : ''}
                         onChange={(e) => updateContactMethod(index, 'lastReceivedMessage', e.target.value ? new Date(e.target.value) : '')}
-                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent text-sm"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent text-sm"
                       />
                     </div>
                   </div>
@@ -235,14 +231,14 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
           <div className="flex space-x-3 pt-4 border-t border-gray-100">
             <button
               type="submit"
-              className="flex-1 bg-[#28428c] text-white py-3 rounded-lg hover:bg-[#1e3366] transition-colors duration-200 font-medium"
+              className="flex-1 bg-blue text-white py-3 rounded-lg hover:bg-blue-dark transition-colors duration-200 font-medium"
             >
-              Add Amazing Friend! 🚀
+              Add Connection 🚀
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 bg-gray-200 text-[#28428c] rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
+              className="px-6 py-3 bg-gray-200 text-blue rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
             >
               Cancel
             </button>

@@ -159,7 +159,7 @@ export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ frie
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
-          <label className="block text-sm text-[#28428c] mb-1">Select Friend</label>
+          <label className="block text-sm text-[#28428c] mb-1">Select Connection</label>
           <select
             value={selectedFriendId}
             onChange={(e) => setSelectedFriendId(e.target.value)}

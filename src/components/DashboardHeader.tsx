@@ -47,14 +47,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-3 bg-white rounded-full px-6 py-3 shadow-md border border-[#ffacd6]/20">
-          <Umbrella className="w-8 h-8 text-[#28428c]" />
-          <h1 className="text-2xl font-bold text-[#28428c]">Net-umbrella</h1>
+        <div className="flex items-center space-x-3 bg-white rounded-full px-6 py-3 shadow-md border border-pink/20">
+          <Umbrella className="w-8 h-8 text-blue" />
+          <h1 className="text-2xl font-bold text-blue">Net-umbrella</h1>
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="text-sm text-[#28428c]">
-            Welcome, <span className="font-medium text-[#28428c]">
+          <div className="text-sm text-blue">
+            Welcome, <span className="font-medium text-blue">
               {userProfile?.full_name || user?.email}
             </span>
           </div>
@@ -62,7 +62,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                className="inline-flex items-center justify-center rounded-md border border-gray-300 shadow-sm px-2 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex items-center justify-center rounded-md border border-gray-300 shadow-sm px-2 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
                 id="options-menu"
                 aria-haspopup="true"
                 aria-expanded={isProfileMenuOpen}
@@ -104,8 +104,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               onClick={() => onViewChange?.('dashboard')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'dashboard'
-                  ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#28428c] hover:bg-gray-50'
+                  ? 'bg-blue text-white shadow-sm'
+                  : 'text-blue hover:bg-gray-50'
               }`}
             >
               <Home className="w-4 h-4" />
@@ -115,8 +115,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               onClick={() => onViewChange?.('analytics')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'analytics'
-                  ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#28428c] hover:bg-gray-50'
+                  ? 'bg-blue text-white shadow-sm'
+                  : 'text-blue hover:bg-gray-50'
               }`}
             >
               <BarChart3 className="w-4 h-4" />
@@ -126,8 +126,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               onClick={() => onViewChange?.('journal')}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
                 currentView === 'journal'
-                  ? 'bg-[#28428c] text-white shadow-sm'
-                  : 'text-[#28428c] hover:bg-gray-50'
+                  ? 'bg-blue text-white shadow-sm'
+                  : 'text-blue hover:bg-gray-50'
               }`}
             >
               <BookOpen className="w-4 h-4" />
@@ -136,7 +136,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             
             <Link
               to="/dashboard/locations"
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 text-[#28428c] hover:bg-gray-50`}
+              className={`flex items:center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 text-blue hover:bg-gray-50`}
             >
               <MapPin className="w-4 h-4" />
               <span>Locations</span>
@@ -146,18 +146,18 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       </div>
 
       <div className="text-center">
-        <h2 className="text-xl font-semibold text-[#28428c] mb-2">
-          {currentView === 'analytics' ? 'Friend Analytics Dashboard ' :
+        <h2 className="text-xl font-semibold text-blue mb-2">
+          {currentView === 'analytics' ? 'Connection Analytics Dashboard ' :
            currentView === 'journal' ? 'Your Personal Journal ' :
-           'Your Amazing Friendship Network! '}
+           'Your Amazing Network! '}
         </h2>
-        <div className="flex items-center justify-center space-x-2 text-[#28428c]">
+        <div className="flex items-center justify-center space-x-2 text-blue">
           <Users className="w-4 h-4" />
           <p className="text-sm">
             {currentView === 'analytics' 
               ? `Analyze communication patterns across your ${friendCount} connections`
               : currentView === 'journal'
-              ? 'Reflect on your friendship journey and growth'
+              ? 'Reflect on your connections journey and growth'
               : `You're nurturing ${friendCount} wonderful connections that bring joy to your life! `
             }
           </p>
