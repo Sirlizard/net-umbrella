@@ -16,8 +16,7 @@ type EventRecord = {
 
 const STORAGE_KEY = 'net-umbrella:events:v1';
 
-// Keep the same exported name so existing routes/imports don't need updating
-export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export const EventsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const { friends, loading: friendsLoading } = useFriends();
   const { user } = useAuth();
 
@@ -34,10 +33,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     taggedFriendIds: string[];
   } | null>(null);
   const [editingEvent, setEditingEvent] = useState<EventRecord | null>(null);
-  const [editTitle, setEditTitle] = useState('');
-  const [editDate, setEditDate] = useState('');
-  const [editNotes, setEditNotes] = useState('');
-  const [editSelectedIds, setEditSelectedIds] = useState<Record<string, boolean>>({});
   const [edgeDetails, setEdgeDetails] = useState<{ a: string; b: string; events: EventRecord[] } | null>(null);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -45,7 +40,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   const [selectedIds, setSelectedIds] = useState<Record<string, boolean>>({});
   const [showForm, setShowForm] = useState(false);
 
-  // Load events from Supabase when signed in, otherwise from localStorage
   useEffect(() => {
     let mounted = true;
 
@@ -115,7 +109,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     if (!title.trim() || !date) return;
     const tagged = Object.keys(selectedIds).filter((k) => selectedIds[k]);
 
-    // optimistic local add
     const temp: EventRecord = {
       id: 'temp-' + String(Date.now()),
       title: title.trim(),
@@ -125,7 +118,7 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       createdAt: new Date().toISOString(),
     };
     setEvents((s) => [temp, ...s]);
-  setLastCreated({ id: temp.id, title: temp.title, taggedFriendIds: temp.taggedFriendIds });
+    setLastCreated({ id: temp.id, title: temp.title, taggedFriendIds: temp.taggedFriendIds });
 
     setTitle('');
     setDate('');
@@ -133,7 +126,7 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     setSelectedIds({});
     setShowForm(false);
 
-    if (!user) return; // keep local if not signed in
+    if (!user) return;
 
     try {
       const { data: inserted, error } = await supabase
@@ -143,17 +136,14 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         .single();
       if (error) throw error;
 
-      // insert tags
       if (tagged.length > 0) {
         const rows = tagged.map((fid) => ({ event_id: inserted.id, friend_id: fid }));
         const { error: tagError } = await supabase.from('event_tags').insert(rows);
         if (tagError) throw tagError;
       }
 
-  // set lastCreated to the real id
-  setLastCreated({ id: inserted.id, title: inserted.title, taggedFriendIds: tagged });
+      setLastCreated({ id: inserted.id, title: inserted.title, taggedFriendIds: tagged });
 
-  // reload remote
       const reload = await supabase
         .from('events')
         .select('id, title, date, notes, created_at, event_tags(friend_id)')
@@ -183,10 +173,14 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
   };
 
+  const [editTitle, setEditTitle] = useState('');
+  const [editDate, setEditDate] = useState('');
+  const [editNotes, setEditNotes] = useState('');
+  const [editSelectedIds, setEditSelectedIds] = useState<Record<string, boolean>>({});
+
   const openEditEvent = (ev: EventRecord) => {
     setEditingEvent(ev);
     setEditTitle(ev.title);
-    // store as yyyy-mm-dd for date input
     try {
       setEditDate(ev.date ? new Date(ev.date).toISOString().substring(0, 10) : '');
     } catch {
@@ -199,22 +193,18 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   };
 
   const saveEditEvent = async (updated: EventRecord) => {
-    // optimistic update
     setEvents((s) => s.map((e) => (e.id === updated.id ? updated : e)));
     setEditingEvent(null);
 
     if (!user || updated.id.startsWith('temp-')) return;
 
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('events')
         .update({ title: updated.title, date: updated.date, notes: updated.notes })
-        .eq('id', updated.id)
-        .select()
-        .single();
+        .eq('id', updated.id);
       if (error) throw error;
 
-      // replace tags: delete existing and insert new
       await supabase.from('event_tags').delete().eq('event_id', updated.id);
       if (updated.taggedFriendIds && updated.taggedFriendIds.length) {
         const rows = updated.taggedFriendIds.map((fid) => ({ event_id: updated.id, friend_id: fid }));
@@ -225,7 +215,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     }
   };
 
-  // filtered events list
   const filteredEvents = useMemo(() => {
     return events.filter((ev) => {
       if (search && !ev.title.toLowerCase().includes(search.toLowerCase()) && !(ev.notes || '').toLowerCase().includes(search.toLowerCase())) return false;
@@ -236,10 +225,9 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     });
   }, [events, search, filterFriend, dateFrom, dateTo]);
 
-  // Compute connection graph data from events
   const graph = useMemo(() => {
     const nodes: Record<string, { id: string; name: string; count: number }> = {};
-    const edges: Record<string, number> = {}; // key 'a|b' where a<b
+    const edges: Record<string, number> = {};
 
     for (const f of friends || []) {
       nodes[f.id] = { id: f.id, name: f.name, count: 0 };
@@ -249,11 +237,9 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
     for (const ev of sourceEvents) {
       const ids = ev.taggedFriendIds.filter((id) => !!nodes[id]);
-      // increment node counts
       for (const id of ids) {
         nodes[id].count = (nodes[id].count || 0) + 1;
       }
-      // increment pair edges
       for (let i = 0; i < ids.length; i++) {
         for (let j = i + 1; j < ids.length; j++) {
           const a = ids[i] < ids[j] ? ids[i] : ids[j];
@@ -266,8 +252,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
     return { nodes: Object.values(nodes), edges };
   }, [events, friends, filteredEvents, graphFromFiltered]);
-
-  // Layout is handled by ConnectionGraph component (force-directed)
 
   const eventOfTheDay = useMemo(() => {
     try {
@@ -397,7 +381,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <div>
           <h3 className="text-sm font-semibold mb-2">Connection Map</h3>
           <div className="p-3 border border-gray-100 rounded bg-white">
-            {/* New interactive graph component */}
             <div style={{ position: 'relative' }}>
               <ConnectionGraph
                 nodes={graph.nodes}
@@ -405,7 +388,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 width={520}
                 height={360}
                 onNodeClick={(id) => {
-                  // click-to-filter by friend
                   setFilterFriend(id);
                 }}
                 onNodeHover={(id, coords) => {
@@ -414,7 +396,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                   if (coords) setHoverTooltip({ id, name, x: coords.x, y: coords.y });
                 }}
                 onEdgeClick={(s, t) => {
-                  // clicking an edge shows shared events between s and t
                   const shared = events.filter((ev) => ev.taggedFriendIds.includes(s) && ev.taggedFriendIds.includes(t));
                   setEdgeDetails({ a: s, b: t, events: shared });
                 }}
@@ -431,7 +412,7 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
           </div>
         </div>
       </div>
-      {/* Edit event modal */}
+
       {editingEvent && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-full max-w-lg p-4">
@@ -481,7 +462,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         </div>
       )}
 
-      {/* Edge details modal */}
       {edgeDetails && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg w-full max-w-md p-4">
@@ -512,4 +492,4 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   );
 };
 
-export default LocationsPage;
+export default EventsPage;

@@ -63,3 +63,14 @@ Notes:
 - Vite
 - Tailwind CSS
 - Supabase
+
+## Events page (replaces Locations map)
+
+The `LocationsPage` component now functions as an Events & Plans page. Key points:
+
+- Create events, tag friends, and view past events. Events are saved locally (localStorage) and, when signed in, persisted to Supabase in the `events` table with tags in `event_tags`.
+- LocalStorage key: `net-umbrella:events:v1`.
+- A Connection Graph visualizes relationships between tagged friends. Node size = times a friend was tagged; link thickness = number of shared events.
+- The graph uses D3 for a force-directed layout with drag and zoom.
+
+If you want to enable server persistence, run the SQL migration in `supabase/migrations/20251106123000_events.sql` against your Supabase project (it creates `events` and `event_tags`). Make sure `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set in your environment.
