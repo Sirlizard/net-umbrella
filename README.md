@@ -50,7 +50,7 @@ You have three ways to provide the key:
 3) URL/local storage (quick dev/testing)
 
 	- URL param: `?mapsKey=YOUR_PUBLIC_BROWSER_KEY_HERE`
-	- Or paste it once in the Locations page prompt; it’s saved to `localStorage`.
+	- Or paste it once in the Events page prompt; it’s saved to `localStorage`.
 
 Notes:
 - `.env.local` and `.env` are git-ignored, so your keys stay out of the repo.
@@ -66,7 +66,7 @@ Notes:
 
 ## Events page (replaces Locations map)
 
-The `LocationsPage` component now functions as an Events & Plans page. Key points:
+The `EventsPage` component provides an Events & Plans experience. Key points:
 
 - Create events, tag friends, and view past events. Events are saved locally (localStorage) and, when signed in, persisted to Supabase in the `events` table with tags in `event_tags`.
 - LocalStorage key: `net-umbrella:events:v1`.

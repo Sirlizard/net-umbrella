@@ -135,11 +135,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             </button>
             
             <Link
-              to="/dashboard/locations"
+              to="/dashboard/events"
               className={`flex items:center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 text-blue hover:bg-gray-50`}
             >
               <MapPin className="w-4 h-4" />
-              <span>Locations</span>
+              <span>Events</span>
             </Link>
           </div>
         </div>

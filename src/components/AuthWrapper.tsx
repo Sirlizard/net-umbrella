@@ -6,7 +6,7 @@ import { LandingPage } from './LandingPage';
 import { DashboardPage } from './DashboardPage';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ProfilePage } from './ProfilePage';
-import { LocationsPage } from './LocationsPage';
+import { EventsPage } from './EventsPage';
 import { JournalPage } from './JournalPage';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useFriends } from '../hooks/useFriends';
@@ -31,9 +31,9 @@ export const AuthWrapper: React.FC = () => {
   }
 
   if (!user) {
-    // Allow public access to the Locations page so anyone can use the feature
-    if (location.pathname === '/locations') {
-      return <LocationsPage onBack={() => navigate('/')} />;
+    // Allow public access to the Events page so anyone can use the feature
+    if (location.pathname === '/events') {
+      return <EventsPage onBack={() => navigate('/')} />;
     }
     if (authView === 'signup') {
       return <SignupPage onSwitchToLogin={() => setAuthView('login')} />;
@@ -49,7 +49,7 @@ export const AuthWrapper: React.FC = () => {
     <Routes>
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/profile" element={<ProfilePage profile={profile} friends={dbFriends} onBack={() => navigate('/dashboard')} />} />
-      <Route path="/dashboard/locations" element={<LocationsPage onBack={() => navigate('/dashboard')} />} />
+  <Route path="/dashboard/events" element={<EventsPage onBack={() => navigate('/dashboard')} />} />
       <Route path="/dashboard/journal" element={<JournalPage onBack={() => navigate('/dashboard')} />} />
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
