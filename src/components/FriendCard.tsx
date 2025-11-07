@@ -23,8 +23,8 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
 
     const diffDays = Math.floor(Math.abs(now.getTime() - lastContacted.getTime()) / (1000 * 60 * 60 * 24));
     const targetDays = frequencyToTargetDays(friend.contactFrequency);
-    if (diffDays <= targetDays) return 'text-yellow-600';
-    return 'text-red-500';
+  if (diffDays <= targetDays) return 'text-yellow-600';
+  return 'text-red';
   };
 
   const getContactStatusBorder = (lastContacted: Date) => {

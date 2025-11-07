@@ -367,8 +367,8 @@ export const EventsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     <div className="flex flex-col items-end gap-2">
                       <div className="text-xs text-gray-400">{new Date(ev.createdAt).toLocaleString()}</div>
                       <div className="flex flex-col items-end gap-1">
-                        <button onClick={() => openEditEvent(ev)} className="text-xs text-blue-600 hover:underline">Edit</button>
-                        <button onClick={() => deleteEvent(ev.id)} className="text-xs text-red-600 hover:underline">Delete</button>
+                        <button onClick={() => openEditEvent(ev)} className="text-xs text-blue hover:underline">Edit</button>
+                        <button onClick={() => deleteEvent(ev.id)} className="text-xs text-red hover:underline">Delete</button>
                       </div>
                     </div>
                   </div>

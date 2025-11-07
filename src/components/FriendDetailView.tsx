@@ -65,7 +65,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
       case 'sms': return 'bg-green-500';
       case 'whatsapp': return 'bg-green-600';
       case 'discord': return 'bg-indigo-600';
-      default: return 'bg-[#28428c]';
+      default: return 'bg-blue';
     }
   };
 
@@ -145,26 +145,26 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#e8e6d8] pb-8">
+    <div className="min-h-screen bg-cream pb-8">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-[#ffacd6]/20">
+  <div className="bg-white shadow-sm border-b border-pink/20">
         <div className="container mx-auto px-4 py-4 max-w-4xl">
           <div className="flex items-center space-x-4">
             <button
               onClick={onBack}
-              className="p-2 rounded-full hover:bg-[#ffacd6]/10 transition-colors duration-200"
+              className="p-2 rounded-full hover:bg-pink/10 transition-colors duration-200"
             >
-              <ArrowLeft className="w-6 h-6 text-[#28428c]" />
+              <ArrowLeft className="w-6 h-6 text-blue" />
             </button>
             <div>
-              <h1 className="text-2xl font-bold text-[#892f1a]">{friend.name}</h1>
-              <p className="text-sm text-[#28428c]">
+              <h1 className="text-2xl font-bold text-red">{friend.name}</h1>
+              <p className="text-sm text-blue">
                 Last contact: <span className={getContactStatusColor(friend.lastContacted)}>
                   {formatLastContacted(friend.lastContacted)}
                 </span>
               </p>
               {streak > 0 && (
-                <div className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-[#28428c]">
+                <div className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-blue">
                   <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
                   {streak} day{streak === 1 ? '' : 's'} streak
                 </div>
@@ -178,12 +178,12 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
         {/* Bio Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#892f1a]">About</h2>
+            <h2 className="text-lg font-semibold text-red">About</h2>
             <button
               onClick={() => setIsEditingBio(!isEditingBio)}
-              className="p-2 rounded-full hover:bg-[#ffacd6]/10 transition-colors duration-200"
+              className="p-2 rounded-full hover:bg-pink/10 transition-colors duration-200"
             >
-              <Edit3 className="w-4 h-4 text-[#28428c]" />
+              <Edit3 className="w-4 h-4 text-blue" />
             </button>
           </div>
           
@@ -193,13 +193,13 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                 value={editedBio}
                 onChange={(e) => setEditedBio(e.target.value)}
                 placeholder="Share what makes this connection special..."
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#ffacd6] focus:border-transparent resize-none"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent resize-none"
                 rows={3}
               />
               <div className="flex space-x-2">
                 <button
                   onClick={handleSaveBio}
-                  className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+                  className="px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200"
                 >
                   Save
                 </button>
@@ -208,7 +208,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                     setIsEditingBio(false);
                     setEditedBio(friend.bio || '');
                   }}
-                  className="px-4 py-2 bg-gray-200 text-[#28428c] rounded-lg hover:bg-gray-300 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-200 text-blue rounded-lg hover:bg-gray-300 transition-colors duration-200"
                 >
                   Cancel
                 </button>
@@ -216,19 +216,19 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
             </div>
           ) : (
             <>
-              <p className="text-[#28428c] leading-relaxed">
+              <p className="text-blue leading-relaxed">
                 {friend.bio || 'No bio added yet. Click the edit button to add one!'}
               </p>
               <div className="flex items-center space-x-4 mt-2">
-                <div className="flex items-center space-x-1 text-xs text-[#28428c]">
+                <div className="flex items-center space-x-1 text-xs text-blue">
                   <BarChart3 className="w-3 h-3" />
                   <span>{getTotalReceivedMessages(friend)} messages received</span>
                 </div>
-                <div className="flex items-center space-x-1 text-xs text-[#28428c]">
+                <div className="flex items-center space-x-1 text-xs text-blue">
                   <Send className="w-3 h-3" />
                   <span>{getTotalSentMessages(friend)} messages sent</span>
                 </div>
-                <div className="flex items-center space-x-1 text-xs text-[#28428c]">
+                <div className="flex items-center space-x-1 text-xs text-blue">
                   <TrendingUp className="w-3 h-3" />
                   <span>{formatResponseTime(getAverageResponseTime(friend.socials.flatMap(s => s.messageHistory)))} response time</span>
                 </div>
@@ -240,12 +240,12 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
         {/* Contact Frequency Preference */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-[#892f1a]">How often to stay in touch</h2>
+            <h2 className="text-lg font-semibold text-red">How often to stay in touch</h2>
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-[#28428c]">Little contact</span>
-              <span className="text-sm text-[#28428c]">Frequent contact through the day</span>
+              <span className="text-sm text-blue">Little contact</span>
+              <span className="text-sm text-blue">Frequent contact through the day</span>
             </div>
             <input
               type="range"
@@ -254,17 +254,17 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               step={1}
               value={contactFrequency}
               onChange={(e) => setContactFrequency(parseInt(e.target.value, 10))}
-              className="w-full accent-[#28428c]"
+              className="w-full accent-blue"
             />
             <div className="flex items-center justify-between">
-              <span className="text-sm text-[#28428c]">0</span>
-              <span className="text-sm text-[#28428c] font-semibold">Preference: {contactFrequency}/10</span>
-              <span className="text-sm text-[#28428c]">10</span>
+              <span className="text-sm text-blue">0</span>
+              <span className="text-sm text-blue font-semibold">Preference: {contactFrequency}/10</span>
+              <span className="text-sm text-blue">10</span>
             </div>
             <div className="flex justify-end">
               <button
                 onClick={handleSaveContactFrequency}
-                className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+                className="px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200"
               >
                 Save Preference
               </button>
@@ -275,10 +275,10 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
         {/* Contact Platforms */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-[#892f1a]">Contact Platforms</h2>
+            <h2 className="text-lg font-semibold text-red">Contact Platforms</h2>
             <button
               onClick={() => setShowAddPlatform(true)}
-              className="flex items-center space-x-2 px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+              className="flex items-center space-x-2 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200"
             >
               <Plus className="w-4 h-4" />
               <span>Add Platform</span>
@@ -287,8 +287,8 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
 
           {/* Add Platform Form */}
           {showAddPlatform && (
-            <div className="bg-[#e8e6d8] rounded-lg p-4 mb-6">
-              <h3 className="font-medium text-[#892f1a] mb-3">Add a New Connection! </h3>
+            <div className="bg-cream rounded-lg p-4 mb-6">
+              <h3 className="font-medium text-red mb-3">Add a New Connection! </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                 <input
                   type="text"
@@ -308,7 +308,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               <div className="flex space-x-2">
                 <button
                   onClick={handleAddPlatform}
-                  className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+                  className="px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200"
                 >
                   Add Platform
                 </button>
@@ -318,7 +318,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                     setNewPlatform('');
                     setNewHandle('');
                   }}
-                  className="px-4 py-2 bg-gray-200 text-[#28428c] rounded-lg hover:bg-gray-300 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-200 text-blue rounded-lg hover:bg-gray-300 transition-colors duration-200"
                 >
                   Cancel
                 </button>
@@ -336,25 +336,25 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                       {getPlatformIcon(social.platform)}
                     </div>
                     <div>
-                      <h3 className="font-medium text-[#892f1a]">{social.platform}</h3>
-                      <p className="text-sm text-[#28428c]">{social.handle}</p>
+                          <h3 className="font-medium text-red">{social.platform}</h3>
+                          <p className="text-sm text-blue">{social.handle}</p>
                       <div className="flex items-center space-x-3 mt-1">
-                        <span className="text-xs text-[#28428c] font-medium">
+                            <span className="text-xs text-blue font-medium">
                           {getReceivedMessageCount(social.messageHistory)} received
                         </span>
-                        <span className="text-xs text-[#28428c] font-medium">
+                            <span className="text-xs text-blue font-medium">
                           {getSentMessageCount(social.messageHistory)} sent
                         </span>
-                        <span className="text-xs text-[#28428c]">
+                            <span className="text-xs text-blue">
                           {formatResponseTime(getAverageResponseTime(social.messageHistory))}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleRemovePlatform(index)}
-                    className="p-2 rounded-full hover:bg-red-50 text-red-500 hover:text-red-600 transition-colors duration-200"
-                  >
+                      <button
+                        onClick={() => handleRemovePlatform(index)}
+                        className="p-2 rounded-full hover:bg-red-50 text-red hover:text-red transition-colors duration-200"
+                      >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -366,12 +366,12 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                 )}
                 
                 {getLastReceivedMessage(social.messageHistory) && (
-                  <p className="text-xs mb-3 text-[#28428c]">
+                  <p className="text-xs mb-3 text-blue">
                     Last received: {formatLastContacted(getLastReceivedMessage(social.messageHistory)!)}
                   </p>
                 )}
                 {getLastSentMessage(social.messageHistory) && (
-                  <p className="text-xs mb-3 text-[#28428c]">
+                  <p className="text-xs mb-3 text-blue">
                     Last sent: {formatLastContacted(getLastSentMessage(social.messageHistory)!)}
                   </p>
                 )}
@@ -379,14 +379,14 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleMessageAction(index, 'sent')}
-                    className="flex items-center space-x-2 px-3 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200 text-sm"
+                    className="flex items-center space-x-2 px-3 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200 text-sm"
                   >
                     <Send className="w-4 h-4" />
                     <span>Sent Message</span>
                   </button>
                   <button
                     onClick={() => handleMessageAction(index, 'received')}
-                    className="flex items-center space-x-2 px-3 py-2 bg-[#ffacd6] text-[#892f1a] rounded-lg hover:bg-[#ff9bc9] transition-colors duration-200 text-sm"
+                    className="flex items-center space-x-2 px-3 py-2 bg-pink text-red rounded-lg hover:bg-pink-dark transition-colors duration-200 text-sm"
                   >
                     <MessageCircle className="w-4 h-4" />
                     <span>Received Message</span>
@@ -398,11 +398,11 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
 
           {friend.socials.length === 0 && (
             <div className="text-center py-8">
-              <MessageSquare className="w-12 h-12 text-[#28428c] mx-auto mb-3 opacity-50" />
-              <p className="text-[#28428c] mb-4">Ready to start connecting? Let's add some ways to reach this connection! </p>
+              <MessageSquare className="w-12 h-12 text-blue mx-auto mb-3 opacity-50" />
+              <p className="text-blue mb-4">Ready to start connecting? Let's add some ways to reach this connection! </p>
               <button
                 onClick={() => setShowAddPlatform(true)}
-                className="px-4 py-2 bg-[#28428c] text-white rounded-lg hover:bg-[#1e3366] transition-colors duration-200"
+                className="px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200"
               >
                 Add Your First Connection! 
               </button>

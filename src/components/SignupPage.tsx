@@ -46,17 +46,17 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
     return (
       <div className="min-h-screen bg-[#e8e6d8] flex items-center justify-center px-4">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-xl shadow-lg p-8 border border-[#ffacd6]/20 text-center">
+          <div className="bg-white rounded-xl shadow-lg p-8 border border-pink/20 text-center">
             <div className="text-6xl mb-6"></div>
-            <h1 className="text-2xl font-bold text-[#892f1a] mb-4">
+            <h1 className="text-2xl font-bold text-red mb-4">
               Welcome to the Family!
             </h1>
-            <p className="text-[#28428c] mb-6">
+            <p className="text-blue mb-6">
               We've sent you a confirmation link. Please check your email and click the link to verify your account!
             </p>
             <button
               onClick={onSwitchToLogin}
-              className="w-full bg-[#28428c] text-white py-3 px-4 rounded-lg hover:bg-[#1e3366] transition-colors duration-200 font-medium"
+              className="w-full bg-blue text-white py-3 px-4 rounded-lg hover:bg-blue-dark transition-colors duration-200 font-medium"
             >
               Continue to Sign In
             </button>
@@ -125,11 +125,11 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
               />
             </div>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-                {error}
-              </div>
-            )}
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red px-4 py-3 rounded-lg">
+                  {error}
+                </div>
+              )}
 
             <button
               type="submit"

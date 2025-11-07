@@ -103,12 +103,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ profile, friends, onBa
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-blue">My Profile</h2>
-          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">
+          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-blue rounded-lg hover:bg-gray-200 transition-colors duration-200">
             Back to Dashboard
           </button>
         </div>
         {error && (
-          <div className="mb-3 text-sm text-red-600">{error}</div>
+          <div className="mb-3 text-sm text-red">{error}</div>
         )}
         <div className="flex items-center space-x-4">
           {profile?.avatar_url ? (

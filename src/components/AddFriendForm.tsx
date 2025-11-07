@@ -103,7 +103,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
               <div className="p-2 bg-blue rounded-full">
                 <User className="w-5 h-5 text-white" />
               </div>
-              <h2 className="text-xl font-bold text-[#892f1a]">Add New Connection! 🌟</h2>
+              <h2 className="text-xl font-bold text-red">Add New Connection! 🌟</h2>
             </div>
             <button
               onClick={onClose}
@@ -174,7 +174,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
                       <button
                         type="button"
                         onClick={() => removeContactMethod(index)}
-                        className="p-1 rounded-full hover:bg-red-50 text-red-500 hover:text-red-600 transition-colors duration-200"
+                        className="p-1 rounded-full hover:bg-red-50 text-red hover:text-red transition-colors duration-200"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
