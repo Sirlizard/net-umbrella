@@ -3,6 +3,7 @@ import { Umbrella, Users, BarChart3, BookOpen, Home, MapPin } from 'lucide-react
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../hooks/useUserProfile';
+import HelpButton from './HelpButton';
 
 interface DashboardHeaderProps {
   friendCount: number;
@@ -58,6 +59,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
               {userProfile?.full_name || user?.email}
             </span>
           </div>
+          <HelpButton />
           {user && (
             <div className="relative" ref={menuRef}>
               <button
