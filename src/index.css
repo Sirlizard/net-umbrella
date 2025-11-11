@@ -4,10 +4,64 @@
 
 /* Global app background and standardized button styles (ribbon-like) */
 @layer base {
+	:root {
+	  --bg: #e8e6d8;
+	  --text: #1f2937;
+	  --card: #ffffff;
+	  --muted: #6b7280;
+	  --blue: #28428c;
+	  --blue-dark: #1e3366;
+	  --pink: #ffacd6;
+	  --cream: #e8e6d8;
+	}
+
 	body {
-		@apply bg-cream min-h-screen text-gray-900;
+		background-color: var(--bg);
+		color: var(--text);
+		min-height: 100vh;
 	}
 }
+
+/* Dark theme variables and class-based overrides. */
+.dark {
+	/* Dark theme tuned for higher contrast and readability */
+	--bg: #041022; /* very dark navy */
+	--text: #e6f0ff; /* brighter off-white for body text */
+	--card: #07202b; /* slightly lighter card surface */
+	--muted: #9fb7d9; /* muted text for secondary info */
+	--blue: #9fd3ff; /* lighter blue for accents */
+	--blue-dark: #7cc0ff;
+	--pink: #ffb6d9;
+	--cream: #041022;
+}
+
+/* Map common utility classes to CSS variables so dark mode can override them. */
+body, .bg-cream { background-color: var(--bg) !important; }
+.text-blue { color: var(--blue) !important; }
+.text-gray-900 { color: var(--text) !important; }
+.bg-white { background-color: var(--card) !important; }
+.bg-pink { background-color: var(--pink) !important; }
+.border-gray-100 { border-color: rgba(255,255,255,0.04) !important; }
+.border-gray-200 { border-color: rgba(255,255,255,0.06) !important; }
+.bg-gray-50 { background-color: rgba(255,255,255,0.02) !important; }
+.bg-gray-100 { background-color: rgba(255,255,255,0.03) !important; }
+
+/* Improve contrast for common text utilities in dark mode */
+.dark .text-blue { color: var(--blue) !important; }
+.dark .text-blue-dark { color: var(--blue-dark) !important; }
+.dark .text-pink { color: var(--pink) !important; }
+.dark .text-red { color: #ffb49a !important; }
+.dark .text-gray-500, .dark .text-gray-600, .dark .text-gray-700, .dark .text-gray-900 { color: var(--muted) !important; }
+
+/* Subtle emphasis: ensure base text is very readable */
+.dark body, .dark .text-base, .dark p, .dark span, .dark a, .dark li, .dark h1, .dark h2, .dark h3, .dark h4 {
+	color: var(--text) !important;
+}
+
+/* Slightly stronger border colors in dark mode for separation */
+.dark .border-gray-100 { border-color: rgba(255,255,255,0.06) !important; }
+.dark .border-gray-200 { border-color: rgba(255,255,255,0.08) !important; }
+
 
 @layer components {
 	/* Base button shared by all buttons */
