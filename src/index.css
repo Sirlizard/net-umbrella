@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global app background and standardized button styles (ribbon-like) */
+@layer base {
+	body {
+		@apply bg-cream min-h-screen text-gray-900;
+	}
+}
+
+@layer components {
+	/* Base button shared by all buttons */
+	.btn,
+	button {
+		@apply inline-flex items-center justify-center px-4 py-2 rounded-md font-semibold transition-colors duration-200;
+		position: relative;
+		overflow: visible;
+		box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+	}
+
+	/* Primary style (blue) */
+	.btn-primary {
+		@apply bg-blue text-white;
+	}
+
+	/* Secondary style (light) */
+	.btn-secondary {
+		@apply bg-white text-blue border border-transparent;
+	}
+
+	/* Small/ghost variant */
+	.btn-ghost {
+		@apply bg-transparent text-blue;
+	}
+
+		/* Previously we used a pseudo-element to create a glossy streak on buttons.
+			 That caused an unwanted clear streak; remove it so buttons look flat and
+			 ribbon-like without the glossy highlight. */
+		/* No ::before pseudo-element for buttons anymore */
+
+	/* Focus and hover states */
+		.btn:hover,
+		button:hover {
+			filter: brightness(0.98);
+		}
+
+	.btn:focus,
+	button:focus {
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(40,66,140,0.12);
+	}
+}

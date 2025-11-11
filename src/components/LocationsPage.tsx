@@ -4,6 +4,7 @@ import { useFriends } from '../hooks/useFriends';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import ConnectionGraph from './ConnectionGraph';
+import { isoToInputDate, inputDateToISO } from '../utils/date';
 
 type EventRecord = {
   id: string;
@@ -17,7 +18,7 @@ type EventRecord = {
 const STORAGE_KEY = 'net-umbrella:events:v1';
 
 // Keep the same exported name so existing routes/imports don't need updating
-export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack: _onBack }) => {
   const { friends, loading: friendsLoading } = useFriends();
   const { user } = useAuth();
 
@@ -119,7 +120,7 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const temp: EventRecord = {
       id: 'temp-' + String(Date.now()),
       title: title.trim(),
-      date: new Date(date).toISOString(),
+  date: inputDateToISO(date),
       notes: notes.trim() || undefined,
       taggedFriendIds: tagged,
       createdAt: new Date().toISOString(),
@@ -188,7 +189,7 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     setEditTitle(ev.title);
     // store as yyyy-mm-dd for date input
     try {
-      setEditDate(ev.date ? new Date(ev.date).toISOString().substring(0, 10) : '');
+      setEditDate(ev.date ? isoToInputDate(ev.date) : '');
     } catch {
       setEditDate('');
     }
@@ -230,8 +231,8 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     return events.filter((ev) => {
       if (search && !ev.title.toLowerCase().includes(search.toLowerCase()) && !(ev.notes || '').toLowerCase().includes(search.toLowerCase())) return false;
       if (filterFriend && !ev.taggedFriendIds.includes(filterFriend)) return false;
-      if (dateFrom && new Date(ev.date) < new Date(dateFrom)) return false;
-      if (dateTo && new Date(ev.date) > new Date(dateTo)) return false;
+  if (dateFrom && new Date(ev.date) < new Date(inputDateToISO(dateFrom))) return false;
+  if (dateTo && new Date(ev.date) > new Date(inputDateToISO(dateTo))) return false;
       return true;
     });
   }, [events, search, filterFriend, dateFrom, dateTo]);
@@ -284,9 +285,6 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
         <div className="flex items-center gap-2">
           <button onClick={() => setShowForm((s) => !s)} className="px-3 py-2 text-sm bg-gray-100 text-blue rounded-lg hover:bg-gray-200 transition-colors duration-200">
             {showForm ? 'Close' : 'New Event'}
-          </button>
-          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-50 text-blue rounded-lg hover:bg-gray-100 transition-colors duration-200">
-            Back
           </button>
         </div>
       </div>
@@ -463,7 +461,7 @@ export const LocationsPage: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                     const updated: EventRecord = {
                       id: editingEvent.id,
                       title: editTitle.trim() || editingEvent.title,
-                      date: editDate ? new Date(editDate).toISOString() : editingEvent.date,
+                      date: editDate ? inputDateToISO(editDate) : editingEvent.date,
                       notes: editNotes.trim() || undefined,
                       taggedFriendIds: Object.keys(editSelectedIds).filter((k) => editSelectedIds[k]),
                       createdAt: editingEvent.createdAt,

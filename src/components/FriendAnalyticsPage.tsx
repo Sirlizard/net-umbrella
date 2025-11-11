@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { DatabaseFriend } from '../hooks/useFriends';
 import { TrendingUp, MessageSquare, Clock, Users } from 'lucide-react';
 import { PieChart } from './PieChart';
-import { ScatterChart } from './ScatterChart';
 import { useFriendDailySeries } from '../hooks/useFriendInteractions';
 
 interface FriendAnalyticsPageProps {
@@ -57,9 +56,9 @@ function buildBars(points: DayPoint[], key: 'sent' | 'received', width: number, 
   });
 }
 
-export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friends, onBack }) => {
+export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friends, onBack: _onBack }) => {
   const [selectedFriendId, setSelectedFriendId] = useState<string>(friends[0]?.id ?? '');
-  const [chartType, setChartType] = useState<'line' | 'bar' | 'pie' | 'scatter'>('line');
+  const [chartType, setChartType] = useState<'line' | 'bar' | 'pie'>('line');
 
   const selectedFriend = useMemo(() => friends.find(f => f.id === selectedFriendId) ?? friends[0], [friends, selectedFriendId]);
   const { data: series } = useFriendDailySeries(selectedFriend?.id, 30);
@@ -105,12 +104,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
     ];
   }, [analytics]);
 
-  const scatterChartData = useMemo(() => {
-    return friends.map(friend => ({
-      x: friend.total_interactions,
-      y: friend.contact_frequency ?? 0,
-    }));
-  }, [friends]);
+  
 
   const width = 800;
   const height = 320;
@@ -129,7 +123,6 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-[#28428c]">Connection Analytics</h2>
-          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back</button>
         </div>
         <div className="text-center py-16">
           <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -145,7 +138,6 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-[#28428c]">Connection Analytics Dashboard</h2>
-          <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back to Dashboard</button>
         </div>
       </div>
 
@@ -253,16 +245,7 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
                 >
                   Pie
                 </button>
-                <button
-                  onClick={() => setChartType('scatter')}
-                  className={`px-3 py-1 rounded text-sm transition-colors ${
-                    chartType === 'scatter'
-                      ? 'bg-white text-[#28428c] shadow-sm'
-                      : 'text-[#28428c] hover:text-[#28428c]'
-                  }`}
-                >
-                  Scatter
-                </button>
+                {/* scatter option removed */}
               </div>
             </div>
           </div>
@@ -317,18 +300,6 @@ export const FriendAnalyticsPage: React.FC<FriendAnalyticsPageProps> = ({ friend
           {chartType === 'pie' ? (
             <div className="flex justify-center items-center" style={{ height }}>
               <PieChart data={pieChartData} size={Math.min(width, height)} />
-            </div>
-          ) : chartType === 'scatter' ? (
-            <div className="flex justify-center items-center" style={{ height }}>
-              <ScatterChart
-                data={scatterChartData}
-                width={width}
-                height={height}
-                color="#28428c"
-                title="Engagement vs Contact Preference"
-                xLabel="Total Interactions"
-                yLabel="Contact Frequency"
-              />
             </div>
           ) : (
             <svg width={width} height={height} className="w-full">

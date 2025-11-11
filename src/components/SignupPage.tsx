@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import Button from './Button'
 
 interface SignupPageProps {
   onSwitchToLogin: () => void
@@ -54,12 +55,9 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
             <p className="text-blue mb-6">
               We've sent you a confirmation link. Please check your email and click the link to verify your account!
             </p>
-            <button
-              onClick={onSwitchToLogin}
-              className="w-full bg-blue text-white py-3 px-4 rounded-lg hover:bg-blue-dark transition-colors duration-200 font-medium"
-            >
+            <Button onClick={onSwitchToLogin} className="w-full" variant="primary">
               Continue to Sign In
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -131,13 +129,14 @@ export const SignupPage: React.FC<SignupPageProps> = ({ onSwitchToLogin }) => {
                 </div>
               )}
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue text-white py-3 px-4 rounded-lg hover:bg-blue-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="primary"
             >
               {loading ? 'Creating Account...' : 'Create Account'}
-            </button>
+            </Button>
           </form>
 
           <div className="mt-6 text-center">

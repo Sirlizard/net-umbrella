@@ -64,7 +64,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                className="inline-flex items-center justify-center rounded-md border border-gray-300 shadow-sm px-2 py-1.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+                className="btn btn-secondary px-2 py-1.5 text-sm"
                 id="options-menu"
                 aria-haspopup="true"
                 aria-expanded={isProfileMenuOpen}

@@ -8,6 +8,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import { ProfilePage } from './ProfilePage';
 import { EventsPage } from './EventsPage';
 import { JournalPage } from './JournalPage';
+import TopRibbon from './TopRibbon';
 import { useUserProfile } from '../hooks/useUserProfile';
 import { useFriends } from '../hooks/useFriends';
 
@@ -44,14 +45,21 @@ export const AuthWrapper: React.FC = () => {
     return <LandingPage onGetStarted={() => setAuthView('signup')} onSignIn={() => setAuthView('login')} />;
   }
 
-  // User is authenticated, show the main dashboard
+  // User is authenticated, show the main dashboard with a top ribbon
   return (
-    <Routes>
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/profile" element={<ProfilePage profile={profile} friends={dbFriends} onBack={() => navigate('/dashboard')} />} />
-  <Route path="/dashboard/events" element={<EventsPage onBack={() => navigate('/dashboard')} />} />
-      <Route path="/dashboard/journal" element={<JournalPage onBack={() => navigate('/dashboard')} />} />
-      <Route path="*" element={<Navigate to="/dashboard" />} />
-    </Routes>
+    <>
+      <div className="pt-16">
+        {/* TopRibbon is fixed so add top padding to the rest of the app */}
+        {/* Import dynamically to avoid circular issues if any */}
+        <Routes>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profile" element={<ProfilePage profile={profile} friends={dbFriends} onBack={() => navigate('/dashboard')} />} />
+          <Route path="/dashboard/events" element={<EventsPage onBack={() => navigate('/dashboard')} />} />
+          <Route path="/dashboard/journal" element={<JournalPage onBack={() => navigate('/dashboard')} />} />
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </div>
+      <TopRibbon />
+    </>
   );
 };

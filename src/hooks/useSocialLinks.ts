@@ -72,6 +72,17 @@ export const useSocialLinks = (friendId: string | null | undefined) => {
     return { error }
   }
 
+  const updateLink = async (id: string, platform: string, handle: string) => {
+    const { data, error } = await supabase
+      .from('social_links')
+      .update({ platform, handle })
+      .eq('id', id)
+      .select('id, friend_id, platform, handle, last_contacted')
+      .single()
+    if (!error && data) setLinks(prev => prev.map(l => (l.id === id ? data : l)))
+    return { data, error }
+  }
+
   const recordInteraction = async (
     friend_id: string,
     interaction: 'message_sent' | 'message_received',
@@ -99,7 +110,7 @@ export const useSocialLinks = (friendId: string | null | undefined) => {
     return { error }
   }
 
-  return { links, loading, error, addLink, removeLink, recordInteraction, touchLink }
+  return { links, loading, error, addLink, removeLink, updateLink, recordInteraction, touchLink }
 }
 
 

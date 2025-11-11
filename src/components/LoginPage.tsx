@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import Button from './Button'
 
 interface LoginPageProps {
   onSwitchToSignup: () => void
@@ -76,13 +77,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSwitchToSignup }) => {
               </div>
             )}
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue text-white py-3 px-4 rounded-lg hover:bg-blue-dark transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+              className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
+              variant="primary"
             >
               {loading ? 'Signing In...' : 'Sign In'}
-            </button>
+            </Button>
           </form>
 
           <div className="mt-6 text-center">

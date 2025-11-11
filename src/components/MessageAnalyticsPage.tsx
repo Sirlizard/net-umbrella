@@ -71,7 +71,7 @@ function buildPolyline(points: DayPoint[], key: 'sent' | 'received', width: numb
   return points.map((p, i) => `${padding + i * stepX},${toY(p[key])}`).join(' ');
 }
 
-export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ friends, onBack }) => {
+export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ friends, onBack: _onBack }) => {
   const [selectedFriendId, setSelectedFriendId] = useState<string>(friends[0]?.id ?? '');
 
   const selectedFriend = useMemo(() => friends.find(f => f.id === selectedFriendId) ?? friends[0], [friends, selectedFriendId]);
@@ -129,7 +129,6 @@ export const MessageAnalyticsPage: React.FC<MessageAnalyticsPageProps> = ({ frie
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-[#28428c]">Message Analytics (Last 30 Days)</h2>
-        <button onClick={onBack} className="px-3 py-2 text-sm bg-gray-100 text-[#28428c] rounded-lg hover:bg-gray-200 transition-colors duration-200">Back</button>
       </div>
 
       {recommended && (

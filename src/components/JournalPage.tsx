@@ -6,7 +6,7 @@ interface JournalPageProps {
   onBack: () => void
 }
 
-export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
+export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => {
   const { journals, createJournal, addEntry, listEntries, deleteEntry, deleteJournal } = useJournals()
   const { friends } = useFriends()
 
@@ -20,11 +20,8 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null)
   const [showDeleteJournalConfirm, setShowDeleteJournalConfirm] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (journals.length && !selectedJournalId) {
-      setSelectedJournalId(journals[0].id)
-    }
-  }, [journals, selectedJournalId])
+  // Require explicit journal selection to make journaling flow linear.
+  // Previously the first journal was auto-selected; that made the flow less deliberate.
 
   useEffect(() => {
     const load = async () => {
@@ -91,7 +88,6 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-blue">Connections Journal</h1>
-          <button onClick={onBack} className="px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200">Back to Dashboard</button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -128,35 +124,52 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
               <h2 className="text-lg font-semibold text-blue mb-3">Tag Connections</h2>
-              <div className="text-xs text-blue mb-2">Select connections to tag in your entry:</div>
-              <div className="space-y-2 max-h-80 overflow-auto pr-1">
-                {friends.map(f => (
-                  <label key={f.id} className="flex items-center space-x-2 text-sm text-[#28428c]">
-                    <input type="checkbox" checked={selectedFriendIds.includes(f.id)} onChange={() => toggleFriend(f.id)} />
-                    <span>{f.name}</span>
-                  </label>
-                ))}
+              <div className="text-xs text-[#28428c] mb-2">Tagging attaches selected connections to the entry when you save it.</div>
+              <div className="flex flex-wrap gap-2 max-h-80 overflow-auto pr-1">
+                {friends.map(f => {
+                  const isTagged = selectedFriendIds.includes(f.id)
+                  return (
+                    <button
+                      key={f.id}
+                      onClick={() => toggleFriend(f.id)}
+                      disabled={!selectedJournalId}
+                      className={`px-3 py-1 text-sm rounded-full transition ${isTagged ? 'bg-pink text-white border-pink' : 'bg-gray-100 text-[#28428c] border border-gray-200'} ${!selectedJournalId ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      title={isTagged ? 'Tagged for this entry' : 'Tag this connection in the entry'}
+                    >
+                      {f.name}
+                    </button>
+                  )
+                })}
               </div>
-              
+
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <h3 className="text-md font-semibold text-[#28428c] mb-2">Filter Entries</h3>
-                <div className="text-xs text-[#28428c] mb-2">Show only entries tagged with:</div>
-                <div className="space-y-2 max-h-40 overflow-auto pr-1">
-                  {friends.map(f => (
-                    <label key={f.id} className="flex items-center space-x-2 text-sm text-[#28428c]">
-                      <input type="checkbox" checked={filterFriendIds.includes(f.id)} onChange={() => toggleFilterFriend(f.id)} />
-                      <span>{f.name}</span>
-                    </label>
-                  ))}
+                <div className="text-xs text-[#28428c] mb-2">Filtering only affects the list of shown entries (it does not change tags on new entries).</div>
+                <div className="flex flex-wrap gap-2 max-h-40 overflow-auto pr-1">
+                  {friends.map(f => {
+                    const isFiltered = filterFriendIds.includes(f.id)
+                    return (
+                      <button
+                        key={f.id}
+                        onClick={() => toggleFilterFriend(f.id)}
+                        className={`px-3 py-1 text-sm rounded-full transition border ${isFiltered ? 'bg-blue text-white border-blue' : 'bg-white text-[#28428c] border-gray-200'}`}
+                        title={isFiltered ? 'Filter active' : 'Filter entries by this connection'}
+                      >
+                        {f.name}
+                      </button>
+                    )
+                  })}
                 </div>
-                {filterFriendIds.length > 0 && (
-                  <button
-                    onClick={clearFilters}
-                    className="mt-2 text-xs text-blue hover:text-blue-dark underline"
-                  >
-                    Clear filters ({filterFriendIds.length} active)
-                  </button>
-                )}
+                <div className="mt-2">
+                  {filterFriendIds.length > 0 && (
+                    <button
+                      onClick={clearFilters}
+                      className="text-xs text-blue hover:text-blue-dark underline"
+                    >
+                      Clear filters ({filterFriendIds.length} active)
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -164,15 +177,23 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack }) => {
           <div className="md:col-span-2">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
               <h2 className="text-lg font-semibold text-blue mb-3">Write Entry</h2>
+              {!selectedJournalId && (
+                <div className="mb-4 p-4 bg-cream rounded-lg border border-gray-200">
+                  <div className="text-sm font-medium text-[#28428c]">Select a journal to begin</div>
+                  <div className="text-xs text-[#28428c]">Pick a journal from the left or create a new one. You must choose a journal before writing pages.</div>
+                </div>
+              )}
+
               <input
                 value={entryTitle}
                 onChange={e => setEntryTitle(e.target.value)}
                 placeholder="Entry title..."
-                className="w-full px-3 py-2 mb-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent"
+                disabled={!selectedJournalId}
+                className={`w-full px-3 py-2 mb-3 border rounded-lg focus:ring-2 focus:border-transparent ${selectedJournalId ? 'border-gray-200 focus:ring-pink' : 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'}`}
               />
-              <textarea value={entryText} onChange={e => setEntryText(e.target.value)} placeholder="Capture your thoughts about your connections..." rows={6} className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent" />
+              <textarea value={entryText} onChange={e => setEntryText(e.target.value)} placeholder="Capture your thoughts about your connections..." rows={6} disabled={!selectedJournalId} className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${selectedJournalId ? 'border-gray-200 focus:ring-pink' : 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'}`} />
               <div className="flex justify-end mt-3">
-                <button onClick={handleAddEntry} className="px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200">Save Entry</button>
+                <button onClick={handleAddEntry} disabled={!selectedJournalId} className={`px-4 py-2 text-white rounded-lg transition-colors duration-200 ${selectedJournalId ? 'bg-blue hover:bg-blue-dark' : 'bg-gray-300 cursor-not-allowed'}`}>Save Entry</button>
               </div>
             </div>
 

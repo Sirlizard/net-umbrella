@@ -14,6 +14,10 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
   const [newPlatform, setNewPlatform] = useState('')
   const [newHandle, setNewHandle] = useState('')
   const [isEditingBio, setIsEditingBio] = useState(false)
+  // Track editing state per link
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
+  const [editedPlatform, setEditedPlatform] = useState('')
+  const [editedHandle, setEditedHandle] = useState('')
   const [editedBio, setEditedBio] = useState(friend.bio || '')
   // Local optimistic stats/state so UI updates immediately without needing refresh
   const [lastContacted, setLastContacted] = useState<string>(friend.last_contacted)
@@ -21,7 +25,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
   const [receivedCount, setReceivedCount] = useState<number>(friend.messages_received_count)
   const [totalInteractions, setTotalInteractions] = useState<number>(friend.total_interactions)
 
-  const { links, addLink, removeLink, recordInteraction } = useSocialLinks(friend.id)
+  const { links, addLink, removeLink, updateLink, recordInteraction } = useSocialLinks(friend.id)
 
   // Keep local state in sync if the parent provides updated friend data
   useEffect(() => {
@@ -47,6 +51,26 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
       setNewHandle('')
       setShowAddPlatform(false)
     }
+  }
+
+  const handleStartEditLink = (link: any) => {
+    setEditingLinkId(link.id)
+    setEditedPlatform(link.platform || '')
+    setEditedHandle(link.handle || '')
+  }
+
+  const handleSaveLinkEdit = async (linkId: string) => {
+    if (!editedPlatform.trim() || !editedHandle.trim()) return
+    await updateLink(linkId, editedPlatform.trim(), editedHandle.trim())
+    setEditingLinkId(null)
+    setEditedPlatform('')
+    setEditedHandle('')
+  }
+
+  const handleCancelLinkEdit = () => {
+    setEditingLinkId(null)
+    setEditedPlatform('')
+    setEditedHandle('')
   }
 
   const handleMessageAction = async (type: 'message_sent' | 'message_received') => {
@@ -228,21 +252,44 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                 <div key={link.id} className="border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <h4 className="font-medium text-red">{link.platform}</h4>
-                      <p className="text-sm text-blue">{link.handle}</p>
-                      {link.last_contacted && (
-                        <p className="text-xs text-blue mt-1">
-                          <Clock className="w-3 h-3 inline mr-1" />
-                          Last contacted: {formatDate(link.last_contacted)}
-                        </p>
+                      {editingLinkId === link.id ? (
+                        <div className="space-y-2">
+                          <input className="px-3 py-2 border border-gray-200 rounded-lg w-full mb-1" value={editedPlatform} onChange={e => setEditedPlatform(e.target.value)} />
+                          <input className="px-3 py-2 border border-gray-200 rounded-lg w-full" value={editedHandle} onChange={e => setEditedHandle(e.target.value)} />
+                        </div>
+                      ) : (
+                        <>
+                          <h4 className="font-medium text-red">{link.platform}</h4>
+                          <p className="text-sm text-blue">{link.handle}</p>
+                          {link.last_contacted && (
+                            <p className="text-xs text-blue mt-1">
+                              <Clock className="w-3 h-3 inline mr-1" />
+                              Last contacted: {formatDate(link.last_contacted)}
+                            </p>
+                          )}
+                        </>
                       )}
                     </div>
-                    <button
-                      onClick={() => removeLink(link.id)}
-                      className="p-2 rounded-full hover:bg-red-50 text-red-500 hover:text-red-600 transition-colors duration-200"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {editingLinkId === link.id ? (
+                        <>
+                          <button onClick={() => handleSaveLinkEdit(link.id)} className="px-3 py-1.5 bg-blue text-white rounded-md">Save</button>
+                          <button onClick={handleCancelLinkEdit} className="px-3 py-1.5 bg-gray-100 text-blue rounded-md">Cancel</button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => handleStartEditLink(link)} className="p-2 rounded-full hover:bg-gray-100 text-blue">
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => removeLink(link.id)}
+                            className="p-2 rounded-full hover:bg-red-50 text-red-500 hover:text-red-600 transition-colors duration-200"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="flex space-x-2">

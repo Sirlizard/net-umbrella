@@ -32,7 +32,7 @@ export const HelpButton: React.FC = () => {
         aria-haspopup="dialog"
         aria-expanded={open}
         title="Help"
-        className="inline-flex items-center justify-center rounded-md border border-gray-300 shadow-sm px-3 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue"
+        className="btn btn-secondary"
       >
         <HelpCircle className="w-5 h-5 text-blue" />
         <span className="sr-only">Help</span>
@@ -105,7 +105,7 @@ export const HelpButton: React.FC = () => {
                   </ul>
 
                   <div className="mt-2">
-                    <Link to="/dashboard/events" className="inline-block px-3 py-1 bg-blue text-white rounded text-sm">Open Events page</Link>
+                    <Link to="/dashboard/events" className="inline-block btn btn-primary text-sm">Open Events page</Link>
                     <p className="mt-1 text-xs text-gray-500">Click the button to go straight to Events and try creating an event — the suggested event of the day can help you practice.</p>
                   </div>
                 </div>
