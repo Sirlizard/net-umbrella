@@ -81,7 +81,7 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
           </div>
 
           {/* Contact methods are intentionally omitted from the initial create flow. */}
-          <div className="p-3 bg-cream rounded-lg text-sm text-[#28428c]">You can add contact methods later from the connection's detail view.</div>
+          <div className="p-3 bg-cream rounded-lg text-sm text-blue">You can add contact methods later from the connection's detail view.</div>
 
           {/* Submit Buttons */}
           <div className="flex space-x-3 pt-4 border-t border-gray-100">

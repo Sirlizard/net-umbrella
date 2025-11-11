@@ -27,7 +27,12 @@ export const ConnectionGraph: React.FC<{
 
   useEffect(() => {
     if (!svgRef.current) return;
-    const svg = d3.select(svgRef.current);
+  const svg = d3.select(svgRef.current);
+  const css = getComputedStyle(document.documentElement);
+  const varBlue = (css.getPropertyValue('--blue') || '#28428c').trim();
+  const varBlueDark = (css.getPropertyValue('--blue-dark') || '#1e3366').trim();
+  const varPink = (css.getPropertyValue('--pink') || '#f472b6').trim();
+  const varText = (css.getPropertyValue('--text') || '#111827').trim();
     svg.selectAll('*').remove();
 
     const g = svg.append('g');
@@ -43,7 +48,7 @@ export const ConnectionGraph: React.FC<{
       .data(linkData)
       .enter()
       .append('line')
-      .attr('stroke', '#7c3aed')
+      .attr('stroke', varBlue)
       .attr('stroke-opacity', (d: any) => Math.min(0.95, 0.15 + d.count * 0.12))
       .attr('stroke-width', (d: any) => Math.min(10, 1 + d.count));
 
@@ -57,8 +62,8 @@ export const ConnectionGraph: React.FC<{
     node
       .append('circle')
       .attr('r', (d: any) => 6 + Math.min(28, d.count * 6))
-      .attr('fill', '#f472b6')
-      .attr('stroke', '#7c2d6b')
+      .attr('fill', varPink)
+      .attr('stroke', varBlueDark)
       .attr('stroke-width', 2);
 
     node
@@ -66,7 +71,7 @@ export const ConnectionGraph: React.FC<{
       .attr('x', (_d: any) => 12)
       .attr('y', 4)
       .attr('font-size', 12)
-      .attr('fill', '#111827')
+      .attr('fill', varText)
       .text((d: any) => d.name);
 
     // Interactions: hover and click
@@ -155,8 +160,16 @@ export const ConnectionGraph: React.FC<{
 
   return (
     <div>
-      <svg ref={svgRef} width="100%" viewBox={`0 0 ${width} ${height}`} className="w-full h-auto bg-white rounded" />
-      <div className="mt-2 text-xs text-gray-500">Drag nodes to rearrange. Scroll to zoom. Node size = times tagged; line thickness = shared events.</div>
+      <svg
+        ref={svgRef}
+        width="100%"
+        viewBox={`0 0 ${width} ${height}`}
+        className="w-full h-auto rounded"
+        style={{ backgroundColor: 'var(--card)' }}
+      />
+      <div className="mt-2 text-xs" style={{ color: 'var(--muted)' }}>
+        Drag nodes to rearrange. Scroll to zoom. Node size = times tagged; line thickness = shared events.
+      </div>
     </div>
   );
 };

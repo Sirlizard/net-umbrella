@@ -124,7 +124,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
               <h2 className="text-lg font-semibold text-blue mb-3">Tag Connections</h2>
-              <div className="text-xs text-[#28428c] mb-2">Tagging attaches selected connections to the entry when you save it.</div>
+              <div className="text-xs text-blue mb-2">Tagging attaches selected connections to the entry when you save it.</div>
               <div className="flex flex-wrap gap-2 max-h-80 overflow-auto pr-1">
                 {friends.map(f => {
                   const isTagged = selectedFriendIds.includes(f.id)
@@ -133,7 +133,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
                       key={f.id}
                       onClick={() => toggleFriend(f.id)}
                       disabled={!selectedJournalId}
-                      className={`px-3 py-1 text-sm rounded-full transition ${isTagged ? 'bg-pink text-white border-pink' : 'bg-gray-100 text-[#28428c] border border-gray-200'} ${!selectedJournalId ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      className={`px-3 py-1 text-sm rounded-full transition ${isTagged ? 'bg-pink text-white border-pink' : 'bg-gray-100 text-blue border border-gray-200'} ${!selectedJournalId ? 'opacity-60 cursor-not-allowed' : ''}`}
                       title={isTagged ? 'Tagged for this entry' : 'Tag this connection in the entry'}
                     >
                       {f.name}
@@ -143,8 +143,8 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
               </div>
 
               <div className="mt-4 pt-4 border-t border-gray-200">
-                <h3 className="text-md font-semibold text-[#28428c] mb-2">Filter Entries</h3>
-                <div className="text-xs text-[#28428c] mb-2">Filtering only affects the list of shown entries (it does not change tags on new entries).</div>
+                <h3 className="text-md font-semibold text-blue mb-2">Filter Entries</h3>
+                <div className="text-xs text-blue mb-2">Filtering only affects the list of shown entries (it does not change tags on new entries).</div>
                 <div className="flex flex-wrap gap-2 max-h-40 overflow-auto pr-1">
                   {friends.map(f => {
                     const isFiltered = filterFriendIds.includes(f.id)
@@ -152,7 +152,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
                       <button
                         key={f.id}
                         onClick={() => toggleFilterFriend(f.id)}
-                        className={`px-3 py-1 text-sm rounded-full transition border ${isFiltered ? 'bg-blue text-white border-blue' : 'bg-white text-[#28428c] border-gray-200'}`}
+                        className={`px-3 py-1 text-sm rounded-full transition border ${isFiltered ? 'bg-blue text-white border-blue' : 'bg-white text-blue border-gray-200'}`}
                         title={isFiltered ? 'Filter active' : 'Filter entries by this connection'}
                       >
                         {f.name}
@@ -179,8 +179,8 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
               <h2 className="text-lg font-semibold text-blue mb-3">Write Entry</h2>
               {!selectedJournalId && (
                 <div className="mb-4 p-4 bg-cream rounded-lg border border-gray-200">
-                  <div className="text-sm font-medium text-[#28428c]">Select a journal to begin</div>
-                  <div className="text-xs text-[#28428c]">Pick a journal from the left or create a new one. You must choose a journal before writing pages.</div>
+                          <div className="text-sm font-medium text-blue">Select a journal to begin</div>
+                          <div className="text-xs text-blue">Pick a journal from the left or create a new one. You must choose a journal before writing pages.</div>
                 </div>
               )}
 
@@ -265,12 +265,12 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-sm mx-4 shadow-xl border border-gray-200">
-            <h3 className="text-lg font-semibold text-[#28428c] mb-2">Delete Entry</h3>
-            <p className="text-sm text-[#28428c] mb-4">Are you sure you want to delete this journal entry? This action cannot be undone.</p>
+            <h3 className="text-lg font-semibold text-blue mb-2">Delete Entry</h3>
+            <p className="text-sm text-blue mb-4">Are you sure you want to delete this journal entry? This action cannot be undone.</p>
             <div className="flex space-x-3">
               <button
                 onClick={() => handleDeleteEntry(showDeleteConfirm!)}
-                className="flex-1 inline-flex items-center justify-center bg-[#28428c] text-white font-semibold py-2 rounded-lg border border-[#1e3366] shadow-sm hover:bg-[#1e3366] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28428c]/40 transition-colors duration-200"
+                className="flex-1 inline-flex items-center justify-center bg-blue text-white font-semibold py-2 rounded-lg border border-blue-dark shadow-sm hover:bg-blue-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue/40 transition-colors duration-200"
                 aria-label="Confirm delete entry"
                 title="Delete this entry"
               >
@@ -278,7 +278,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(null)}
-                className="flex-1 inline-flex items-center justify-center bg-gray-100 text-[#28428c] py-2 rounded-lg border border-gray-300 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 transition-colors duration-200"
+                className="flex-1 inline-flex items-center justify-center bg-gray-100 text-blue py-2 rounded-lg border border-gray-300 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 transition-colors duration-200"
               >
                 Cancel
               </button>
@@ -291,12 +291,12 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
       {showDeleteJournalConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-sm mx-4">
-            <h3 className="text-lg font-semibold text-[#28428c] mb-2">Delete Journal</h3>
-            <p className="text-sm text-[#28428c] mb-4">Delete this entire journal and all its entries? This cannot be undone.</p>
+            <h3 className="text-lg font-semibold text-blue mb-2">Delete Journal</h3>
+            <p className="text-sm text-blue mb-4">Delete this entire journal and all its entries? This cannot be undone.</p>
             <div className="flex space-x-3">
               <button 
                 onClick={async () => { await handleDeleteJournal(showDeleteJournalConfirm!); setShowDeleteJournalConfirm(null); }} 
-                className="flex-1 bg-[#28428c] text-white font-semibold py-2 rounded-lg border border-[#1e3366] shadow-sm hover:bg-[#1e3366] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#28428c]/40 transition-colors duration-200"
+                className="flex-1 bg-blue text-white font-semibold py-2 rounded-lg border border-blue-dark shadow-sm hover:bg-blue-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue/40 transition-colors duration-200"
                 aria-label="Confirm delete journal"
                 title="Delete this journal"
               >
@@ -304,7 +304,7 @@ export const JournalPage: React.FC<JournalPageProps> = ({ onBack: _onBack }) => 
               </button>
               <button 
                 onClick={() => setShowDeleteJournalConfirm(null)} 
-                className="flex-1 bg-gray-100 text-[#28428c] py-2 rounded-lg border border-gray-300 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 transition-colors duration-200"
+                className="flex-1 bg-gray-100 text-blue py-2 rounded-lg border border-gray-300 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 transition-colors duration-200"
               >
                 Cancel
               </button>

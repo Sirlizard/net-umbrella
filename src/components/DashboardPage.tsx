@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { useUserProfile } from '../hooks/useUserProfile';
+// profile not used here anymore; TopRibbon provides global navigation
 import { useFriends, DatabaseFriend } from '../hooks/useFriends';
 import { JournalPage } from './JournalPage';
 import { FriendAnalyticsPage } from './FriendAnalyticsPage';
-import { DashboardHeader } from './DashboardHeader';
+// DashboardHeader removed to avoid duplicate header (TopRibbon is the global header)
 import { EmailVerificationBanner } from './EmailVerificationBanner';
 import { AddFriendForm } from './AddFriendForm';
 import { FriendDetailModal } from './FriendDetailModal';
@@ -13,10 +13,10 @@ import { FriendCard } from './FriendCard';
 const EmptyDashboard = ({ onStart }: { onStart: () => void }) => (
   <div className="text-center py-16">
   <div className="bg-white rounded-xl p-8 shadow-sm max-w-md mx-auto border border-pink/20">
-      <h3 className="text-lg font-semibold text-[#892f1a] mb-2">
+    <h3 className="text-lg font-semibold text-red mb-2">
         Ready to create your amazing network? 🌈
       </h3>
-      <p className="text-[#28428c] mb-4">
+  <p className="text-blue mb-4">
         Start building beautiful connections that will bring happiness and joy to your life! ✨
       </p>
       <button onClick={onStart} className="bg-blue text-white px-6 py-2 rounded-lg hover:bg-blue-dark transition-colors duration-200">
@@ -30,8 +30,8 @@ const AddMoreFriends = ({ onAdd }: { onAdd: () => void }) => (
     <div className="mt-10">
   <div className="bg-white rounded-xl p-6 shadow-sm border border-pink/20 flex items-center justify-between">
             <div>
-        <h3 className="text-lg font-semibold text-[#28428c]">Keep growing your network</h3>
-        <p className="text-[#28428c] text-sm">Add more connections and set up their details.</p>
+  <h3 className="text-lg font-semibold text-blue">Keep growing your network</h3>
+  <p className="text-blue text-sm">Add more connections and set up their details.</p>
             </div>
       <button onClick={onAdd} className="bg-blue text-white px-4 py-2 rounded-lg hover:bg-blue-dark transition-colors duration-200">
         Add more connections
@@ -41,7 +41,6 @@ const AddMoreFriends = ({ onAdd }: { onAdd: () => void }) => (
 );
 
 export const DashboardPage: React.FC = () => {
-  const { profile } = useUserProfile();
   const { friends: dbFriends, loading: friendsLoading, addFriend, updateFriend } = useFriends();
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [selectedFriendDb, setSelectedFriendDb] = useState<DatabaseFriend | null>(null);
@@ -87,13 +86,7 @@ export const DashboardPage: React.FC = () => {
   <div className="min-h-screen bg-cream">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <EmailVerificationBanner />
-        <DashboardHeader 
-          friendCount={friends.length} 
-          userProfile={profile} 
-          onOpenJournal={() => setCurrentView('journal')}
-          currentView={currentView}
-          onViewChange={setCurrentView}
-        />
+        {/* Header intentionally removed so TopRibbon is the sole header at the top of the app */}
         
         {friendsLoading ? (
           <div className="text-center py-16">

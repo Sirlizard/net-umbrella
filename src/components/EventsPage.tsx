@@ -287,7 +287,7 @@ export const EventsPage: React.FC<{ onBack: () => void }> = ({ onBack: _onBack }
         </div>
       )}
 
-      <div className="mb-4 p-4 rounded-lg border border-pink/30 bg-[#fff8fb]">
+  <div className="mb-4 p-4 rounded-lg border border-pink/30 bg-cream">
         <p className="text-sm text-red font-semibold mb-1">Suggested event of the day</p>
         <p className="text-blue">{eventOfTheDay}</p>
         <p className="mt-1 text-xs text-gray-600">Create an event, tag connections, and watch your connection map grow.</p>
