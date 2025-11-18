@@ -6,6 +6,7 @@ import { LandingPage } from './LandingPage';
 import { DashboardPage } from './DashboardPage';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ProfilePage } from './ProfilePage';
+import { FriendAnalyticsPage } from './FriendAnalyticsPage';
 import { EventsPage } from './EventsPage';
 import { JournalPage } from './JournalPage';
 import TopRibbon from './TopRibbon';
@@ -56,6 +57,7 @@ export const AuthWrapper: React.FC = () => {
           <Route path="/profile" element={<ProfilePage profile={profile} friends={dbFriends} onBack={() => navigate('/dashboard')} />} />
           <Route path="/dashboard/events" element={<EventsPage onBack={() => navigate('/dashboard')} />} />
           <Route path="/dashboard/journal" element={<JournalPage onBack={() => navigate('/dashboard')} />} />
+          <Route path="/dashboard/analytics" element={<FriendAnalyticsPage friends={dbFriends} onBack={() => navigate('/dashboard')} />} />
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </div>

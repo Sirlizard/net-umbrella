@@ -7,6 +7,7 @@ export interface DatabaseFriend {
   profile_user_id: string
   name: string
   bio: string | null
+  avatar_url?: string | null
   last_contacted: string
   contact_frequency: number | null
   messages_sent_count: number
@@ -81,13 +82,15 @@ export const useFriends = () => {
     name: string
     bio?: string
     contact_frequency?: number
+    avatar_url?: string | null
   }) => {
     try {
-      const { data, error } = await supabase
+        const { data, error } = await supabase
         .from('friends')
         .insert({
           name: friendData.name,
           bio: friendData.bio,
+          avatar_url: friendData.avatar_url || null,
           contact_frequency: friendData.contact_frequency || 5,
           last_contacted: new Date().toISOString(),
           user_id: user?.id

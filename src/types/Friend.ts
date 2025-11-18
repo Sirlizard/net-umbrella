@@ -2,6 +2,7 @@ export interface Friend {
   id: string;
   name: string;
   bio?: string;
+  avatarUrl?: string;
   socials: SocialLink[];
   lastContacted: Date;
   contactFrequency?: number; // 0 (low) to 10 (high)

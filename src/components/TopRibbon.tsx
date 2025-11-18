@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BookOpen, MapPin, User, Sun, Moon } from 'lucide-react';
+import { Home, BookOpen, MapPin, User, Sun, Moon, Umbrella, BarChart3 } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const TopRibbon: React.FC = () => {
@@ -10,6 +10,7 @@ const TopRibbon: React.FC = () => {
     { to: '/dashboard', label: 'Dashboard', icon: <Home className="w-4 h-4" /> },
     { to: '/dashboard/journal', label: 'Journal', icon: <BookOpen className="w-4 h-4" /> },
     { to: '/dashboard/events', label: 'Events', icon: <MapPin className="w-4 h-4" /> },
+    { to: '/dashboard/analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
     { to: '/profile', label: 'Profile', icon: <User className="w-4 h-4" /> },
   ];
 
@@ -18,7 +19,12 @@ const TopRibbon: React.FC = () => {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-cream border-b border-gray-200">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <div />
+        <div className="flex items-center space-x-3">
+          <Link to="/dashboard" className="inline-flex items-center space-x-3">
+            <Umbrella className="w-7 h-7 text-blue" />
+            <span className="text-lg font-bold text-blue">Net Umbrella</span>
+          </Link>
+        </div>
         <div className="flex items-center space-x-3">
           {items.map((it) => {
             const active = location.pathname === it.to;

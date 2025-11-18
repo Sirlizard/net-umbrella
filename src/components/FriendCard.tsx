@@ -59,7 +59,17 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
               {friend.socials.length} contact method{friend.socials.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <MessageCircle className="w-5 h-5 text-pink group-hover:text-blue transition-colors duration-200" />
+          <div className="flex items-center gap-3">
+            <MessageCircle className="w-5 h-5 text-pink group-hover:text-blue transition-colors duration-200" />
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
+              {friend.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={friend.avatarUrl} alt={`${friend.name} avatar`} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-sm text-blue">{friend.name?.charAt(0) || '?'}</div>
+              )}
+            </div>
+          </div>
         </div>
         
         <div className="flex items-center space-x-2">

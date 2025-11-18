@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { X, User } from 'lucide-react';
+import { supabase } from '../lib/supabase'
 
 interface AddFriendFormProps {
   onClose: () => void;
-  onAddFriend: (friendData: { name: string; bio?: string; contact_frequency?: number }) => void;
+  onAddFriend: (friendData: { name: string; bio?: string; contact_frequency?: number; avatar_url?: string | null }) => Promise<{ data?: any; error?: any }>;
 }
 
 export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFriend }) => {
@@ -22,13 +23,43 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
       return;
     }
 
-    // Call the parent handler with friend data
-    onAddFriend({
+    // First create the friend without the avatar so we have an id to upload into
+    const res = await onAddFriend({
       name: name.trim(),
       bio: bio.trim() || undefined,
-      contact_frequency: 5
+      contact_frequency: 5,
+      avatar_url: undefined
     });
+
+    // If an image was selected, upload it to avatars/<friendId>/ and persist the public URL
+    if (selectedFile && res && res.data && res.data.id) {
+      try {
+        const id = res.data.id
+        const path = `avatars/${id}/${Date.now()}-${selectedFile.name}`
+        const { data: uploadData, error: uploadError } = await supabase.storage.from('avatars').upload(path, selectedFile, { upsert: true })
+        if (uploadError) {
+          console.error('Upload error', uploadError)
+          throw uploadError
+        }
+        const { data: publicData } = supabase.storage.from('avatars').getPublicUrl(path)
+        const publicUrl = publicData?.publicUrl
+        if (!publicUrl) throw new Error('Failed to obtain public URL after upload')
+        // Persist the avatar_url on the friend row
+        const { data: updated, error: updateError } = await supabase.from('friends').update({ avatar_url: publicUrl }).eq('id', id).select().single()
+        if (updateError) {
+          console.error('Failed to update friend with avatar_url', updateError)
+          throw updateError
+        }
+        console.log('Uploaded avatar and updated friend:', updated)
+      } catch (err) {
+        console.error('Avatar upload failed after friend creation', err)
+        alert('Failed to upload avatar image after creating friend. You can add one later from the friend detail view.')
+      }
+    }
   };
+
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -78,6 +109,13 @@ export const AddFriendForm: React.FC<AddFriendFormProps> = ({ onClose, onAddFrie
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-pink focus:border-transparent resize-none"
               rows={3}
             />
+          </div>
+
+          {/* Avatar image (optional) */}
+          <div>
+            <label className="block text-sm font-medium text-red mb-2">Profile Image (optional)</label>
+            <input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files ? e.target.files[0] : null)} className="w-full" />
+            <p className="text-xs text-gray-500 mt-1">You can add an image now or edit it later from the connection detail view.</p>
           </div>
 
           {/* Contact methods are intentionally omitted from the initial create flow. */}

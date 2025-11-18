@@ -50,6 +50,7 @@ export const DashboardPage: React.FC = () => {
     return dbFriends.map(f => ({
       ...f,
       bio: f.bio ?? undefined,
+      avatarUrl: (f as any).avatar_url || undefined,
       socials: [], // Placeholder for socials
       lastContacted: new Date(f.last_contacted),
       contactFrequency: typeof f.contact_frequency === 'number' ? f.contact_frequency : undefined,
@@ -57,13 +58,14 @@ export const DashboardPage: React.FC = () => {
   }, [dbFriends]);
 
   const handleAddFriend = async (friendData: { name: string; bio?: string; contact_frequency?: number }) => {
-    const { data, error } = await addFriend(friendData);
-    if (!error && data) {
+    const result = await addFriend(friendData);
+    if (!result.error && result.data) {
       setShowAddFriend(false);
-    } else if (error) {
-      console.error(`Error adding friend: ${error}`);
-      alert(`Error adding friend: ${error}`);
+    } else if (result.error) {
+      console.error(`Error adding friend: ${result.error}`);
+      alert(`Error adding friend: ${result.error}`);
     }
+    return result
   };
 
   const handleUpdateFriend = async (friendId: string, updates: Partial<DatabaseFriend>) => {

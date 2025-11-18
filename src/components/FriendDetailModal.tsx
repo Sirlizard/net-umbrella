@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { X, MessageCircle, Send, Plus, Trash2, Clock } from 'lucide-react'
 import { useSocialLinks } from '../hooks/useSocialLinks'
+import { supabase } from '../lib/supabase'
 
 interface FriendDetailModalProps {
   friend: any
@@ -24,6 +25,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
   const [sentCount, setSentCount] = useState<number>(friend.messages_sent_count)
   const [receivedCount, setReceivedCount] = useState<number>(friend.messages_received_count)
   const [totalInteractions, setTotalInteractions] = useState<number>(friend.total_interactions)
+  const [uploading, setUploading] = useState(false)
 
   const { links, addLink, removeLink, updateLink, recordInteraction } = useSocialLinks(friend.id)
 
@@ -102,24 +104,93 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
     return new Date(dateString).toLocaleDateString()
   }
 
+  const handleFileChange = async (file: File | null) => {
+    if (!file) return
+    setUploading(true)
+    try {
+      // Use a deterministic path: avatars/<friendId>/<timestamp>-<filename>
+      const path = `avatars/${friend.id}/${Date.now()}-${file.name}`
+      const { data: uploadData, error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
+      if (uploadError) {
+        console.error('Upload error', uploadError)
+        throw uploadError
+      }
+      const { data: publicData } = supabase.storage.from('avatars').getPublicUrl(path)
+      const publicUrl = publicData?.publicUrl
+      if (!publicUrl) throw new Error('Failed to obtain public URL')
+
+      // Persist the avatar_url on the friend row
+      const { data: updated, error: updateError } = await supabase.from('friends').update({ avatar_url: publicUrl }).eq('id', friend.id).select().single()
+      if (updateError) {
+        console.error('Failed to update friend row with avatar', updateError)
+        throw updateError
+      }
+      // Notify parent UI of the update as well
+      onUpdate(friend.id, { avatar_url: publicUrl })
+    } catch (err) {
+      console.error('Failed to upload avatar', err)
+      alert('Failed to upload image. Check console for details.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleRemoveAvatar = async () => {
+    if (!friend.avatar_url) {
+      // nothing to do
+      return
+    }
+    // Try to remove from storage if path can be derived (best-effort). We store public URLs, so deletion may require extracting path.
+    try {
+      // If URL contains `/storage/v1/object/public/avatars/` then derive the path
+      const segments = friend.avatar_url.split('/storage/v1/object/public/')
+      if (segments.length === 2) {
+        const key = segments[1]
+        await supabase.storage.from('avatars').remove([key])
+      }
+    } catch (err) {
+      // ignore storage deletion errors; still clear db value
+      console.warn('Failed to delete file from storage (continuing to clear db):', err)
+    }
+
+    await onUpdate(friend.id, { avatar_url: null })
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-100 p-6 rounded-t-xl">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-red">{friend.name}</h2>
-              <p className="text-sm text-blue">
-                Last contact: {formatDate(lastContacted)}
-              </p>
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                {friend.avatar_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={friend.avatar_url} alt={`${friend.name} avatar`} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-blue font-medium">{friend.name?.charAt(0) || '?'}</div>
+                )}
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-red">{friend.name}</h2>
+                <p className="text-sm text-blue">Last contact: {formatDate(lastContacted)}</p>
+              </div>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-            >
-              <X className="w-5 h-5 text-blue" />
-            </button>
+            <div className="flex items-center gap-2">
+              <label className="inline-flex items-center px-3 py-2 bg-gray-100 rounded text-sm cursor-pointer">
+                <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e.target.files ? e.target.files[0] : null)} />
+                <span>{uploading ? 'Uploading...' : friend.avatar_url ? 'Change' : 'Add'} Image</span>
+              </label>
+              {friend.avatar_url && (
+                <button onClick={handleRemoveAvatar} className="px-3 py-2 bg-red-50 text-red-600 rounded text-sm">Remove</button>
+              )}
+              <button
+                onClick={onClose}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+              >
+                <X className="w-5 h-5 text-blue" />
+              </button>
+            </div>
           </div>
         </div>
 
