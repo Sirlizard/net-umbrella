@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserProfile } from '../hooks/useUserProfile';
 import HelpButton from './HelpButton';
+import { startTour } from './Tutorial';
 
 interface DashboardHeaderProps {
   friendCount: number;
@@ -48,7 +49,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-3 bg-white rounded-full px-6 py-3 shadow-md border border-pink/20">
+        <div id="tutorial-brand" className="flex items-center space-x-3 bg-white rounded-full px-6 py-3 shadow-md border border-pink/20">
           <Umbrella className="w-8 h-8 text-blue" />
           <h1 className="text-2xl font-bold text-blue">Net-umbrella</h1>
         </div>
@@ -60,6 +61,21 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             </span>
           </div>
           <HelpButton />
+          <button
+            onClick={() => startTour()}
+            title="Take a quick tour"
+            className="btn btn-ghost px-2 py-1.5 text-sm ml-2"
+            id="help-tour-trigger"
+          >
+            Tour
+          </button>
+          <button
+            onClick={() => startTour()}
+            title="Take a quick tour"
+            className="btn btn-ghost px-2 py-1.5 text-sm ml-2"
+          >
+            Tour
+          </button>
           {user && (
             <div className="relative" ref={menuRef}>
               <button
@@ -99,8 +115,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       </div>
       
       {/* Tab Navigation */}
-      <div className="flex justify-center mb-6">
-        <div className="bg-white rounded-xl p-1 shadow-sm border border-gray-100">
+      <div id="tutorial-tabs" className="flex justify-center mb-6">
+      <div className="bg-white rounded-xl p-1 shadow-sm border border-gray-100">
           <div className="flex space-x-1">
             <button
               onClick={() => onViewChange?.('dashboard')}
@@ -138,6 +154,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             
             <Link
               to="/dashboard/events"
+              id="tutorial-events-link"
               className={`flex items:center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 text-blue hover:bg-gray-50`}
             >
               <MapPin className="w-4 h-4" />

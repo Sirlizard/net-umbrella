@@ -70,6 +70,32 @@ select, input, textarea {
 	--tw-ring-color: rgba(255,255,255,0.06) !important;
 }
 
+/* Intro.js theme overrides to match app variables */
+.introjs-tooltip {
+	background: var(--card) !important;
+	color: var(--text) !important;
+	border-radius: 0.5rem !important;
+	box-shadow: 0 10px 30px rgba(2,6,23,0.6) !important;
+}
+.introjs-tooltiptext {
+	color: var(--text) !important;
+}
+.introjs-tooltipbuttons .introjs-button {
+	background: var(--blue) !important;
+	color: white !important;
+	border-radius: 0.375rem !important;
+}
+.introjs-overlay {
+	background: rgba(2,6,23,0.6) !important;
+}
+
+.dark .introjs-tooltip {
+	background: var(--card) !important;
+	color: var(--text) !important;
+	border: 1px solid rgba(255,255,255,0.04) !important;
+}
+
+
 /* Improve contrast for common text utilities in dark mode */
 .dark .text-blue { color: var(--blue) !important; }
 .dark .text-blue-dark { color: var(--blue-dark) !important; }
@@ -91,7 +117,7 @@ select, input, textarea {
 	/* Base button shared by all buttons */
 	.btn,
 	button {
-		@apply inline-flex items-center justify-center px-4 py-2 rounded-md font-semibold transition-colors duration-200;
+		@apply inline-flex items-center justify-center px-5 py-3 rounded-md font-semibold transition-colors duration-200;
 		position: relative;
 		overflow: visible;
 		box-shadow: 0 1px 0 rgba(0,0,0,0.03);
@@ -110,6 +136,11 @@ select, input, textarea {
 	/* Small/ghost variant */
 	.btn-ghost {
 		@apply bg-transparent text-blue;
+	}
+
+	/* Generic card helper to unify spacing and padding across app */
+	.card {
+		@apply bg-white rounded-lg shadow-sm p-6;
 	}
 
 		/* Previously we used a pseudo-element to create a glossy streak on buttons.

@@ -13,6 +13,7 @@ import {
 } from '../utils/messageAnalytics';
 import { ArrowLeft, MessageCircle, Send, MessageSquare, Plus, Instagram, Twitter, Facebook, Linkedin, Mail, Phone, MessageCircleMore, Trash2, CreditCard as Edit3, BarChart3, TrendingUp, Flame } from 'lucide-react';
 import { useSocialLinks } from '../hooks/useSocialLinks'
+import { supabase } from '../lib/supabase'
 import { frequencyToTargetDays } from '../utils/contactPreference'
 import { useFriendStreak } from '../hooks/useFriendStreak'
 
@@ -34,6 +35,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
   const [editedBio, setEditedBio] = useState(friend.bio || '');
   const [contactFrequency, setContactFrequency] = useState<number>(friend.contactFrequency ?? 5);
   const { streak } = useFriendStreak(friend.id, 60)
+  const [uploading, setUploading] = useState(false)
 
   // Load server-backed social links for this friend
   const { links, addLink, removeLink, recordInteraction, touchLink } = useSocialLinks(friend.id)
@@ -106,6 +108,30 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
     }
   };
 
+  const handleFileChange = async (file: File | null) => {
+    if (!file) return
+    setUploading(true)
+    try {
+      const path = `avatars/${friend.id}/${Date.now()}-${file.name}`
+      const { data: uploadData, error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
+      if (uploadError) throw uploadError
+      const { data: publicData } = supabase.storage.from('avatars').getPublicUrl(path)
+      const publicUrl = publicData?.publicUrl
+      if (!publicUrl) throw new Error('Failed to get public URL')
+
+      const { error: updateError } = await supabase.from('friends').update({ avatar_url: publicUrl }).eq('id', friend.id)
+      if (updateError) throw updateError
+
+      const updatedFriend = { ...friend, avatarUrl: publicUrl }
+      onUpdateFriend(updatedFriend)
+    } catch (err) {
+      console.error('Avatar upload failed', err)
+      alert('Failed to upload avatar. Check console for details.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const handleRemovePlatform = async (socialIndex: number) => {
     const removed = friend.socials[socialIndex]
     const updatedFriend = { ...friend };
@@ -156,8 +182,8 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
             >
               <ArrowLeft className="w-6 h-6 text-blue" />
             </button>
-            <div>
-              <h1 className="text-2xl font-bold text-red">{friend.name}</h1>
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold text-red truncate">{friend.name}</h1>
               <p className="text-sm text-blue">
                 Last contact: <span className={getContactStatusColor(friend.lastContacted)}>
                   {formatLastContacted(friend.lastContacted)}
@@ -216,7 +242,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
             </div>
           ) : (
             <>
-              <p className="text-blue leading-relaxed">
+              <p className="text-blue leading-relaxed break-words whitespace-normal">
                 {friend.bio || 'No bio added yet. Click the edit button to add one!'}
               </p>
               <div className="flex items-center space-x-4 mt-2">
@@ -248,35 +274,49 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
               <span className="text-sm text-blue">Frequent contact through the day</span>
             </div>
             <input
-              type="range"
-              min={0}
-              max={10}
-              step={1}
-              value={contactFrequency}
-              onChange={(e) => setContactFrequency(parseInt(e.target.value, 10))}
-              className="w-full accent-blue"
-            />
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-blue">0</span>
-              <span className="text-sm text-blue font-semibold">Preference: {contactFrequency}/10</span>
-              <span className="text-sm text-blue">10</span>
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={handleSaveContactFrequency}
-                className="px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200"
-              >
-                Save Preference
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Platforms */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-red">Contact Platforms</h2>
-            <button
+              return (
+                <div className="min-h-screen bg-cream pb-8">
+                  {/* Header */}
+              <div className="bg-white shadow-sm border-b border-pink/20">
+                    <div className="container mx-auto px-4 py-4 max-w-4xl">
+                      <div className="flex items-center space-x-4">
+                        <button
+                          onClick={onBack}
+                          className="p-2 rounded-full hover:bg-pink/10 transition-colors duration-200"
+                        >
+                          <ArrowLeft className="w-6 h-6 text-blue" />
+                        </button>
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center relative">
+                            {friend.avatarUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={friend.avatarUrl} alt={`${friend.name} avatar`} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="text-blue font-medium">{friend.name?.charAt(0) || '?'}</div>
+                            )}
+                            <label className="absolute -right-1 -bottom-1 bg-white border rounded-full p-1 cursor-pointer text-xs shadow" title="Change image">
+                              <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e.target.files ? e.target.files[0] : null)} />
+                              {uploading ? '...' : 'Edit'}
+                            </label>
+                          </div>
+                          <div className="min-w-0">
+                            <h1 className="text-2xl font-bold text-red truncate">{friend.name}</h1>
+                            <p className="text-sm text-blue">
+                              Last contact: <span className={getContactStatusColor(friend.lastContacted)}>
+                                {formatLastContacted(friend.lastContacted)}
+                              </span>
+                            </p>
+                            {streak > 0 && (
+                              <div className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-blue">
+                                <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
+                                {streak} day{streak === 1 ? '' : 's'} streak
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               onClick={() => setShowAddPlatform(true)}
               className="flex items-center space-x-2 px-4 py-2 bg-blue text-white rounded-lg hover:bg-blue-dark transition-colors duration-200"
             >
@@ -335,9 +375,9 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
                     <div className={`p-2 rounded-full text-white ${getPlatformColor(social.platform)}`}>
                       {getPlatformIcon(social.platform)}
                     </div>
-                    <div>
-                          <h3 className="font-medium text-red">{social.platform}</h3>
-                          <p className="text-sm text-blue">{social.handle}</p>
+                      <div className="min-w-0">
+                        <h3 className="font-medium text-red truncate">{social.platform}</h3>
+                        <p className="text-sm text-blue break-words whitespace-normal truncate">{social.handle}</p>
                       <div className="flex items-center space-x-3 mt-1">
                             <span className="text-xs text-blue font-medium">
                           {getReceivedMessageCount(social.messageHistory)} received

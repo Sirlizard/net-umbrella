@@ -158,7 +158,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto card">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-100 p-6 rounded-t-xl">
           <div className="flex items-center justify-between">
@@ -171,9 +171,9 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                   <div className="text-blue font-medium">{friend.name?.charAt(0) || '?'}</div>
                 )}
               </div>
-              <div>
-                <h2 className="text-2xl font-bold text-red">{friend.name}</h2>
-                <p className="text-sm text-blue">Last contact: {formatDate(lastContacted)}</p>
+              <div className="min-w-0">
+                <h2 className="text-2xl font-bold text-red truncate">{friend.name}</h2>
+                <p className="text-sm text-blue truncate">Last contact: {formatDate(lastContacted)}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -194,7 +194,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
           </div>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="space-y-6">
           {/* Bio Section */}
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
@@ -330,8 +330,8 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                         </div>
                       ) : (
                         <>
-                          <h4 className="font-medium text-red">{link.platform}</h4>
-                          <p className="text-sm text-blue">{link.handle}</p>
+                          <h4 className="font-medium text-red truncate">{link.platform}</h4>
+                          <p className="text-sm text-blue truncate break-words whitespace-normal">{link.handle}</p>
                           {link.last_contacted && (
                             <p className="text-xs text-blue mt-1">
                               <Clock className="w-3 h-3 inline mr-1" />

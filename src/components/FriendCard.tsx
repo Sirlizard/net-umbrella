@@ -45,18 +45,17 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
   return (
     <div
       onClick={() => onClick(friend)}
-      className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer 
-                  border-l-4 ${getContactStatusBorder(friend.lastContacted)} hover:scale-[1.02] 
-                  border border-gray-100 hover:border-pink group`}
+      className={`card border-l-4 ${getContactStatusBorder(friend.lastContacted)} hover:scale-[1.02] cursor-pointer hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-pink group bg-white p-4 rounded-lg`}
     >
-      <div className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-blue group-hover:text-red transition-colors duration-200 mb-1">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-red-600 group-hover:text-pink-600 transition-colors duration-200 mb-1 truncate">
               {friend.name}
             </h3>
-            <p className="text-sm text-blue mb-2">
-              {friend.socials.length} contact method{friend.socials.length !== 1 ? 's' : ''}
+            <p className="text-sm mb-2">
+              <span className="inline-block bg-blue-50 text-blue px-2 py-0.5 rounded-full text-xs">
+                {friend.socials.length} contact{friend.socials.length !== 1 ? 's' : ''}
+              </span>
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -66,19 +65,17 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={friend.avatarUrl} alt={`${friend.name} avatar`} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-sm text-blue">{friend.name?.charAt(0) || '?'}</div>
+                <div className="w-full h-full flex items-center justify-center text-sm text-red-600 font-medium">{friend.name?.charAt(0) || '?'}</div>
               )}
             </div>
           </div>
+        <div className="mt-3">
+          <div className="flex items-center space-x-2">
+            <Clock className={`w-4 h-4 ${getContactStatusColor(friend.lastContacted)}`} />
+            <span className={`text-sm font-medium ${getContactStatusColor(friend.lastContacted)} bg-gray-50 px-2 py-0.5 rounded`}>Last contact: {formatLastContacted(friend.lastContacted)}</span>
+          </div>
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <Clock className={`w-4 h-4 ${getContactStatusColor(friend.lastContacted)}`} />
-          <span className={`text-sm font-medium ${getContactStatusColor(friend.lastContacted)}`}>
-            Last contact: {formatLastContacted(friend.lastContacted)}
-          </span>
-        </div>
-        
+
         <div className="mt-4 pt-4 border-t border-gray-100">
           <div className="flex items-center justify-between">
             {streak > 0 ? (
