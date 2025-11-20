@@ -16,6 +16,7 @@ import { useSocialLinks } from '../hooks/useSocialLinks'
 import { supabase } from '../lib/supabase'
 import { frequencyToTargetDays } from '../utils/contactPreference'
 import { useFriendStreak } from '../hooks/useFriendStreak'
+import { useUserProfile } from '../hooks/useUserProfile'
 
 interface FriendDetailViewProps {
   friend: Friend;
@@ -39,6 +40,19 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
 
   // Load server-backed social links for this friend
   const { links, addLink, removeLink, recordInteraction, touchLink } = useSocialLinks(friend.id)
+  const { profile: meProfile } = useUserProfile()
+
+  const handleHeaderMessageAction = async (type: 'message_sent' | 'message_received') => {
+    const now = new Date();
+    const updatedFriend = { ...friend, lastContacted: now };
+    onUpdateFriend(updatedFriend);
+
+    try {
+      await recordInteraction(friend.id, type);
+    } catch (err) {
+      console.error('Failed to record interaction:', err);
+    }
+  }
 
   // totals are displayed inline via utilities where needed
 
@@ -173,7 +187,7 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
   return (
     <div className="min-h-screen bg-cream pb-8">
       {/* Header */}
-  <div className="bg-white shadow-sm border-b border-pink/20">
+      <div className="bg-white shadow-sm border-b border-pink/20">
         <div className="container mx-auto px-4 py-4 max-w-4xl">
           <div className="flex items-center space-x-4">
             <button
@@ -182,17 +196,63 @@ export const FriendDetailView: React.FC<FriendDetailViewProps> = ({
             >
               <ArrowLeft className="w-6 h-6 text-blue" />
             </button>
-            <div className="min-w-0">
-              <h1 className="text-2xl font-bold text-red truncate">{friend.name}</h1>
-              <p className="text-sm text-blue">
-                Last contact: <span className={getContactStatusColor(friend.lastContacted)}>
-                  {formatLastContacted(friend.lastContacted)}
-                </span>
-              </p>
-              {streak > 0 && (
-                <div className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-blue">
-                  <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
-                  {streak} day{streak === 1 ? '' : 's'} streak
+
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center relative">
+                {friend.avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={friend.avatarUrl} alt={`${friend.name} avatar`} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="text-blue font-medium">{friend.name?.charAt(0) || '?'}</div>
+                )}
+                <label className="absolute -right-1 -bottom-1 bg-white border rounded-full p-1 cursor-pointer text-xs shadow" title="Change image">
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileChange(e.target.files ? e.target.files[0] : null)} />
+                  {uploading ? '...' : 'Edit'}
+                </label>
+              </div>
+
+              {/* Quick action toolbar next to friend avatar */}
+              <div className="flex items-center space-x-2">
+                <button onClick={() => handleHeaderMessageAction('message_sent')} className="flex items-center space-x-2 px-3 py-1.5 bg-blue text-white rounded-md text-sm">
+                  <Send className="w-4 h-4" />
+                  <span>Sent</span>
+                </button>
+                <button onClick={() => handleHeaderMessageAction('message_received')} className="flex items-center space-x-2 px-3 py-1.5 bg-pink text-red rounded-md text-sm">
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Received</span>
+                </button>
+                <button onClick={() => setShowAddPlatform(true)} className="px-2 py-1.5 bg-gray-100 rounded-md text-sm">Add</button>
+              </div>
+
+              <div className="min-w-0">
+                <h1 className="text-2xl font-bold text-red truncate">{friend.name}</h1>
+                <p className="text-sm text-blue">
+                  Last contact: <span className={getContactStatusColor(friend.lastContacted)}>
+                    {formatLastContacted(friend.lastContacted)}
+                  </span>
+                </p>
+                {streak > 0 && (
+                  <div className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-blue">
+                    <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
+                    {streak} day{streak === 1 ? '' : 's'} streak
+                  </div>
+                )}
+              </div>
+
+              {meProfile && (
+                <div className="ml-4 flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {meProfile.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={meProfile.avatar_url} alt={`${meProfile.full_name} avatar`} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-sm text-blue font-medium">{(meProfile.full_name || meProfile.email)?.charAt(0)}</div>
+                    )}
+                  </div>
+                  <div className="hidden sm:block min-w-0">
+                    <div className="text-sm font-medium text-blue truncate">{meProfile.full_name || meProfile.email}</div>
+                    <div className="text-xs text-gray-500">You</div>
+                  </div>
                 </div>
               )}
             </div>

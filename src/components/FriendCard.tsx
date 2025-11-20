@@ -1,6 +1,6 @@
 import React from 'react';
 import { Friend } from '../types/Friend';
-import { formatLastContacted } from '../utils/timeFormatter';
+// compact formatter used inside component
 import { MessageCircle, Clock, Flame } from 'lucide-react';
 import { useFriendStreak } from '../hooks/useFriendStreak';
 import { frequencyToTargetDays } from '../utils/contactPreference';
@@ -24,8 +24,29 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
     const diffDays = Math.floor(Math.abs(now.getTime() - lastContacted.getTime()) / (1000 * 60 * 60 * 24));
     const targetDays = frequencyToTargetDays(friend.contactFrequency);
   if (diffDays <= targetDays) return 'text-yellow-600';
-  return 'text-red';
+  return 'text-red-600';
   };
+
+  const getRecencyLevel = (lastContacted: Date) => {
+    const now = new Date();
+    const diffDays = Math.floor(Math.abs(now.getTime() - lastContacted.getTime()) / (1000 * 60 * 60 * 24));
+    const targetDays = frequencyToTargetDays(friend.contactFrequency);
+    if (diffDays === 0) return 'good';
+    if (diffDays <= targetDays) return 'ok';
+    return 'overdue';
+  }
+
+  const formatShort = (date: Date) => {
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays}d`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)}w`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)}m`;
+    return `${Math.floor(diffDays / 365)}y`;
+  }
 
   const getContactStatusBorder = (lastContacted: Date) => {
     const now = new Date();
@@ -45,53 +66,60 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
   return (
     <div
       onClick={() => onClick(friend)}
-      className={`card border-l-4 ${getContactStatusBorder(friend.lastContacted)} hover:scale-[1.02] cursor-pointer hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-pink group bg-white p-4 rounded-lg`}
+      className={`card border-l-4 ${getContactStatusBorder(friend.lastContacted)} hover:scale-[1.02] cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-100 group bg-white p-4 rounded-lg`}
     >
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-red-600 group-hover:text-pink-600 transition-colors duration-200 mb-1 truncate">
-              {friend.name}
-            </h3>
-            <p className="text-sm mb-2">
-              <span className="inline-block bg-blue-50 text-blue px-2 py-0.5 rounded-full text-xs">
-                {friend.socials.length} contact{friend.socials.length !== 1 ? 's' : ''}
-              </span>
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <MessageCircle className="w-5 h-5 text-pink group-hover:text-blue transition-colors duration-200" />
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100">
-              {friend.avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={friend.avatarUrl} alt={`${friend.name} avatar`} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-sm text-red-600 font-medium">{friend.name?.charAt(0) || '?'}</div>
-              )}
-            </div>
-          </div>
-        <div className="mt-3">
-          <div className="flex items-center space-x-2">
-            <Clock className={`w-4 h-4 ${getContactStatusColor(friend.lastContacted)}`} />
-            <span className={`text-sm font-medium ${getContactStatusColor(friend.lastContacted)} bg-gray-50 px-2 py-0.5 rounded`}>Last contact: {formatLastContacted(friend.lastContacted)}</span>
+      <div className="flex items-center gap-4">
+        <div className="flex-shrink-0">
+          <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center text-sm font-medium text-red-600">
+            {friend.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={friend.avatarUrl} alt={`${friend.name} avatar`} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-lg">{friend.name?.charAt(0) || '?'}</span>
+            )}
           </div>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-gray-100">
+        <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
-            {streak > 0 ? (
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-blue">
-                <Flame className="w-3.5 h-3.5 text-[#ff6a00]" />
-                {streak} day{streak === 1 ? '' : 's'} streak
-              </span>
-            ) : (
-              <span className="text-xs text-pink font-medium">
-                Ready to spark a connection! 
-              </span>
-            )}
-            <div className="w-2 h-2 rounded-full bg-pink group-hover:bg-blue transition-colors duration-200"></div>
+            <h3 className="text-lg font-semibold text-red-600 group-hover:text-pink-600 transition-colors duration-200 truncate">
+              {friend.name}
+            </h3>
+            <div className="text-xs text-gray-400">{friend.socials.length} {friend.socials.length === 1 ? 'contact' : 'contacts'}</div>
+          </div>
+
+          <p className="text-sm text-gray-600 mt-2 truncate">{friend.bio ? friend.bio : ''}</p>
+
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Clock className={`w-4 h-4 ${getContactStatusColor(friend.lastContacted)}`} />
+              {/* compact label with color backdrop */}
+              {(() => {
+                const level = getRecencyLevel(friend.lastContacted)
+                const mapping: Record<string, string> = {
+                  good: 'bg-green-50 text-green-600',
+                  ok: 'bg-yellow-50 text-yellow-600',
+                  overdue: 'bg-red-50 text-red-600'
+                }
+                return (
+                  <span className={`text-sm font-medium px-2 py-0.5 rounded ${mapping[level]}`}>{formatShort(friend.lastContacted)}</span>
+                )
+              })()}
+            </div>
+
+            <div className="text-right">
+              {streak > 0 ? (
+                <span className="inline-flex items-center gap-1 text-xs font-medium text-blue">
+                  <Flame className="w-4 h-4 text-[#ff6a00]" />
+                  {streak}d
+                </span>
+              ) : (
+                <span className="text-xs text-gray-500 font-medium">Let’s connect</span>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 };

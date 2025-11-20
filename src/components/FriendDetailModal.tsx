@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { X, MessageCircle, Send, Plus, Trash2, Clock } from 'lucide-react'
 import { useSocialLinks } from '../hooks/useSocialLinks'
 import { supabase } from '../lib/supabase'
+import { useUserProfile } from '../hooks/useUserProfile'
 
 interface FriendDetailModalProps {
   friend: any
@@ -28,6 +29,7 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
   const [uploading, setUploading] = useState(false)
 
   const { links, addLink, removeLink, updateLink, recordInteraction } = useSocialLinks(friend.id)
+  const { profile: meProfile } = useUserProfile()
 
   // Keep local state in sync if the parent provides updated friend data
   useEffect(() => {
@@ -175,6 +177,23 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
                 <h2 className="text-2xl font-bold text-red truncate">{friend.name}</h2>
                 <p className="text-sm text-blue truncate">Last contact: {formatDate(lastContacted)}</p>
               </div>
+
+              {meProfile && (
+                <div className="ml-4 flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {meProfile.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={meProfile.avatar_url} alt={`${meProfile.full_name} avatar`} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="text-sm text-blue font-medium">{(meProfile.full_name || meProfile.email)?.charAt(0)}</div>
+                    )}
+                  </div>
+                  <div className="hidden sm:block min-w-0">
+                    <div className="text-sm font-medium text-blue truncate">{meProfile.full_name || meProfile.email}</div>
+                    <div className="text-xs text-gray-500">You</div>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <label className="inline-flex items-center px-3 py-2 bg-gray-100 rounded text-sm cursor-pointer">
@@ -263,9 +282,23 @@ export const FriendDetailModal: React.FC<FriendDetailModalProps> = ({ friend, on
             </div>
           </div>
 
-          {/* Contact Methods */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
+            {/* Contact Methods */}
+            <div className="bg-gray-50 rounded-lg p-4">
+
+              {/* Quick action toolbar next to friend avatar */}
+              <div className="flex items-center space-x-2">
+                <button onClick={() => handleMessageAction('message_sent')} className="flex items-center space-x-2 px-3 py-1.5 bg-blue text-white rounded-md text-sm">
+                  <Send className="w-4 h-4" />
+                  <span>Sent</span>
+                </button>
+                <button onClick={() => handleMessageAction('message_received')} className="flex items-center space-x-2 px-3 py-1.5 bg-pink text-red rounded-md text-sm">
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Received</span>
+                </button>
+                <button onClick={() => setShowAddPlatform(true)} className="px-2 py-1.5 bg-gray-100 rounded-md text-sm">Add</button>
+              </div>
+
+              <div className="min-w-0">
               <h3 className="text-lg font-semibold text-red">Contact Methods</h3>
               <button
                 onClick={() => setShowAddPlatform(true)}
