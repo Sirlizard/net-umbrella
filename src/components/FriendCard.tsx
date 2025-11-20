@@ -97,9 +97,9 @@ export const FriendCard: React.FC<FriendCardProps> = ({ friend, onClick }) => {
               {(() => {
                 const level = getRecencyLevel(friend.lastContacted)
                 const mapping: Record<string, string> = {
-                  good: 'bg-green-50 text-green-600',
-                  ok: 'bg-yellow-50 text-yellow-600',
-                  overdue: 'bg-red-50 text-red-600'
+                  good: 'bg-green-50 dark:bg-green-900 text-green-600 dark:text-green-200',
+                  ok: 'bg-yellow-50 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-200',
+                  overdue: 'bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-200'
                 }
                 return (
                   <span className={`text-sm font-medium px-2 py-0.5 rounded ${mapping[level]}`}>{formatShort(friend.lastContacted)}</span>
